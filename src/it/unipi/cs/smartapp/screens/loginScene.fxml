@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.loginController">
+
+   <children>
+      <Label alignment="CENTER" layoutX="297.0" layoutY="38.0" prefHeight="137.0" prefWidth="206.0" text="AmongAIs" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="50.0">
+         <font>
+            <Font name="Segoe UI Bold Italic" size="36.0" />
+         </font>
+      </Label>
+
+      <TextField fx:id="usernameField" layoutX="324.0" layoutY="178.0" prefHeight="25.0" prefWidth="187.0" promptText="Username" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="210.0" />
+
+      <Button layoutX="374.0" layoutY="239.0" mnemonicParsing="false" onAction="#playAsGuestBtnPressed" text="Play as Guest" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="260.0" />
+      <Label fx:id="usernameErrorLabel" layoutX="300.0" layoutY="193.0" prefHeight="17.0" prefWidth="200.0" text="usernameErrorLabel" textFill="RED" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="193.0" />
+   </children>
+
+</AnchorPane>
