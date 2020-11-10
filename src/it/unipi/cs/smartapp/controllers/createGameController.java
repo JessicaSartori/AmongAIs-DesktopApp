@@ -1,5 +1,6 @@
 package it.unipi.cs.smartapp.controllers;
 
+import it.unipi.cs.smartapp.screens.Renderer;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
@@ -48,15 +49,13 @@ public class createGameController implements Controller {
             return;
         }
 
-        String[] params = res[1].split(" ");
-
         stateMgr.setCurrentGameName(gamename);
-        stateMgr.setTeam(Integer.parseInt(params[0]));
-        stateMgr.setLoyalty(Integer.parseInt(params[1]));
+
+        System.out.println(res[1]);
     }
 
-    @Override
-    public void updateContent() {
-
+    @FXML
+    public void backBtnPressed(ActionEvent event) {
+        Renderer.getInstance().show("mainMenu");
     }
 }

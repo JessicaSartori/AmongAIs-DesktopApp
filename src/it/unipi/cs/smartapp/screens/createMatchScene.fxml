@@ -17,6 +17,7 @@
 
         <Button layoutX="374.0" layoutY="239.0" mnemonicParsing="false" onAction="#createMatchBtnPressed" text="Create Match" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="260.0" />
         <Label fx:id="gamenameErrorLabel" layoutX="300.0" layoutY="193.0" prefHeight="17.0" prefWidth="200.0" text="gamenameErrorLabel" textFill="RED" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="193.0" />
+        <Button layoutX="37.0" layoutY="38.0" mnemonicParsing="false" onAction="#backBtnPressed" prefHeight="25.0" prefWidth="60.0" text="Back" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0" />
     </children>
 
 </AnchorPane>
