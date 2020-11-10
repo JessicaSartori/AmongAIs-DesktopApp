@@ -43,6 +43,7 @@ public class createGameController implements Controller {
         res = gameServer.sendJOIN(gamename, stateMgr.getUsername(), 'H', "Test");
         if(!res[0].equals("OK")) {
             gamenameErrorLabel.setText("Cannot join the lobby");
+            return;
         }
 
         String[] params = res[1].split(" ");
