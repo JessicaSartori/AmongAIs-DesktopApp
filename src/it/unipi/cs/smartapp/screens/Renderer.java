@@ -1,8 +1,11 @@
 package it.unipi.cs.smartapp.screens;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +25,7 @@ public class Renderer {
         return instance;
     }
 
+
     /* ==============================
      * Instance variables and methods
      * ============================== */
@@ -34,15 +38,26 @@ public class Renderer {
     }
 
     /*
-     * Add a new scene
+     * Add a new scene.
+     * Load the scene from the given FXML file and associate it
+     * with the given name
      */
-    public void addScene(String name, Scene scene) {
+    public void addScene(String name, String FXMLFile) {
         if(scenesMap.containsKey(name)) {
             System.err.println("screens.Renderer: Scene already exists");
             return;
         }
 
-        scenesMap.put(name, scene);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(FXMLFile));
+            Parent pane = loader.load();
+            Scene scene = new Scene(pane, 800, 600);
+            Controller sceneController = loader.getController();
+            scene.setUserData(sceneController);
+            scenesMap.put(name, scene);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -54,6 +69,13 @@ public class Renderer {
         c.updateContent();
 
         stage.setScene(sceneToShow);
+    }
+
+    /*
+     * Make the stage visible
+     */
+    public void showStage() {
+        stage.show();
     }
 
 }
