@@ -1,11 +1,13 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.drivers.GameServerDriver;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+
+import it.unipi.cs.smartapp.drivers.GameServerDriver;
 import it.unipi.cs.smartapp.statemanager.StateManager;
+
 
 public class createGameController implements Controller {
 
