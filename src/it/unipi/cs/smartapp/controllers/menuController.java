@@ -32,7 +32,7 @@ public class menuController implements Controller {
 
     @FXML
     private void joinMatchBtnPressed(ActionEvent event) {
-        System.out.println("Join game");
+        Renderer.getInstance().show("joinMatch");
     }
 
     @FXML
