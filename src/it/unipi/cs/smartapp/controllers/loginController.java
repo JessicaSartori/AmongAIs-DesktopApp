@@ -25,6 +25,14 @@ public class loginController implements Controller {
         System.out.println("Login Controller done");
     }
 
+    @Override
+    public void updateContent() {
+        String username = stateMgr.getUsername();
+        if(username != null) {
+            usernameField.setText(username);
+        }
+    }
+
     @FXML
     private void playAsGuestBtnPressed(ActionEvent event) {
         String username = usernameField.getText();
@@ -36,13 +44,5 @@ public class loginController implements Controller {
 
         stateMgr.setUsername(username);
         Renderer.getInstance().show("mainMenu");
-    }
-
-    @Override
-    public void updateContent() {
-        String username = stateMgr.getUsername();
-        if(username != null) {
-            usernameField.setText(username);
-        }
     }
 }

@@ -25,6 +25,12 @@ public class menuController implements Controller {
         System.out.println("Main Menu Controller done");
     }
 
+    @Override
+    public void updateContent() {
+        String username = stateMgr.getUsername();
+        welcomeLabel.setText("Welcome back " + username + "!");
+    }
+
     @FXML
     private void newMatchBtnPressed(ActionEvent event) {
         Renderer.getInstance().show("createMatch");
@@ -40,9 +46,5 @@ public class menuController implements Controller {
         Renderer.getInstance().show("login");
     }
 
-    @Override
-    public void updateContent() {
-        String username = stateMgr.getUsername();
-        welcomeLabel.setText("Welcome back " + username + "!");
-    }
+
 }
