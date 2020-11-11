@@ -12,28 +12,18 @@
          <font>
             <Font name="System Bold" size="18.0" />
          </font></Label>
-      <Label layoutX="212.0" layoutY="511.0" text="Energy: ">
+      <Label layoutX="238.0" layoutY="511.0" text="Energy: ">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
       <ProgressBar fx:id="PlayerEnergyBar" layoutX="293.0" layoutY="508.0" prefHeight="27.0" prefWidth="153.0" progress="1.0" />
-      <Label layoutX="455.0" layoutY="512.0" text="256">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="274.0" layoutY="512.0" text="0">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Label>
       <Label layoutX="13.0" layoutY="555.0" text="Team affiliation:">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label fx:id="PlayerTeam" alignment="CENTER" contentDisplay="CENTER" layoutX="113.0" layoutY="551.0" prefHeight="27.0" prefWidth="76.0" style="-fx-background-color: #ff0000;" text="Team Red" textFill="WHITE">
+      <Label fx:id="PlayerTeam" alignment="CENTER" contentDisplay="CENTER" layoutX="125.0" layoutY="551.0" prefHeight="27.0" prefWidth="76.0" style="-fx-background-color: #ff0000;" text="Team Red" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
@@ -55,7 +45,7 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Canvas fx:id="mapCanvas" layoutX="74.0" layoutY="57.0" height="416.0" width="416.0" />
+      <Canvas fx:id="mapCanvas" height="416.0" layoutX="74.0" layoutY="57.0" width="416.0" />
       <Label layoutX="13.0" layoutY="510.0" text="Player name:">
          <font>
             <Font name="System Bold" size="14.0" />
@@ -76,7 +66,7 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label fx:id="PlayerEnergy" alignment="CENTER" contentDisplay="CENTER" layoutX="361.0" layoutY="512.0" style="-fx-scale-z: 1000;" text="256" textFill="WHITE">
+      <Label fx:id="PlayerEnergy" alignment="CENTER" contentDisplay="CENTER" layoutX="455.0" layoutY="512.0" style="-fx-scale-z: 1000;" text="256" textFill="BLACK">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

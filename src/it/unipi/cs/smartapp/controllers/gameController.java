@@ -164,8 +164,8 @@ public class gameController implements Controller {
         String response[] = gameServer.sendLOOK(stateMgr.getCurrentGameName());
 
         if (response[0].equals("OK")){
-            char[][] charMap = stringToCharMap(response[1]);
-            drawMap(charMap);
+            stateMgr.setGameMap(stringToCharMap(response[1]));
+            drawMap();
         }
         else {
             canvasContext.setStroke(Color.RED);
@@ -173,12 +173,12 @@ public class gameController implements Controller {
         }
     }
 
-    private char[][] stringToCharMap(String mapResponse) {
+    private Character[][] stringToCharMap(String mapResponse) {
         // Quick fix - improvements coming soon directly on GameServerDriver
         // Map is currently limited to 32x32 - increasing in the future
         mapResponse = mapResponse.replace("LONG\n", "");
 
-        char[][] parsedMap = new char[32][32];
+        Character[][] parsedMap = new Character[32][32];
 
         int i = 0; // String index
 
@@ -195,9 +195,10 @@ public class gameController implements Controller {
         return parsedMap;
     }
 
-    private void drawMap(char[][] charMap) {
+    private void drawMap() {
         // TODO update when maps won't be simply 32x32
         int rowCoordinate = 0, columnCoordinate = 0, cellDimension = 13;
+        Character charMap[][] = stateMgr.getGameMap();
 
         for(int r=0; r<32; r++) { // rows
             for (int c = 0; c < 32; c++) { // columns
@@ -212,7 +213,7 @@ public class gameController implements Controller {
         }
     }
 
-    private void setColor(char terrain) {
+    private void setColor(Character terrain) {
         switch (terrain) {
             case '.': // grass
                 canvasContext.setFill(Color.GREEN);

@@ -19,6 +19,8 @@ public class StateManager {
     private Integer energy = null;
     private Boolean creator = null;
 
+    private Character[][] gameMap = null;
+
     /*
      * Setters
      */
@@ -34,6 +36,7 @@ public class StateManager {
     }
     public void setEnergy(Integer e) { energy = e; }
     public void setCreator(Boolean c) { creator = c; }
+    public void setGameMap(Character[][] m) { gameMap = m; }
 
     /*
      * Getter
@@ -48,6 +51,6 @@ public class StateManager {
     public Integer getLoyalty() { return loyalty; }
     public Integer getEnergy() { return energy; }
     public Boolean getCreator() { return creator; }
-
+    public Character[][] getGameMap() { return gameMap; }
 
 }
