@@ -158,41 +158,35 @@ public class GameServerDriver {
     }
 
     // Send a general command and wait for the response
-    private String sendCommand(String command) {
+    private synchronized String sendCommand(String command) {
         String rawResponse;
 
         forcedWait(System.currentTimeMillis());
-
-        synchronized (socket) {
-            try {
-                outSocket.println(command);
-                lastCommandSent = System.currentTimeMillis();
-                rawResponse = inSocket.readLine();
-            } catch (IOException e) {
-                rawResponse = "ERROR Can not communicate with Game Server";
-            }
+        try {
+            outSocket.println(command);
+            lastCommandSent = System.currentTimeMillis();
+            rawResponse = inSocket.readLine();
+        } catch (IOException e) {
+            rawResponse = "ERROR Can not communicate with Game Server";
         }
         return rawResponse;
     }
 
     // Send command with a long response to be retrieved
-    private String sendCommandLong(String command, String endString) {
+    private synchronized String sendCommandLong(String command, String endString) {
         String rawResponse = "", line;
 
         forcedWait(System.currentTimeMillis());
-
-        synchronized (socket) {
-            try {
-                outSocket.println(command);
-                lastCommandSent = System.currentTimeMillis();
-                while(!(line = inSocket.readLine()).contains(endString))
-                    if(line.equals("OK "))
-                        rawResponse = rawResponse.concat(line);
-                    else
-                        rawResponse = rawResponse.concat(line+"\n");
-            } catch (IOException e) {
-                rawResponse = "ERROR Can not communicate with Game Server";
-            }
+        try {
+            outSocket.println(command);
+            lastCommandSent = System.currentTimeMillis();
+            while(!(line = inSocket.readLine()).contains(endString))
+                if(line.equals("OK "))
+                    rawResponse = rawResponse.concat(line);
+                else
+                    rawResponse = rawResponse.concat(line+"\n");
+        } catch (IOException e) {
+            rawResponse = "ERROR Can not communicate with Game Server";
         }
         return rawResponse;
     }
