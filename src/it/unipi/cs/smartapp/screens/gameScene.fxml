@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.gameController">
+   <children>
+      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" text="Quit match" />
+      <Label layoutX="14.0" layoutY="470.0" text="Your status:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Label>
+      <Label layoutX="212.0" layoutY="511.0" text="Energy: ">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <ProgressBar fx:id="PlayerEnergyBar" layoutX="293.0" layoutY="508.0" prefHeight="27.0" prefWidth="153.0" progress="1.0" />
+      <Label layoutX="455.0" layoutY="512.0" text="256">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="274.0" layoutY="512.0" text="0">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="13.0" layoutY="555.0" text="Team affiliation:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="PlayerTeam" alignment="CENTER" contentDisplay="CENTER" layoutX="113.0" layoutY="551.0" prefHeight="27.0" prefWidth="76.0" style="-fx-background-color: #ff0000;" text="Team Red" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="238.0" layoutY="555.0" text="Loyalty: ">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="PlayerLoyalty" layoutX="289.0" layoutY="555.0" prefHeight="18.0" prefWidth="76.0" text="Normal">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtMessage" layoutX="523.0" layoutY="461.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="263.0" promptText="Write something in chat..." />
+      <TextArea fx:id="txtChat" editable="false" layoutX="523.0" layoutY="61.0" prefHeight="392.0" prefWidth="263.0" />
+      <Label layoutX="523.0" layoutY="30.0" text="Game chat:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="74.0" layoutY="57.0" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #bdc3c7;" text="I'm the map" />
+      <Label layoutX="13.0" layoutY="510.0" text="Player name:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="PlayerName" layoutX="100.0" layoutY="510.0" text="Guest_1234">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="400.0" layoutY="555.0" text="Score: ">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="PlayerScore" layoutX="470.0" layoutY="555.0" text="0">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="PlayerEnergy" alignment="CENTER" contentDisplay="CENTER" layoutX="361.0" layoutY="512.0" style="-fx-scale-z: 1000;" text="256" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnStartMatch" layoutX="605.0" layoutY="515.0" mnemonicParsing="false" onAction="#btnStartMatchPressed" prefHeight="40.0" prefWidth="100.0" text="Start Match!" />
+   </children>
+</AnchorPane>

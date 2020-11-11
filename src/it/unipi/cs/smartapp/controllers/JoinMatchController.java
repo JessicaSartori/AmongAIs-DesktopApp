@@ -44,8 +44,11 @@ public class JoinMatchController implements Controller {
         }
 
         stateMgr.setCurrentGameName(gamename);
+        stateMgr.setCreator(false);
 
         System.out.println(res[1]);
+
+        Renderer.getInstance().show("gameScene");
     }
 
     @FXML
