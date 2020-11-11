@@ -9,17 +9,22 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import it.unipi.cs.smartapp.statemanager.StateManager;
+
+
 public class GameServerDriver {
     // Instance reference
-    private static final GameServerDriver instance = new GameServerDriver();
+    private static GameServerDriver instance = null;
     // Socket (connection to Game Server)
-    private static Socket socket = null;
+    private Socket socket;
     // Read from socket (input stream)
     private BufferedReader inSocket = null;
     // Write on socket (output stream)
     private PrintWriter outSocket = null;
     // Last command timestamp (milliseconds)
     private long lastCommandSent;
+
+    private Thread connectionSaver;
 
     // Constant - Game Server hostname
     public static final String HOSTNAME = "margot.di.unipi.it";
@@ -37,7 +42,7 @@ public class GameServerDriver {
             socket = new Socket(HOSTNAME, PORT);
 
             // For debug purposes
-            System.out.println("Client socket: "+ socket);
+            System.out.println("Client socket: " + socket);
 
             // Create input stream from socket
             InputStreamReader isr = new InputStreamReader(socket.getInputStream());
@@ -47,19 +52,23 @@ public class GameServerDriver {
             OutputStreamWriter osw = new OutputStreamWriter(socket.getOutputStream());
             BufferedWriter bw = new BufferedWriter(osw);
             outSocket = new PrintWriter(bw, true);
+
+            // Initialize Thread to send NOP
+            connectionSaver = new Thread(new NOPSender(30));
+            connectionSaver.start();
+            // TODO: How to stop the thread when the process is closed?
         }
         catch (UnknownHostException e) {
             System.err.println("Can not find " + HOSTNAME);
-            System.exit(1);
         }
         catch (IOException e) {
             System.err.println("I/O exception connecting to " + HOSTNAME);
-            System.exit(1);
         }
     }
 
     // Make instance available to the outside
     public static GameServerDriver getInstance() {
+        if(instance == null) instance = new GameServerDriver();
         return instance;
     }
 
@@ -82,211 +91,58 @@ public class GameServerDriver {
     // <game> NOP : resets command timer
     public String[] sendNOP(String gameName) {
         String command = gameName + " NOP";
-        String rawResponse;
-
-        forcedWait(System.currentTimeMillis());
-
-        try {
-            outSocket.println(command);
-
-            // Update local command timestamp
-            lastCommandSent = System.currentTimeMillis();
-
-            rawResponse =  inSocket.readLine();
-        } catch (IOException e) {
-            rawResponse = "ERROR Can not communicate with Game Server";
-        }
-
-        String[] response = rawResponse.split(" ", 2);
-
-        return response;
+        String rawResponse = sendCommand(command);
+        return rawResponse.split(" ", 2);
     }
 
     // NEW <game> : creates new game
     public String[] sendNEW(String gameName) {
         String command = "NEW " + gameName;
-        String rawResponse;
-
-        forcedWait(System.currentTimeMillis());
-
-        try {
-            outSocket.println(command);
-
-            // Update local command timestamp
-            lastCommandSent = System.currentTimeMillis();
-
-            rawResponse =  inSocket.readLine();
-        } catch (IOException e) {
-            rawResponse = "ERROR Can not communicate with Game Server";
-        }
-
-        System.out.println("rawResponse:" + rawResponse);
-        String response[] = rawResponse.split(" ", 2);
-
-        return response;
+        String rawResponse = sendCommand(command);
+        return rawResponse.split(" ", 2);
     }
 
     // <game> JOIN <player-name> <nature> <role> <user-info> : joins game
     public String[] sendJOIN(String gameName, String playerName, char nature, String userInfo) {
         // <role> currently does nothing, sending - as placeholder
         String command = gameName + " JOIN " + playerName + " " + nature + " - " + userInfo;
-        String rawResponse;
-
-        forcedWait(System.currentTimeMillis());
-
-        try {
-            outSocket.println(command);
-
-            // Update local command timestamp
-            lastCommandSent = System.currentTimeMillis();
-
-            rawResponse =  inSocket.readLine();
-        } catch (IOException e) {
-            rawResponse = "ERROR Can not communicate with Game Server";
-        }
-
-        System.out.println("rawResponse:" + rawResponse);
-        String response[] = rawResponse.split(" ", 2);
-
-        return response;
+        String rawResponse = sendCommand(command);
+        return rawResponse.split(" ", 2);
     }
 
     // <game> START : starts game (if possible)
     public String[] sendSTART(String gameName) {
         String command = gameName + " START";
-        String rawResponse;
-
-        forcedWait(System.currentTimeMillis());
-
-        try {
-            outSocket.println(command);
-
-            // Update local command timestamp
-            lastCommandSent = System.currentTimeMillis();
-
-            rawResponse =  inSocket.readLine();
-        } catch (IOException e) {
-            rawResponse = "ERROR Can not communicate with Game Server";
-        }
-
-        String response[] = rawResponse.split(" ", 2);
-
-        return response;
+        String rawResponse = sendCommand(command);
+        return rawResponse.split(" ", 2);
     }
 
     // <game> LOOK : request to see the map
     public String[] sendLOOK(String gameName) {
         String command = gameName + " LOOK";
-        String line, rawResponse="";
-
-        forcedWait(System.currentTimeMillis());
-
-        try {
-            outSocket.println(command);
-
-            // Update local command timestamp
-            lastCommandSent = System.currentTimeMillis();
-
-            // The response from LOOK is multiline
-            line = inSocket.readLine();
-
-            while(!line.contains("ENDOFMAP")) {
-                if(line.equals("OK "))
-                    rawResponse += line;
-                else
-                    rawResponse += line + "\n";
-
-                line =  inSocket.readLine();
-            }
-
-        } catch (IOException e) {
-            rawResponse = "ERROR Can not communicate with Game Server";
-        }
-
-        String response[] = rawResponse.split(" ", 2);
-
-        return response;
+        String rawResponse = sendCommandLong(command, "ENDOFMAP");
+        return rawResponse.split(" ", 2);
     }
 
     // <game> MOVE <direction> : request to move player
     public String[] sendMOVE(String gameName, char direction) {
         String command = gameName + " MOVE " + direction;
-        String rawResponse;
-
-        forcedWait(System.currentTimeMillis());
-
-        try {
-            outSocket.println(command);
-
-            // Update local command timestamp
-            lastCommandSent = System.currentTimeMillis();
-
-            rawResponse =  inSocket.readLine();
-        } catch (IOException e) {
-            rawResponse = "ERROR Can not communicate with Game Server";
-        }
-
-        String response[] = rawResponse.split(" ", 2);
-
-        return response;
+        String rawResponse = sendCommand(command);
+        return rawResponse.split(" ", 2);
     }
 
     // <game> SHOOT <direction> : request to shoot
     public String[] sendSHOOT(String gameName, char direction) {
         String command = gameName + " SHOOT " + direction;
-        String rawResponse;
-
-        forcedWait(System.currentTimeMillis());
-
-        try {
-            outSocket.println(command);
-
-            // Update local command timestamp
-            lastCommandSent = System.currentTimeMillis();
-
-            rawResponse =  inSocket.readLine();
-        } catch (IOException e) {
-            rawResponse = "ERROR Can not communicate with Game Server";
-        }
-
-        String response[] = rawResponse.split(" ", 2);
-
-        return response;
+        String rawResponse = sendCommand(command);
+        return rawResponse.split(" ", 2);
     }
 
     // <game> STATUS : request to get the status
     public String[] sendSTATUS(String gameName) {
         String command = gameName + " STATUS";
-        String line, rawResponse="";
-
-        forcedWait(System.currentTimeMillis());
-
-        try {
-            outSocket.println(command);
-
-            // Update local command timestamp
-            lastCommandSent = System.currentTimeMillis();
-
-            // The response from STATUS is multiline
-            line = inSocket.readLine();
-
-            while(!line.contains("ENDOFSTATUS")) {
-                if(line.equals("OK "))
-                    rawResponse += line;
-                else
-                    rawResponse += line + "\n";
-
-                line = inSocket.readLine();
-
-            }
-        } catch (IOException e) {
-            rawResponse = "ERROR Can not communicate with Game Server";
-        }
-
-        System.out.println("rawResponse:" + rawResponse);
-        String response[] = rawResponse.split(" ", 2);
-
-        return response;
+        String rawResponse = sendCommandLong(command, "ENDOFSTATUS");
+        return rawResponse.split(" ", 2);
     }
 
     // <game> ACCUSE <player> : CURRENTLY NOT IMPLEMENTED
@@ -297,24 +153,48 @@ public class GameServerDriver {
     // <game> LEAVE <reason> : player leaves game
     public String[] sendLEAVE(String gameName, String reason) {
         String command = gameName + " LEAVE " + reason;
+        String rawResponse = sendCommand(command);
+        return rawResponse.split(" ", 2);
+    }
+
+    // Send a general command and wait for the response
+    private String sendCommand(String command) {
         String rawResponse;
 
         forcedWait(System.currentTimeMillis());
 
-        try {
-            outSocket.println(command);
-
-            // Update local command timestamp
-            lastCommandSent = System.currentTimeMillis();
-
-            rawResponse =  inSocket.readLine();
-        } catch (IOException e) {
-            rawResponse = "ERROR Can not communicate with Game Server";
+        synchronized (socket) {
+            try {
+                outSocket.println(command);
+                lastCommandSent = System.currentTimeMillis();
+                rawResponse = inSocket.readLine();
+            } catch (IOException e) {
+                rawResponse = "ERROR Can not communicate with Game Server";
+            }
         }
+        return rawResponse;
+    }
 
-        String response[] = rawResponse.split(" ", 2);
+    // Send command with a long response to be retrieved
+    private String sendCommandLong(String command, String endString) {
+        String rawResponse = "", line;
 
-        return response;
+        forcedWait(System.currentTimeMillis());
+
+        synchronized (socket) {
+            try {
+                outSocket.println(command);
+                lastCommandSent = System.currentTimeMillis();
+                while(!(line = inSocket.readLine()).contains(endString))
+                    if(line.equals("OK "))
+                        rawResponse = rawResponse.concat(line);
+                    else
+                        rawResponse = rawResponse.concat(line+"\n");
+            } catch (IOException e) {
+                rawResponse = "ERROR Can not communicate with Game Server";
+            }
+        }
+        return rawResponse;
     }
 
     // Forces to wait at least MIN_DELAY
@@ -331,5 +211,32 @@ public class GameServerDriver {
             }
         }
     }
+}
 
+
+class NOPSender implements Runnable {
+
+    private final long secondsToWait;
+
+    public NOPSender(long nseconds) {
+        secondsToWait = nseconds;
+    }
+
+    @Override
+    public void run() {
+        System.out.println("NOP Thread started");
+        try {
+            while(true) {
+                Thread.sleep(secondsToWait*1000);
+
+                String[] res = GameServerDriver.getInstance().sendNOP(StateManager.getInstance().getCurrentGameName());
+                if(!res[0].equals("OK")) {
+                    System.err.println(res[1]);
+                    return;
+                }
+            }
+        } catch (InterruptedException e) {
+            System.err.println("NOP Thread interrupted");
+        }
+    }
 }
