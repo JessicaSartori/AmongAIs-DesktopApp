@@ -22,7 +22,7 @@ public class JoinMatchController implements Controller {
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
-        gameServer = GameServerDriver.getInstance();
+        gameServer = null;
 
         gamenameErrorLabel.setText("");
 
@@ -36,6 +36,8 @@ public class JoinMatchController implements Controller {
             gamenameErrorLabel.setText("Gamename not valid");
             return;
         }
+
+        gameServer = GameServerDriver.getInstance();
 
         String[] res = gameServer.sendJOIN(gamename, stateMgr.getUsername(), 'H', "Test");
         if(!res[0].equals("OK")) {

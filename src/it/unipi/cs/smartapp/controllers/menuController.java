@@ -11,14 +11,12 @@ import it.unipi.cs.smartapp.drivers.GameServerDriver;
 public class menuController implements Controller {
 
     private StateManager stateMgr;
-    private GameServerDriver gameServer;
 
     @FXML
     private Label welcomeLabel;
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
-        gameServer = GameServerDriver.getInstance();
 
         welcomeLabel.setText("");
 

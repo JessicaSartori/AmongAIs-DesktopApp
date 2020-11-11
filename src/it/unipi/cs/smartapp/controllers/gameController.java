@@ -45,7 +45,7 @@ public class gameController implements Controller {
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
-        gameServer = GameServerDriver.getInstance();
+        gameServer = null;
 
         canvasContext = mapCanvas.getGraphicsContext2D();
 
@@ -59,6 +59,7 @@ public class gameController implements Controller {
         if (!stateMgr.getCreator()) {
             btnStartMatch.setVisible(false);
         }
+        gameServer = GameServerDriver.getInstance();
 
         // Retrieve other player info from the Game Server
         String[] res = gameServer.sendSTATUS(stateMgr.getCurrentGameName());
