@@ -50,8 +50,11 @@ public class createGameController implements Controller {
         }
 
         stateMgr.setCurrentGameName(gamename);
+        stateMgr.setCreator(true);
 
         System.out.println(res[1]);
+
+        Renderer.getInstance().show("gameScene");
 
         // Added temporarily for testing (to merge with in game view)
         Renderer.getInstance().show("map");

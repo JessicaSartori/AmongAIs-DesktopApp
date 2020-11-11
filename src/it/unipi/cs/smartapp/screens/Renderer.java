@@ -25,7 +25,6 @@ public class Renderer {
         return instance;
     }
 
-
     /* ==============================
      * Instance variables and methods
      * ============================== */

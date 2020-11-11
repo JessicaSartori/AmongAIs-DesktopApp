@@ -17,6 +17,7 @@ public class StateManager {
     private Integer loyalty = null;
 
     private Integer energy = null;
+    private Boolean creator = null;
 
     /*
      * Setters
@@ -32,6 +33,7 @@ public class StateManager {
         loyalty = l;
     }
     public void setEnergy(Integer e) { energy = e; }
+    public void setCreator(Boolean c) { creator = c; }
 
     /*
      * Getter
@@ -45,6 +47,7 @@ public class StateManager {
     public Integer getTeam() { return team; }
     public Integer getLoyalty() { return loyalty; }
     public Integer getEnergy() { return energy; }
+    public Boolean getCreator() { return creator; }
 
 
 }

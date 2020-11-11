@@ -29,7 +29,7 @@ public class GameServerDriver {
     private static final long MIN_DELAY = 500;
 
     // Constructor
-    private GameServerDriver(){
+    private GameServerDriver() {
         lastCommandSent = 0;
 
         try {
@@ -120,6 +120,7 @@ public class GameServerDriver {
             rawResponse = "ERROR Can not communicate with Game Server";
         }
 
+        System.out.println("rawResponse:" + rawResponse);
         String response[] = rawResponse.split(" ", 2);
 
         return response;
@@ -144,6 +145,7 @@ public class GameServerDriver {
             rawResponse = "ERROR Can not communicate with Game Server";
         }
 
+        System.out.println("rawResponse:" + rawResponse);
         String response[] = rawResponse.split(" ", 2);
 
         return response;
@@ -274,13 +276,14 @@ public class GameServerDriver {
                 else
                     rawResponse += line + "\n";
 
-                line =  inSocket.readLine();
+                line = inSocket.readLine();
 
             }
         } catch (IOException e) {
             rawResponse = "ERROR Can not communicate with Game Server";
         }
 
+        System.out.println("rawResponse:" + rawResponse);
         String response[] = rawResponse.split(" ", 2);
 
         return response;
@@ -315,7 +318,7 @@ public class GameServerDriver {
     }
 
     // Forces to wait at least MIN_DELAY
-    private void forcedWait(long currentTime){
+    private void forcedWait(long currentTime) {
         // Time difference in milliseconds
         long timeDifference = currentTime - lastCommandSent;
 
