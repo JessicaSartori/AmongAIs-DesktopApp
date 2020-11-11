@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.MapController">
+   <children>
+      <Canvas fx:id="mapCanvas" height="640.0" layoutX="0.0" layoutY="0.0" width="640.0" />
+      <Button fx:id="updateMapButton" layoutX="500.0" layoutY="500.0" onAction="#updMapBtnPressed" mnemonicParsing="false" text="Update" />
+   </children>
+</AnchorPane>

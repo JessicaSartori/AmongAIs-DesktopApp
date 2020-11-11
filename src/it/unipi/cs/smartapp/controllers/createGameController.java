@@ -52,6 +52,9 @@ public class createGameController implements Controller {
         stateMgr.setCurrentGameName(gamename);
 
         System.out.println(res[1]);
+
+        // Added temporarily for testing (to merge with in game view)
+        Renderer.getInstance().show("map");
     }
 
     @FXML
