@@ -97,7 +97,7 @@ public class GameServerDriver {
             rawResponse = "ERROR Can not communicate with Game Server";
         }
 
-        String response[] = rawResponse.split(" ", 2);
+        String[] response = rawResponse.split(" ", 2);
 
         return response;
     }
