@@ -17,6 +17,7 @@ public class StateManager {
     private Integer loyalty = null;
 
     private Integer energy = null;
+    private Integer score = null;
     private Boolean creator = null;
 
     private Character[][] gameMap = null;
@@ -35,6 +36,7 @@ public class StateManager {
         loyalty = l;
     }
     public void setEnergy(Integer e) { energy = e; }
+    public void setScore(Integer s) { score = s; }
     public void setCreator(Boolean c) { creator = c; }
     public void setGameMap(Character[][] m) { gameMap = m; }
 
@@ -50,6 +52,7 @@ public class StateManager {
     public Integer getTeam() { return team; }
     public Integer getLoyalty() { return loyalty; }
     public Integer getEnergy() { return energy; }
+    public Integer getScore() { return score; }
     public Boolean getCreator() { return creator; }
     public Character[][] getGameMap() { return gameMap; }
 

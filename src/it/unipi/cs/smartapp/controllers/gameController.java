@@ -68,8 +68,8 @@ public class gameController implements Controller {
         String PlayerStatus = res[1].split("\n")[2];
         String castPlayerStatus = PlayerStatus.substring(PlayerStatus.length() - 35, PlayerStatus.length() - 8);
         String[] PlayerValues = castPlayerStatus.split(" ");
-        System.out.println("Full string: " + PlayerStatus);
-        System.out.println("Cast string: " + castPlayerStatus);
+        /*System.out.println("Full string: " + PlayerStatus);
+        System.out.println("Cast string: " + castPlayerStatus);*/
 
         // It will contain team, loyalty, energy and score value
         String[] FinalValues = new String[3];
@@ -79,7 +79,7 @@ public class gameController implements Controller {
         for (int i = 0; i < PlayerValues.length; i++) {
             String[] data = PlayerValues[i].split("=");
             FinalValues[count] = data[1];
-            System.out.println(FinalValues[count]);
+            /*System.out.println(FinalValues[count]);*/
             count++;
         }
 
@@ -118,7 +118,22 @@ public class gameController implements Controller {
 
     @FXML
     private void btnUpdStatusPressed(ActionEvent event) {
-        // TODO implement update status
+        String[] res = gameServer.sendSTATUS(stateMgr.getCurrentGameName());
+        // Fetch elements in "ME" line
+        String PlayerStatus = res[1].split("\n")[2];
+        String playerValues[] = PlayerStatus.split(" ");
+
+        // Symbol ?
+
+        // Energy
+        playerValues[5] = playerValues[5].replace("energy=", "");
+        PlayerEnergy.setText(playerValues[5]);
+        stateMgr.setEnergy(Integer.parseInt(playerValues[5]));
+
+        // Score
+        playerValues[6] = playerValues[6].replace("score=", "");
+        PlayerScore.setText(playerValues[6]);
+        stateMgr.setScore(Integer.parseInt(playerValues[6]));
     }
 
     @FXML
