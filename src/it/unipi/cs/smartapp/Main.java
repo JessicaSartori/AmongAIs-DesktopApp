@@ -22,9 +22,6 @@ public class Main extends Application {
         r.addScene("joinMatch", "/it/unipi/cs/smartapp/screens/joinMatchScene.fxml");
         r.addScene("gameScene", "/it/unipi/cs/smartapp/screens/gameScene.fxml");
 
-        // Added temporarily for testing (to merge with in game view)
-        r.addScene("map", "/it/unipi/cs/smartapp/screens/mapScene.fxml");
-
         r.show("login");
         r.showStage();
     }

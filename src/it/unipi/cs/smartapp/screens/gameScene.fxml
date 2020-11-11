@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.gameController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.gameController">
    <children>
       <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" text="Quit match" />
       <Label layoutX="14.0" layoutY="470.0" text="Your status:">
@@ -54,7 +55,7 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" layoutX="74.0" layoutY="57.0" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #bdc3c7;" text="I'm the map" />
+      <Canvas fx:id="mapCanvas" layoutX="74.0" layoutY="57.0" height="416.0" width="416.0" />
       <Label layoutX="13.0" layoutY="510.0" text="Player name:">
          <font>
             <Font name="System Bold" size="14.0" />
@@ -80,6 +81,8 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="btnStartMatch" layoutX="605.0" layoutY="515.0" mnemonicParsing="false" onAction="#btnStartMatchPressed" prefHeight="40.0" prefWidth="100.0" text="Start Match!" />
+      <Button fx:id="btnStartMatch" layoutX="659.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnStartMatchPressed" prefHeight="40.0" prefWidth="100.0" text="Start Match!" />
+      <Button fx:id="btnUpdMap" layoutX="550.0" layoutY="496.0" mnemonicParsing="false" onAction="#btnUpdMapPressed" prefHeight="40.0" prefWidth="100.0" text="Update Map" />
+      <Button fx:id="btnUpdStatus" layoutX="550.0" layoutY="544.0" mnemonicParsing="false" onAction="#btnUpdStatusPressed" prefHeight="40.0" prefWidth="100.0" text="Update Status" />
    </children>
 </AnchorPane>
