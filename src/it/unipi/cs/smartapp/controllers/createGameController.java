@@ -22,7 +22,7 @@ public class createGameController implements Controller {
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
-        gameServer = GameServerDriver.getInstance();
+        gameServer = null;
 
         gamenameErrorLabel.setText("");
 
@@ -36,6 +36,8 @@ public class createGameController implements Controller {
             gamenameErrorLabel.setText("Gamename not valid");
             return;
         }
+
+        gameServer = GameServerDriver.getInstance();
 
         String[] res = gameServer.sendNEW(gamename);
         if(!res[0].equals("OK")) {
