@@ -1,13 +1,15 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.screens.Renderer;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import it.unipi.cs.smartapp.drivers.GameServerDriver;
+import it.unipi.cs.smartapp.drivers.GameServerResponse;
+import it.unipi.cs.smartapp.drivers.ResponseCode;
 import it.unipi.cs.smartapp.statemanager.StateManager;
+import it.unipi.cs.smartapp.screens.Renderer;
 
 
 public class JoinMatchController implements Controller {
@@ -22,7 +24,7 @@ public class JoinMatchController implements Controller {
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
-        gameServer = null;
+        gameServer = GameServerDriver.getInstance();
 
         gamenameErrorLabel.setText("");
 
@@ -30,26 +32,23 @@ public class JoinMatchController implements Controller {
     }
 
     @FXML
-    private void joinMatchBtnPressed(ActionEvent event) {
-        String gamename = gamenameField.getText();
-        if(gamename.isBlank()) {
+    private void btnJoinMatchPressed(ActionEvent event) {
+        String gameName = gamenameField.getText();
+        if(gameName.isBlank()) {
             gamenameErrorLabel.setText("Gamename not valid");
             return;
         }
 
-        gameServer = GameServerDriver.getInstance();
-
-        String[] res = gameServer.sendJOIN(gamename, stateMgr.getUsername(), 'H', "Test");
-        if(!res[0].equals("OK")) {
+        GameServerResponse res = gameServer.sendJOIN(gameName, stateMgr.getUsername(), 'H', "Test");
+        if(res.code == ResponseCode.ERROR) {
             gamenameErrorLabel.setText("Cannot join the lobby");
-            System.err.println(res[1]);
+            System.err.println((String) res.get("freeText"));
             return;
         }
+        System.out.println((String) res.get("freeText"));
 
-        stateMgr.setCurrentGameName(gamename);
+        stateMgr.setCurrentGameName(gameName);
         stateMgr.setCreator(false);
-
-        System.out.println(res[1]);
 
         Renderer.getInstance().show("gameScene");
     }
