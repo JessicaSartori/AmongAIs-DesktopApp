@@ -228,19 +228,26 @@ public class gameController implements Controller {
 
     private void drawMap() {
         // TODO update when maps won't be simply 32x32
-        int rowCoordinate = 0, columnCoordinate = 0, cellDimension = 13;
+        int xCanvas = 0, yCanvas = 0, cellDimension = 13;
         Character charMap[][] = stateMgr.getGameMap();
+
+        for(int r=0; r<32; r++) { // rows
+            for (int c = 0; c < 32; c++) { // columns
+                System.out.print(charMap[r][c]);
+            }
+            System.out.println("");
+        }
 
         for(int r=0; r<32; r++) { // rows
             for (int c = 0; c < 32; c++) { // columns
                 setColor(charMap[r][c]);
 
-                canvasContext.fillRect(rowCoordinate, columnCoordinate, cellDimension, cellDimension);
+                canvasContext.fillRect(xCanvas, yCanvas, cellDimension, cellDimension);
 
-                columnCoordinate += cellDimension;
+                xCanvas += cellDimension;
             }
-            rowCoordinate += cellDimension;
-            columnCoordinate = 0;
+            yCanvas += cellDimension;
+            xCanvas = 0;
         }
     }
 
