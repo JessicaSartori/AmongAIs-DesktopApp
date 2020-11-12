@@ -136,7 +136,9 @@ public class gameController implements Controller {
         String PlayerStatus = res[1].split("\n")[2];
         String playerValues[] = PlayerStatus.split(" ");
 
-        // Symbol ?
+        // Symbol
+        playerValues[1] = playerValues[1].replace("symbol=", "");
+        stateMgr.setSymbol(playerValues[1].charAt(0));
 
         // Energy
         playerValues[5] = playerValues[5].replace("energy=", "");

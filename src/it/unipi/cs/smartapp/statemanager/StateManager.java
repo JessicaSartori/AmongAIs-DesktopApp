@@ -43,7 +43,7 @@ public class StateManager {
     public void setGameMap(Character[][] m) { gameMap = m; }
 
     /*
-     * Getter
+     * Getters
      */
     public String getUsername() {
         return username;
