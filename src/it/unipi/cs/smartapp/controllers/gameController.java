@@ -136,6 +136,8 @@ public class gameController implements Controller {
         String PlayerStatus = res[1].split("\n")[2];
         String playerValues[] = PlayerStatus.split(" ");
 
+        System.out.println(res[1]);
+
         // Symbol
         playerValues[1] = playerValues[1].replace("symbol=", "");
         stateMgr.setSymbol(playerValues[1].charAt(0));
@@ -203,7 +205,7 @@ public class gameController implements Controller {
     }
 
     private Character[][] stringToCharMap(String mapResponse) {
-        // Quick fix - improvements coming soon directly on GameServerDriver
+        // Quick fix
         // Map is currently limited to 32x32 - increasing in the future
         mapResponse = mapResponse.replace("LONG\n", "");
 
@@ -242,35 +244,56 @@ public class gameController implements Controller {
         }
     }
 
-    private void setColor(Character terrain) {
-        switch (terrain) {
-            case '.': // grass
-                canvasContext.setFill(Color.GREEN);
+    private void setColor(Character value) {
+        switch (value) {
+            case '.': // Grass
+                canvasContext.setFill(Color.web("#009432"));
                 break;
-            case '#': // wall
-                canvasContext.setFill(Color.GRAY);
+            case '#': // Wall
+                canvasContext.setFill(Color.web("#718093"));
                 break;
-            case '~': // river
-                canvasContext.setFill(Color.CYAN);
+            case '~': // River
+                canvasContext.setFill(Color.web("#00FFFF"));
                 break;
-            case '@': // ocean
-                canvasContext.setFill(Color.BLUE);
+            case '@': // Ocean
+                canvasContext.setFill(Color.web("#006b6b"));
                 break;
-            case '!': // trap
-                canvasContext.setFill(Color.FIREBRICK);
+            case '!': // Trap
+                canvasContext.setFill(Color.web("#ff8a00"));
                 break;
-            case '$': // energy recharge
-                canvasContext.setFill(Color.YELLOW);
+            case '$': // Energy recharge
+                canvasContext.setFill(Color.web("#fffd50"));
                 break;
-            case '&': // barrier
-                canvasContext.setFill(Color.BROWN);
+            case '&': // Barrier
+                canvasContext.setFill(Color.web("#3b1909"));
                 break;
-            case 'x': // flags - TODO distinguish color by team
-            case 'X':
-                canvasContext.setFill(Color.ORANGE);
+            case 'X': // Flag team 0
+                canvasContext.setFill(Color.web("#fdbda7"));
                 break;
-            default: // player - TODO distinguish teams and current player from others
-                canvasContext.setFill(Color.MAGENTA);
+            case 'x': // Flag team 1
+                canvasContext.setFill(Color.web("#b7beff"));
+                break;
+            default: // Players
+                if(value == stateMgr.getSymbol()){
+                    // Current player
+                    if(stateMgr.getTeam() == 0)
+                        canvasContext.setFill(Color.web("#ff0000"));
+                    else
+                        canvasContext.setFill(Color.web("#0000ff"));
+                    break;
+                }
+                if(Character.isUpperCase(value)){
+                    // 0 -> TEAM RED, uppercase letters
+                    canvasContext.setFill(Color.web("#f25656"));
+                    break;
+                }
+                if(Character.isLowerCase(value)) {
+                    // 1 -> TEAM BLUE, lowercase letters
+                    canvasContext.setFill(Color.web("#0652DD"));
+                    break;
+                }
+                // Unknown
+                canvasContext.setFill(Color.web("#000000"));
         }
     }
 }
