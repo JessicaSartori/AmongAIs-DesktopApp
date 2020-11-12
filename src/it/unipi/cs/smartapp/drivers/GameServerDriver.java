@@ -31,7 +31,9 @@ public class GameServerDriver {
     // Constant - Game Server port
     public static final int PORT = 8421;
     // Constant - Milliseconds before next command can be sent to Game Server
-    private static final long MIN_DELAY = 500;
+    private static final long MIN_DELAY = 600;
+    // Constant - Milliseconds of inactivity before NOP is sent
+    private static final long NOP_DELAY = 30*1000;
 
     // Constructor
     private GameServerDriver() { }
@@ -59,32 +61,49 @@ public class GameServerDriver {
      */
 
     // <game> NOP : resets command timer
-    public String[] sendNOP(String gameName) {
+    public GameServerResponse sendNOP(String gameName) {
         String command = gameName + " NOP";
-        String rawResponse = sendCommand(command);
-        return rawResponse.split(" ", 2);
+        String[] rawResponse = sendCommand(command).split(" ", 2);
+
+        GameServerResponse res = new GameServerResponse(
+                (rawResponse[0].equals("OK")) ? ResponseCode.OK : ResponseCode.ERROR);
+        res.put("freeText", rawResponse[1]);
+
+        return res;
     }
 
-    // NEW <game> : creates new game
-    public String[] sendNEW(String gameName) {
+    public GameServerResponse sendNEW(String gameName) {
         String command = "NEW " + gameName;
-        String rawResponse = sendCommand(command);
-        return rawResponse.split(" ", 2);
+        String[] rawResponse = sendCommand(command).split(" ", 2);
+
+        GameServerResponse res = new GameServerResponse(
+                (rawResponse[0].equals("OK")) ? ResponseCode.OK : ResponseCode.ERROR);
+        res.put("freeText", rawResponse[1]);
+
+        return res;
     }
 
-    // <game> JOIN <player-name> <nature> <role> <user-info> : joins game
-    public String[] sendJOIN(String gameName, String playerName, char nature, String userInfo) {
-        // <role> currently does nothing, sending - as placeholder
+    public GameServerResponse sendJOIN(String gameName, String playerName, char nature, String userInfo) {
         String command = gameName + " JOIN " + playerName + " " + nature + " - " + userInfo;
-        String rawResponse = sendCommand(command);
-        return rawResponse.split(" ", 2);
+        String[] rawResponse = sendCommand(command).split(" ", 2);
+
+        GameServerResponse res = new GameServerResponse(
+                (rawResponse[0].equals("OK")) ? ResponseCode.OK : ResponseCode.ERROR);
+        res.put("freeText", rawResponse[1]);
+
+        return res;
     }
 
     // <game> START : starts game (if possible)
-    public String[] sendSTART(String gameName) {
+    public GameServerResponse sendSTART(String gameName) {
         String command = gameName + " START";
-        String rawResponse = sendCommand(command);
-        return rawResponse.split(" ", 2);
+        String[] rawResponse = sendCommand(command).split(" ", 2);
+
+        GameServerResponse res = new GameServerResponse(
+                (rawResponse[0].equals("OK")) ? ResponseCode.OK : ResponseCode.ERROR);
+        res.put("freeText", rawResponse[1]);
+
+        return res;
     }
 
     // <game> LOOK : request to see the map
@@ -121,10 +140,17 @@ public class GameServerDriver {
     }
 
     // <game> LEAVE <reason> : player leaves game
-    public String[] sendLEAVE(String gameName, String reason) {
+    public GameServerResponse sendLEAVE(String gameName, String reason) {
         String command = gameName + " LEAVE " + reason;
-        String rawResponse = sendCommand(command);
-        return rawResponse.split(" ", 2);
+        String[] rawResponse = sendCommand(command).split(" ", 2);
+
+        GameServerResponse res = new GameServerResponse(
+                (rawResponse[0].equals("OK")) ? ResponseCode.OK : ResponseCode.ERROR);
+        res.put("freeText", rawResponse[1]);
+
+        clearSocket();
+
+        return res;
     }
 
     // Send a general command and wait for the response
@@ -168,7 +194,6 @@ public class GameServerDriver {
 
             // Read the response
             while(!(line = inSocket.readLine()).contains(endString)) {
-                System.out.println(line);
                 if (line.equals("OK "))
                     rawResponse = rawResponse.concat(line);
                 else
@@ -178,8 +203,7 @@ public class GameServerDriver {
             rawResponse = "ERROR Can not communicate with Game Server";
             clearSocket();
         } catch (NullPointerException e) {
-            System.err.println("Idk");
-            rawResponse = "ERROR idk";
+            rawResponse = "ERROR Socket closed";
             clearSocket();
         }
         return rawResponse;
@@ -198,13 +222,13 @@ public class GameServerDriver {
                 e.printStackTrace();
             }
         }
+        // System.err.println(timeDifference);
     }
 
     // Send a NOP request in case the last sent request happened more than 30 seconds ago
-    public String[] sendConditionalNOP(String gamename) {
-        String[] res = null;
-        if(System.currentTimeMillis() - lastCommandSent > 30*1000) {
-            System.out.println(System.currentTimeMillis() - lastCommandSent);
+    public GameServerResponse sendConditionalNOP(String gamename) {
+        GameServerResponse res = null;
+        if(System.currentTimeMillis() - lastCommandSent > NOP_DELAY) {
             res = sendNOP(gamename);
         }
         return res;
@@ -248,16 +272,14 @@ public class GameServerDriver {
         try { socket.close(); }
         catch (Exception e) { System.err.println("clearSocket: " + e.toString()); }
 
-        connectionSaver.interrupt();
-        try{
-            connectionSaver.join();
-        } catch (InterruptedException e) {
-            System.err.println("Interrupted while joining...");
-        }
+        try { connectionSaver.interrupt(); connectionSaver.join(); }
+        catch (Exception e) { System.err.println("clearSocket: " + e.toString()); }
 
         inSocket = null;
         outSocket = null;
         socket = null;
+
+        System.err.println("Socket closed");
     }
 
 }
@@ -279,13 +301,13 @@ class NOPSender implements Runnable {
             while(true) {
                 Thread.sleep(secondsToWait*1000);
 
-                String[] res = GameServerDriver.getInstance().sendConditionalNOP(StateManager.getInstance().getCurrentGameName());
+                GameServerResponse res = GameServerDriver.getInstance().sendConditionalNOP(StateManager.getInstance().getCurrentGameName());
                 if(res == null) continue;
-                if(res[0].equals("ERROR")) {
-                    System.err.println(res[1]);
+                if(res.code == ResponseCode.ERROR) {
+                    System.err.println((String) res.get("freeText"));
                     return;
                 }
-                System.out.println("NOP Sent");
+                System.out.println((String) res.get("freeText"));
             }
         } catch (InterruptedException e) {
             System.out.println("NOP Thread interrupted");

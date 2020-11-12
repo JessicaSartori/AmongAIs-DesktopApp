@@ -1,7 +1,7 @@
 package it.unipi.cs.smartapp.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -34,7 +34,7 @@ public class loginController implements Controller {
     }
 
     @FXML
-    private void playAsGuestBtnPressed(ActionEvent event) {
+    private void btnPlayAsGuestPressed(ActionEvent event) {
         String username = usernameField.getText();
         if(username.isBlank()) {
             usernameErrorLabel.setText("Username not valid");
