@@ -19,6 +19,7 @@ public class StateManager {
     private Integer energy = null;
     private Integer score = null;
     private Boolean creator = null;
+    private Character symbol = null;
 
     private Character[][] gameMap = null;
 
@@ -38,6 +39,7 @@ public class StateManager {
     public void setEnergy(Integer e) { energy = e; }
     public void setScore(Integer s) { score = s; }
     public void setCreator(Boolean c) { creator = c; }
+    public void setSymbol(Character c) { symbol = c; }
     public void setGameMap(Character[][] m) { gameMap = m; }
 
     /*
@@ -54,6 +56,7 @@ public class StateManager {
     public Integer getEnergy() { return energy; }
     public Integer getScore() { return score; }
     public Boolean getCreator() { return creator; }
+    public Character getSymbol() { return symbol; }
     public Character[][] getGameMap() { return gameMap; }
 
 }
