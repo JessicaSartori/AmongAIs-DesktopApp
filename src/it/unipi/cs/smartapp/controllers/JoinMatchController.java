@@ -41,7 +41,8 @@ public class JoinMatchController implements Controller {
 
         String[] res = gameServer.sendJOIN(gamename, stateMgr.getUsername(), 'H', "Test");
         if(!res[0].equals("OK")) {
-            gamenameErrorLabel.setText(res[1]);
+            gamenameErrorLabel.setText("Cannot join the lobby");
+            System.err.println(res[1]);
             return;
         }
 

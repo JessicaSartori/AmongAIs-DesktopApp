@@ -42,12 +42,14 @@ public class createGameController implements Controller {
         String[] res = gameServer.sendNEW(gamename);
         if(!res[0].equals("OK")) {
             gamenameErrorLabel.setText("Cannot create the match");
+            System.err.println(res[1]);
             return;
         }
 
         res = gameServer.sendJOIN(gamename, stateMgr.getUsername(), 'H', "Test");
         if(!res[0].equals("OK")) {
             gamenameErrorLabel.setText("Cannot join the lobby");
+            System.err.println(res[1]);
             return;
         }
 
