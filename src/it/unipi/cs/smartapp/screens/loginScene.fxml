@@ -15,7 +15,7 @@
 
       <TextField fx:id="usernameField" layoutX="324.0" layoutY="178.0" prefHeight="25.0" prefWidth="187.0" promptText="Username" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="210.0" />
 
-      <Button layoutX="374.0" layoutY="239.0" mnemonicParsing="false" onAction="#playAsGuestBtnPressed" text="Play as Guest" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="260.0" />
+      <Button layoutX="374.0" layoutY="239.0" mnemonicParsing="false" onAction="#btnPlayAsGuestPressed" text="Play as Guest" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="260.0" />
       <Label fx:id="usernameErrorLabel" layoutX="300.0" layoutY="193.0" prefHeight="17.0" prefWidth="200.0" text="usernameErrorLabel" textFill="RED" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="193.0" />
    </children>
 

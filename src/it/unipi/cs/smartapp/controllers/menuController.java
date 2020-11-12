@@ -6,7 +6,6 @@ import javafx.scene.control.Label;
 
 import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.statemanager.StateManager;
-import it.unipi.cs.smartapp.drivers.GameServerDriver;
 
 public class menuController implements Controller {
 
@@ -30,17 +29,17 @@ public class menuController implements Controller {
     }
 
     @FXML
-    private void newMatchBtnPressed(ActionEvent event) {
+    private void btnNewMatchPressed(ActionEvent event) {
         Renderer.getInstance().show("createMatch");
     }
 
     @FXML
-    private void joinMatchBtnPressed(ActionEvent event) {
+    private void btnJoinMatchPressed(ActionEvent event) {
         Renderer.getInstance().show("joinMatch");
     }
 
     @FXML
-    private void backBtnPressed(ActionEvent event) {
+    private void btnBackPressed(ActionEvent event) {
         Renderer.getInstance().show("login");
     }
 

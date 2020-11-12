@@ -1,9 +1,5 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.drivers.GameServerDriver;
-import it.unipi.cs.smartapp.screens.Renderer;
-import it.unipi.cs.smartapp.statemanager.StateManager;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -13,9 +9,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
+import javafx.event.ActionEvent;
 
-import java.awt.*;
 import java.util.ArrayList;
+
+import it.unipi.cs.smartapp.drivers.GameServerDriver;
+import it.unipi.cs.smartapp.drivers.GameServerResponse;
+import it.unipi.cs.smartapp.drivers.ResponseCode;
+import it.unipi.cs.smartapp.screens.Renderer;
+import it.unipi.cs.smartapp.statemanager.StateManager;
 
 public class gameController implements Controller {
     private StateManager stateMgr;
@@ -46,7 +48,7 @@ public class gameController implements Controller {
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
-        gameServer = null;
+        gameServer = GameServerDriver.getInstance();
 
         canvasContext = mapCanvas.getGraphicsContext2D();
 
@@ -58,8 +60,6 @@ public class gameController implements Controller {
         if (!stateMgr.getCreator()) {
             btnStartMatch.setVisible(false);
         }
-
-        gameServer = GameServerDriver.getInstance();
 
         // Retrieve other player info from the Game Server
         String[] response = gameServer.sendSTATUS(stateMgr.getCurrentGameName());
@@ -113,17 +113,17 @@ public class gameController implements Controller {
 
     @FXML
     public void btnGoBackPressed(ActionEvent event) {
-        if (gameServer == null) {
-            gameServer = GameServerDriver.getInstance();
-        }
+        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Leaving the game");
 
-        String[] response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Leaving the game.");
-
-        if (response[0].equals("OK")) {
-            Renderer.getInstance().show("mainMenu");
-        } else {
-            System.out.println("Error exiting the game...\n");
+        if (response.code == ResponseCode.ERROR) {
+            System.err.println((String) response.get("freeText"));
+            return;
         }
+        System.out.println((String) response.get("freeText"));
+
+        stateMgr.setCurrentGameName(null);
+
+        Renderer.getInstance().show("mainMenu");
     }
 
     @FXML
@@ -159,8 +159,8 @@ public class gameController implements Controller {
 
     @FXML
     public void btnStartMatchPressed(ActionEvent event) {
-        String[] res = gameServer.sendSTART(stateMgr.getCurrentGameName());
-        System.out.println(res[0] + " " + res[1]);
+        GameServerResponse res = gameServer.sendSTART(stateMgr.getCurrentGameName());
+        System.out.println((String) res.get("freeText"));
     }
 
     // Update ProgressBar correctly
