@@ -63,13 +63,12 @@ public class gameController implements Controller {
 
         // Retrieve other player info from the Game Server
         String[] res = gameServer.sendSTATUS(stateMgr.getCurrentGameName());
-
+        return;
+/*
         // Split the Game Server response
         String PlayerStatus = res[1].split("\n")[2];
         String castPlayerStatus = PlayerStatus.substring(PlayerStatus.length() - 35, PlayerStatus.length() - 8);
         String[] PlayerValues = castPlayerStatus.split(" ");
-        /*System.out.println("Full string: " + PlayerStatus);
-        System.out.println("Cast string: " + castPlayerStatus);*/
 
         // It will contain team, loyalty, energy and score value
         String[] FinalValues = new String[3];
@@ -79,7 +78,6 @@ public class gameController implements Controller {
         for (int i = 0; i < PlayerValues.length; i++) {
             String[] data = PlayerValues[i].split("=");
             FinalValues[count] = data[1];
-            /*System.out.println(FinalValues[count]);*/
             count++;
         }
 
@@ -105,7 +103,7 @@ public class gameController implements Controller {
             PlayerLoyalty.setStyle("-fx-text-fill: red;");
         }
 
-        updateMap();
+        updateMap();*/
     }
 
     @FXML
