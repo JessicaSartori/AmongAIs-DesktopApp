@@ -65,7 +65,7 @@ public class gameController implements Controller {
         }
 
         // Retrieve other player info from the Game Server
-        btnUpdStatusPressed(null);
+        updateStatus();
 
         // Update the map
         updateMap();
@@ -75,9 +75,6 @@ public class gameController implements Controller {
 
             @Override
             public void handle(KeyEvent keyEvent) {
-                System.out.println("Key pressed: " + keyEvent.getCode().toString());
-                if(keyEvent.getCode() == KeyCode.DOWN)
-                    System.out.println("Arrow down");
 
                 if (!stateMgr.getGameState().equals("ACTIVE")) {
                     Alert message = new Alert(Alert.AlertType.INFORMATION);
@@ -118,14 +115,16 @@ public class gameController implements Controller {
     }
 
     public void tryToShoot(Character direction){
-        System.out.println("Direction: " + direction);
         String res[] = gameServer.sendSHOOT(stateMgr.getCurrentGameName(), direction);
 
-        if(res[0] == "OK")
-            System.out.println("Ok shot");
+        if(res[0].equals("OK")){
+            Character landed = res[1].charAt(0);
+            System.out.println("Ok shot. Landed on: " + landed);
 
-        // TODO - find out coordinates of shot landing
+            // TODO - find out coordinates of landed
 
+            updateStatus();
+        }
     }
 
     @FXML
@@ -147,7 +146,48 @@ public class gameController implements Controller {
     private void btnUpdMapPressed(ActionEvent event) { updateMap(); }
 
     @FXML
-    private void btnUpdStatusPressed(ActionEvent event) {
+    private void btnUpdStatusPressed(ActionEvent event) { updateStatus(); }
+
+    @FXML
+    public void txtSendMessage(ActionEvent event) {
+        txtChat.appendText("\n" + stateMgr.getUsername() + ": " + txtMessage.getText());
+        txtMessage.setText("");
+    }
+
+    @FXML
+    public void btnStartMatchPressed(ActionEvent event) {
+        GameServerResponse res = gameServer.sendSTART(stateMgr.getCurrentGameName());
+
+        if (res.code != ResponseCode.OK) {
+            Alert message = new Alert(Alert.AlertType.ERROR);
+            message.setTitle("Error");
+            message.setContentText(res.freeText);
+            message.showAndWait();
+            return;
+        }
+
+        System.out.println(res.freeText);
+
+        Alert message = new Alert(Alert.AlertType.INFORMATION);
+        message.setTitle("Game started!");
+        message.setContentText("The minimum number of player is reached, the game is started!");
+        message.showAndWait();
+    }
+
+    // Update ProgressBar correctly
+    public void updateEnergy(Integer energyValue) {
+        if (energyValue < 0) {
+            energyValue = 0;
+        }
+
+        stateMgr.setEnergy(energyValue);
+        PlayerEnergy.setText(energyValue.toString());
+        Double barValue = (energyValue < 0) ? 0 : (energyValue / 256.0);
+        PlayerEnergyBar.setProgress(Double.parseDouble(barValue.toString()));
+    }
+
+    // Update general Status
+    public void updateStatus() {
         GameServerResponse res = gameServer.sendSTATUS(stateMgr.getCurrentGameName());
 
         if (res.code != ResponseCode.OK) {
@@ -203,44 +243,7 @@ public class gameController implements Controller {
         }
     }
 
-    @FXML
-    public void txtSendMessage(ActionEvent event) {
-        txtChat.appendText("\n" + stateMgr.getUsername() + ": " + txtMessage.getText());
-        txtMessage.setText("");
-    }
-
-    @FXML
-    public void btnStartMatchPressed(ActionEvent event) {
-        GameServerResponse res = gameServer.sendSTART(stateMgr.getCurrentGameName());
-
-        if (res.code != ResponseCode.OK) {
-            Alert message = new Alert(Alert.AlertType.ERROR);
-            message.setTitle("Error");
-            message.setContentText(res.freeText);
-            message.showAndWait();
-            return;
-        }
-
-        System.out.println(res.freeText);
-
-        Alert message = new Alert(Alert.AlertType.INFORMATION);
-        message.setTitle("Game started!");
-        message.setContentText("The minimum number of player is reached, the game is started!");
-        message.showAndWait();
-    }
-
-    // Update ProgressBar correctly
-    public void updateEnergy(Integer energyValue) {
-        if (energyValue < 0) {
-            energyValue = 0;
-        }
-
-        stateMgr.setEnergy(energyValue);
-        PlayerEnergy.setText(energyValue.toString());
-        Double barValue = (energyValue < 0) ? 0 : (energyValue / 256.0);
-        PlayerEnergyBar.setProgress(Double.parseDouble(barValue.toString()));
-    }
-
+    // Update gameMap
     public void updateMap() {
         String response[] = gameServer.sendLOOK(stateMgr.getCurrentGameName());
 
