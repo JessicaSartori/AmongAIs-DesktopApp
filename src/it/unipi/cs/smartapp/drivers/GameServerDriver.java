@@ -118,7 +118,7 @@ public class GameServerDriver {
         GameServerResponse res;
 
         if(code == ResponseCode.OK) {
-            if(rawResponse.length == 1) {
+            if(rawResponse[1].length() == 1) {
                 // A single char -> map cell
                 res = new GameServerResponse(code, rawResponse[1].toCharArray()[0], "Shot");
             } else {
@@ -195,8 +195,7 @@ public class GameServerDriver {
         String rawResponse, line;
 
         try {
-            if(socket == null)
-                setupSocket();
+            if(socket == null) setupSocket();
 
             // Send request
             forcedWait(System.currentTimeMillis());
