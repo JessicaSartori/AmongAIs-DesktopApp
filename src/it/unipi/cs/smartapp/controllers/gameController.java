@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -74,6 +75,10 @@ public class gameController implements Controller {
 
             @Override
             public void handle(KeyEvent keyEvent) {
+                System.out.println("Key pressed: " + keyEvent.getCode().toString());
+                if(keyEvent.getCode() == KeyCode.DOWN)
+                    System.out.println("Arrow down");
+
                 if (!stateMgr.getGameState().equals("ACTIVE")) {
                     Alert message = new Alert(Alert.AlertType.INFORMATION);
                     message.setTitle("Information");
@@ -94,9 +99,33 @@ public class gameController implements Controller {
 
                     case "S":
                         break;
+
+                    case "I":
+                        tryToShoot('N');
+                        break;
+                    case "J":
+                        tryToShoot('W');
+                        break;
+                    case "K":
+                        tryToShoot('S');
+                        break;
+                    case "L":
+                        tryToShoot('E');
+                        break;
                 }
             }
         });
+    }
+
+    public void tryToShoot(Character direction){
+        System.out.println("Direction: " + direction);
+        String res[] = gameServer.sendSHOOT(stateMgr.getCurrentGameName(), direction);
+
+        if(res[0] == "OK")
+            System.out.println("Ok shot");
+
+        // TODO - find out coordinates of shot landing
+
     }
 
     @FXML
@@ -219,8 +248,7 @@ public class gameController implements Controller {
             stateMgr.setGameMap(stringToCharMap(response[1]));
             drawMap();
         } else {
-            canvasContext.setStroke(Color.RED);
-            canvasContext.strokeText("CANVAS ERROR!", 314, 314);
+            System.err.println(response[1]);
         }
     }
 
