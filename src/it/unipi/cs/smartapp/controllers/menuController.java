@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.statemanager.StateManager;
 
+
 public class menuController implements Controller {
 
     private StateManager stateMgr;

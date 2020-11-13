@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import it.unipi.cs.smartapp.statemanager.StateManager;
 import it.unipi.cs.smartapp.screens.Renderer;
 
+
 public class loginController implements Controller {
 
     private StateManager stateMgr;
