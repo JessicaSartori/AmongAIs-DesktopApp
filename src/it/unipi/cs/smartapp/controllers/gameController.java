@@ -4,20 +4,15 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
-
-import java.util.ArrayList;
 
 import it.unipi.cs.smartapp.drivers.GameServerDriver;
 import it.unipi.cs.smartapp.drivers.GameServerResponse;
 import it.unipi.cs.smartapp.drivers.ResponseCode;
 import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.statemanager.StateManager;
+
 
 public class gameController implements Controller {
     private StateManager stateMgr;
@@ -62,53 +57,10 @@ public class gameController implements Controller {
         }
 
         // Retrieve other player info from the Game Server
-        String[] response = gameServer.sendSTATUS(stateMgr.getCurrentGameName());
+        btnUpdStatusPressed(null);
 
-        if (response[0].equals("OK")) {
-            String PlayerStatusRow = response[1].split("\n")[2];      // Select only ME row
-            String castPlayerStatusRow = PlayerStatusRow.substring(4);      // Remove "ME: "
-            String[] PlayerValues = castPlayerStatusRow.split(" ");  // Split by " "
-
-            ArrayList<String> finalValues = new ArrayList<>();
-
-            // Save symbol, name, team, loyalty, energy and score
-            for (int i = 0; i < PlayerValues.length; i++) {
-                String[] data = PlayerValues[i].split("=");
-                finalValues.add(data[1]);
-            }
-
-            // Update State Manager
-            stateMgr.setSymbol(finalValues.get(0).charAt(0));
-            stateMgr.setUsername(finalValues.get(1));
-            stateMgr.setTeam(Integer.parseInt(finalValues.get(2)));
-            stateMgr.setLoyalty(Integer.parseInt(finalValues.get(3)));
-            stateMgr.setEnergy(Integer.parseInt(finalValues.get(4)));
-            stateMgr.setScore(Integer.parseInt(finalValues.get(5)));
-
-            // Update Game View Values
-            PlayerName.setText(stateMgr.getUsername());
-
-            String team = (stateMgr.getTeam() == 0) ? "Red Team" : "Blue Team";
-            PlayerTeam.setText(team);
-            if (PlayerTeam.getText() == "Blue Team") {
-                PlayerTeam.setStyle("-fx-background-color: blue");
-            }
-
-            PlayerScore.setText(stateMgr.getScore().toString());
-            PlayerEnergy.setText(stateMgr.getEnergy().toString());
-
-            String loyalty = (stateMgr.getLoyalty() == 0) ? "Normal" : "Impostor";
-            PlayerLoyalty.setText(loyalty);
-            if (PlayerLoyalty.getText() == "Impostor") {
-                PlayerLoyalty.setStyle("-fx-text-fill: red;");
-            }
-
-            updateMap();
-        } else {
-            Alert errorMessage = new Alert(Alert.AlertType.ERROR);
-            errorMessage.setTitle("Can't update player status");
-            errorMessage.setContentText("There was an error updating the player status");
-        }
+        // Update the map
+        updateMap();
     }
 
     @FXML
@@ -116,10 +68,10 @@ public class gameController implements Controller {
         GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Leaving the game");
 
         if (response.code == ResponseCode.ERROR) {
-            System.err.println((String) response.get("freeText"));
+            System.err.println(response.freeText);
             return;
         }
-        System.out.println((String) response.get("freeText"));
+        System.out.println(response.freeText);
 
         stateMgr.setCurrentGameName(null);
 
@@ -131,26 +83,46 @@ public class gameController implements Controller {
 
     @FXML
     private void btnUpdStatusPressed(ActionEvent event) {
-        String[] res = gameServer.sendSTATUS(stateMgr.getCurrentGameName());
-        // Fetch elements in "ME" line
-        String PlayerStatus = res[1].split("\n")[2];
-        String playerValues[] = PlayerStatus.split(" ");
+        GameServerResponse res = gameServer.sendSTATUS(stateMgr.getCurrentGameName());
 
-        System.out.println(res[1]);
+        if (res.code != ResponseCode.OK) {
+            System.err.println(res.freeText);
+            return;
+        }
+        System.out.println(res.freeText);
 
-        // Symbol
-        playerValues[1] = playerValues[1].replace("symbol=", "");
-        stateMgr.setSymbol(playerValues[1].charAt(0));
+        String[] data = (String[]) res.data;
 
-        // Energy
-        playerValues[5] = playerValues[5].replace("energy=", "");
-        PlayerEnergy.setText(playerValues[5]);
-        stateMgr.setEnergy(Integer.parseInt(playerValues[5]));
+        // Update game status
+        String GA = data[0].substring(4); // Remove "GA: "
+        stateMgr.updateGameState(GA);
 
-        // Score
-        playerValues[6] = playerValues[6].replace("score=", "");
-        PlayerScore.setText(playerValues[6]);
-        stateMgr.setScore(Integer.parseInt(playerValues[6]));
+        // Update player status
+        String ME = data[1].substring(4); // Remove "ME: "
+        stateMgr.player.updateWith(ME);
+
+        for (int i = 2; i < data.length; i++) {
+            String PL = data[i].substring(4); // Remove "PL: "
+            stateMgr.updatePlayerStatus(PL);
+        }
+
+        // Update Game View Values
+        PlayerName.setText(stateMgr.getUsername());
+
+        String team = (stateMgr.getTeam() == 0) ? "Red Team" : "Blue Team";
+        PlayerTeam.setText(team);
+        if (PlayerTeam.getText() == "Blue Team") {
+            PlayerTeam.setStyle("-fx-background-color: blue");
+        }
+
+        PlayerScore.setText(stateMgr.getScore().toString());
+        PlayerEnergy.setText(stateMgr.getEnergy().toString());
+
+        String loyalty = (stateMgr.getLoyalty() == 0) ? "Normal" : "Impostor";
+        PlayerLoyalty.setText(loyalty);
+        if (PlayerLoyalty.getText() == "Impostor") {
+            PlayerLoyalty.setStyle("-fx-text-fill: red;");
+        }
     }
 
     @FXML
@@ -162,7 +134,7 @@ public class gameController implements Controller {
     @FXML
     public void btnStartMatchPressed(ActionEvent event) {
         GameServerResponse res = gameServer.sendSTART(stateMgr.getCurrentGameName());
-        System.out.println((String) res.get("freeText"));
+        System.out.println(res.freeText);
     }
 
     // Update ProgressBar correctly
