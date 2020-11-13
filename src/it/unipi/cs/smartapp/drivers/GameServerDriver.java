@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 import it.unipi.cs.smartapp.statemanager.StateManager;
 
@@ -64,46 +65,34 @@ public class GameServerDriver {
     public GameServerResponse sendNOP(String gameName) {
         String command = gameName + " NOP";
         String[] rawResponse = sendCommand(command).split(" ", 2);
+        ResponseCode code = ResponseCode.fromString(rawResponse[0]);
 
-        GameServerResponse res = new GameServerResponse(
-                (rawResponse[0].equals("OK")) ? ResponseCode.OK : ResponseCode.ERROR);
-        res.put("freeText", rawResponse[1]);
-
-        return res;
+        return new GameServerResponse(code, null, rawResponse[1]);
     }
 
     public GameServerResponse sendNEW(String gameName) {
         String command = "NEW " + gameName;
         String[] rawResponse = sendCommand(command).split(" ", 2);
+        ResponseCode code = ResponseCode.fromString(rawResponse[0]);
 
-        GameServerResponse res = new GameServerResponse(
-                (rawResponse[0].equals("OK")) ? ResponseCode.OK : ResponseCode.ERROR);
-        res.put("freeText", rawResponse[1]);
-
-        return res;
+        return new GameServerResponse(code, null, rawResponse[1]);
     }
 
     public GameServerResponse sendJOIN(String gameName, String playerName, char nature, String userInfo) {
         String command = gameName + " JOIN " + playerName + " " + nature + " - " + userInfo;
         String[] rawResponse = sendCommand(command).split(" ", 2);
+        ResponseCode code = ResponseCode.fromString(rawResponse[0]);
 
-        GameServerResponse res = new GameServerResponse(
-                (rawResponse[0].equals("OK")) ? ResponseCode.OK : ResponseCode.ERROR);
-        res.put("freeText", rawResponse[1]);
-
-        return res;
+        return new GameServerResponse(code, null, rawResponse[1]);
     }
 
     // <game> START : starts game (if possible)
     public GameServerResponse sendSTART(String gameName) {
         String command = gameName + " START";
         String[] rawResponse = sendCommand(command).split(" ", 2);
+        ResponseCode code = ResponseCode.fromString(rawResponse[0]);
 
-        GameServerResponse res = new GameServerResponse(
-                (rawResponse[0].equals("OK")) ? ResponseCode.OK : ResponseCode.ERROR);
-        res.put("freeText", rawResponse[1]);
-
-        return res;
+        return new GameServerResponse(code, null, rawResponse[1]);
     }
 
     // <game> LOOK : request to see the map
@@ -127,11 +116,21 @@ public class GameServerDriver {
         return rawResponse.split(" ", 2);
     }
 
-    // <game> STATUS : request to get the status
-    public String[] sendSTATUS(String gameName) {
+    public GameServerResponse sendSTATUS(String gameName) {
         String command = gameName + " STATUS";
-        String rawResponse = sendCommandLong(command, "ENDOFSTATUS");
-        return rawResponse.split(" ", 2);
+        String[] rawResponse = sendCommandLong(command, "ENDOFSTATUS").split(" ", 2);
+
+        ResponseCode code = ResponseCode.fromString(rawResponse[0]);
+        GameServerResponse res;
+
+        if(code == ResponseCode.OK) {
+            String[] content = rawResponse[1].split("\n");
+            res = new GameServerResponse(code, Arrays.copyOfRange(content, 1, content.length), content[0]);
+        } else {
+            res = new GameServerResponse(code, null, rawResponse[1]);
+        }
+
+        return res;
     }
 
     // <game> ACCUSE <player> : CURRENTLY NOT IMPLEMENTED
@@ -143,14 +142,11 @@ public class GameServerDriver {
     public GameServerResponse sendLEAVE(String gameName, String reason) {
         String command = gameName + " LEAVE " + reason;
         String[] rawResponse = sendCommand(command).split(" ", 2);
-
-        GameServerResponse res = new GameServerResponse(
-                (rawResponse[0].equals("OK")) ? ResponseCode.OK : ResponseCode.ERROR);
-        res.put("freeText", rawResponse[1]);
+        ResponseCode code = ResponseCode.fromString(rawResponse[0]);
 
         clearSocket();
 
-        return res;
+        return new GameServerResponse(code, null, rawResponse[1]);
     }
 
     // Send a general command and wait for the response
@@ -158,8 +154,7 @@ public class GameServerDriver {
         String rawResponse;
 
         try {
-            if(socket == null)
-                setupSocket();
+            if(socket == null) setupSocket();
 
             // Send request
             forcedWait(System.currentTimeMillis());
@@ -169,11 +164,11 @@ public class GameServerDriver {
             // Wait for response
             rawResponse = inSocket.readLine();
             if(rawResponse == null) {
-                rawResponse = "ERROR Socket closed";
+                rawResponse = "FAIL Socket closed";
                 clearSocket();
             }
         } catch (IOException e) {
-            rawResponse = "ERROR Can not communicate with Game Server";
+            rawResponse = "FAIL Can not communicate with Game Server";
             clearSocket();
         }
         return rawResponse;
@@ -192,18 +187,18 @@ public class GameServerDriver {
             outSocket.println(command);
             lastCommandSent = System.currentTimeMillis();
 
-            // Read the response
-            while(!(line = inSocket.readLine()).contains(endString)) {
-                if (line.equals("OK "))
-                    rawResponse = rawResponse.concat(line);
-                else
+            rawResponse = inSocket.readLine();
+            if(!rawResponse.contains("ERROR")) {
+                rawResponse = rawResponse.concat("\n");
+                while(!(line = inSocket.readLine()).contains(endString)) {
                     rawResponse = rawResponse.concat(line + "\n");
+                }
             }
         } catch (IOException e) {
-            rawResponse = "ERROR Can not communicate with Game Server";
+            rawResponse = "FAIL Can not communicate with Game Server";
             clearSocket();
         } catch (NullPointerException e) {
-            rawResponse = "ERROR Socket closed";
+            rawResponse = "FAIL Socket closed";
             clearSocket();
         }
         return rawResponse;
@@ -226,10 +221,10 @@ public class GameServerDriver {
     }
 
     // Send a NOP request in case the last sent request happened more than 30 seconds ago
-    public GameServerResponse sendConditionalNOP(String gamename) {
+    public GameServerResponse sendConditionalNOP(String gameName) {
         GameServerResponse res = null;
         if(System.currentTimeMillis() - lastCommandSent > NOP_DELAY) {
-            res = sendNOP(gamename);
+            res = sendNOP(gameName);
         }
         return res;
     }
@@ -281,7 +276,6 @@ public class GameServerDriver {
 
         System.err.println("Socket closed");
     }
-
 }
 
 /*
@@ -298,19 +292,18 @@ class NOPSender implements Runnable {
     public void run() {
         System.out.println("NOP Thread started");
         try {
-            while(true) {
+            while(!Thread.currentThread().isInterrupted()) {
                 Thread.sleep(secondsToWait*1000);
 
                 GameServerResponse res = GameServerDriver.getInstance().sendConditionalNOP(StateManager.getInstance().getCurrentGameName());
                 if(res == null) continue;
-                if(res.code == ResponseCode.ERROR) {
-                    System.err.println((String) res.get("freeText"));
+                if(res.code == ResponseCode.FAIL) {
+                    System.err.println(res.freeText);
                     return;
                 }
-                System.out.println((String) res.get("freeText"));
+                System.out.println(res.freeText);
             }
-        } catch (InterruptedException e) {
-            System.out.println("NOP Thread interrupted");
-        }
+        } catch (InterruptedException ignored) { }
+        System.out.println("NOP Thread interrupted");
     }
 }
