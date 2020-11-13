@@ -110,10 +110,26 @@ public class GameServerDriver {
     }
 
     // <game> SHOOT <direction> : request to shoot
-    public String[] sendSHOOT(String gameName, char direction) {
+    public GameServerResponse sendSHOOT(String gameName, char direction) {
         String command = gameName + " SHOOT " + direction;
-        String rawResponse = sendCommand(command);
-        return rawResponse.split(" ", 2);
+        String[] rawResponse = sendCommand(command).split(" ", 2);
+
+        ResponseCode code = ResponseCode.fromString(rawResponse[0]);
+        GameServerResponse res;
+
+        if(code == ResponseCode.OK) {
+            if(rawResponse.length == 1) {
+                // A single char -> map cell
+                res = new GameServerResponse(code, rawResponse[1].toCharArray()[0], "Shot");
+            } else {
+                // A normal string -> didn't actually shoot
+                res = new GameServerResponse(ResponseCode.ERROR, null, rawResponse[1]);
+            }
+        } else {
+            res = new GameServerResponse(code, null, rawResponse[1]);
+        }
+
+        return res;
     }
 
     public GameServerResponse sendSTATUS(String gameName) {
@@ -176,7 +192,7 @@ public class GameServerDriver {
 
     // Send command with a long response to be retrieved
     private synchronized String sendCommandLong(String command, String endString) {
-        String rawResponse = "", line;
+        String rawResponse, line;
 
         try {
             if(socket == null)
@@ -217,7 +233,6 @@ public class GameServerDriver {
                 e.printStackTrace();
             }
         }
-        // System.err.println(timeDifference);
     }
 
     // Send a NOP request in case the last sent request happened more than 30 seconds ago

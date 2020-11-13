@@ -114,17 +114,20 @@ public class gameController implements Controller {
     }
 
     public void tryToShoot(Character direction){
-        String res[] = gameServer.sendSHOOT(stateMgr.getCurrentGameName(), direction);
+        GameServerResponse res = gameServer.sendSHOOT(stateMgr.getCurrentGameName(), direction);
 
-        if(res[0].equals("OK")){
-            Character landed = res[1].charAt(0);
-            System.out.println("Ok shot. Landed on: " + landed);
-
-            // TODO - find out coordinates of landed
-            // TODO - add "explosion" on map ?
-
-            updateStatus();
+        if(res.code != ResponseCode.OK) {
+            System.err.println(res.freeText);
+            return;
         }
+
+        Character landed = (Character) res.data;
+        System.out.println("Ok shot. Landed on: " + landed);
+
+        // TODO - find out coordinates of landed
+        // TODO - add "explosion" on map ?
+
+        updateStatus();
     }
 
     @FXML
