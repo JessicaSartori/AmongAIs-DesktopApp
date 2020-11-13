@@ -263,6 +263,7 @@ public class GameServerDriver {
             lastCommandSent = 0;
 
             connectionSaver = new Thread(new NOPSender(10));
+            connectionSaver.setDaemon(true);
             connectionSaver.start();
 
         } catch (UnknownHostException e) {
@@ -282,12 +283,13 @@ public class GameServerDriver {
         try { socket.close(); }
         catch (Exception e) { System.err.println("clearSocket: " + e.toString()); }
 
-        try { connectionSaver.interrupt(); connectionSaver.join(); }
+        try { connectionSaver.interrupt(); }
         catch (Exception e) { System.err.println("clearSocket: " + e.toString()); }
 
         inSocket = null;
         outSocket = null;
         socket = null;
+        connectionSaver = null;
 
         System.err.println("Socket closed");
     }
@@ -313,10 +315,10 @@ class NOPSender implements Runnable {
                 GameServerResponse res = GameServerDriver.getInstance().sendConditionalNOP(StateManager.getInstance().getCurrentGameName());
                 if(res == null) continue;
                 if(res.code == ResponseCode.FAIL) {
-                    System.err.println(res.freeText);
+                    System.err.println("Nop Thread: " + res.freeText);
                     return;
                 }
-                System.out.println(res.freeText);
+                System.out.println("Nop Thread: " + res.freeText);
             }
         } catch (InterruptedException ignored) { }
         System.out.println("NOP Thread interrupted");
