@@ -48,6 +48,7 @@ public class StateManager {
     public Integer getScore() { return player.score; }
     public Boolean getCreator() { return creator; }
     public Character getSymbol() { return player.symbol; }
+    public String getGameState() { return gameState; }
     public Character[][] getGameMap() { return gameMap; }
 
 

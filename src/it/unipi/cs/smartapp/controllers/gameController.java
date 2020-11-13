@@ -1,9 +1,12 @@
 package it.unipi.cs.smartapp.controllers;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
 
@@ -19,6 +22,8 @@ public class gameController implements Controller {
     private GameServerDriver gameServer;
 
     private GraphicsContext canvasContext;
+
+    private Boolean firstTime = true;
 
     @FXML
     private Label PlayerName;
@@ -40,6 +45,8 @@ public class gameController implements Controller {
     private Button btnStartMatch;
     @FXML
     private Canvas mapCanvas;
+    @FXML
+    private AnchorPane gamePanel;
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
@@ -61,6 +68,35 @@ public class gameController implements Controller {
 
         // Update the map
         updateMap();
+
+        // Keyboard events for moving
+        gamePanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (!stateMgr.getGameState().equals("ACTIVE")) {
+                    Alert message = new Alert(Alert.AlertType.INFORMATION);
+                    message.setTitle("Information");
+                    message.setContentText("You can move or shoot only with a started game.\n Game state: " + stateMgr.getGameState());
+                    message.showAndWait();
+                    return;
+                }
+
+                switch (keyEvent.getCode().toString()) {
+                    case "A":
+                        break;
+
+                    case "W":
+                        break;
+
+                    case "D":
+                        break;
+
+                    case "S":
+                        break;
+                }
+            }
+        });
     }
 
     @FXML
@@ -97,6 +133,14 @@ public class gameController implements Controller {
         String GA = data[0].substring(4); // Remove "GA: "
         stateMgr.updateGameState(GA);
 
+        if (stateMgr.getGameState().equals("ACTIVE") && firstTime) {
+            Alert message = new Alert(Alert.AlertType.INFORMATION);
+            message.setTitle("Information");
+            message.setContentText("Game started, now you can move and shoot!");
+            message.showAndWait();
+            firstTime = false;
+        }
+
         // Update player status
         String ME = data[1].substring(4); // Remove "ME: "
         stateMgr.player.updateWith(ME);
@@ -113,15 +157,20 @@ public class gameController implements Controller {
         PlayerTeam.setText(team);
         if (PlayerTeam.getText() == "Blue Team") {
             PlayerTeam.setStyle("-fx-background-color: blue");
+        } else {
+            PlayerTeam.setStyle("-fx-background-color: red");
         }
 
         PlayerScore.setText(stateMgr.getScore().toString());
         PlayerEnergy.setText(stateMgr.getEnergy().toString());
+        updateEnergy(stateMgr.getEnergy());
 
         String loyalty = (stateMgr.getLoyalty() == 0) ? "Normal" : "Impostor";
         PlayerLoyalty.setText(loyalty);
         if (PlayerLoyalty.getText() == "Impostor") {
             PlayerLoyalty.setStyle("-fx-text-fill: red;");
+        } else {
+            PlayerLoyalty.setStyle("-fx-text-fill: black;");
         }
     }
 
@@ -134,33 +183,32 @@ public class gameController implements Controller {
     @FXML
     public void btnStartMatchPressed(ActionEvent event) {
         GameServerResponse res = gameServer.sendSTART(stateMgr.getCurrentGameName());
+
+        if (res.code != ResponseCode.OK) {
+            Alert message = new Alert(Alert.AlertType.ERROR);
+            message.setTitle("Error");
+            message.setContentText(res.freeText);
+            message.showAndWait();
+            return;
+        }
+
         System.out.println(res.freeText);
+
+        Alert message = new Alert(Alert.AlertType.INFORMATION);
+        message.setTitle("Game started!");
+        message.setContentText("The minimum number of player is reached, the game is started!");
+        message.showAndWait();
     }
 
     // Update ProgressBar correctly
-    public void decreaseEnergy(Integer energyValue) {
-        Integer newValue = stateMgr.getEnergy() - energyValue;
-
-        if (newValue < 0) {
-            newValue = 0;
+    public void updateEnergy(Integer energyValue) {
+        if (energyValue < 0) {
+            energyValue = 0;
         }
 
-        stateMgr.setEnergy(newValue);
-        PlayerEnergy.setText(newValue.toString());
-        Double barValue = (newValue < 0) ? 0 : (newValue / 256.0);
-        PlayerEnergyBar.setProgress(Double.parseDouble(barValue.toString()));
-    }
-
-    public void increaseEnergy(Integer energyValue) {
-        Integer newValue = stateMgr.getEnergy() + energyValue;
-
-        if (newValue > 256) {
-            newValue = 256;
-        }
-
-        stateMgr.setEnergy(newValue);
-        PlayerEnergy.setText(newValue.toString());
-        Double barValue = (newValue > 256) ? 1.0 : (newValue / 256.0);
+        stateMgr.setEnergy(energyValue);
+        PlayerEnergy.setText(energyValue.toString());
+        Double barValue = (energyValue < 0) ? 0 : (energyValue / 256.0);
         PlayerEnergyBar.setProgress(Double.parseDouble(barValue.toString()));
     }
 
