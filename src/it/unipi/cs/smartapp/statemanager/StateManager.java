@@ -16,10 +16,10 @@ public class StateManager {
     public PlayerStatus player;
     public HashMap<String, PlayerStatus> playerList = null;
 
+    public MapStatus map;
+
     private String currentGameName = null;
     private String gameState = null;
-    private Character[][] gameMap = null;
-    private Integer mapSize = null;
     private Boolean creator = null;
 
     /*
@@ -31,7 +31,6 @@ public class StateManager {
     }
     public void setEnergy(Integer e) { player.energy = e; }
     public void setScore(Integer s) { player.score = s; }
-    public void setGameMap(Character[][] m) { gameMap = m; }
 
     /*
      * Getters
@@ -49,12 +48,12 @@ public class StateManager {
     public Boolean getCreator() { return creator; }
     public Character getSymbol() { return player.symbol; }
     public String getGameState() { return gameState; }
-    public Character[][] getGameMap() { return gameMap; }
-
 
     public void setInGame(String gameName, Boolean created) {
         player = new PlayerStatus();
         playerList = new HashMap<>();
+
+        map = new MapStatus();
 
         currentGameName = gameName;
         gameState = "LOBBY";
@@ -69,7 +68,7 @@ public class StateManager {
             switch (keyword) {
                 case "name" -> currentGameName = value;
                 case "state" -> gameState = value;
-                case "size" -> mapSize = Integer.parseInt(value);
+                case "size" -> map.setMapSize(Integer.parseInt(value));
             }
         }
     }

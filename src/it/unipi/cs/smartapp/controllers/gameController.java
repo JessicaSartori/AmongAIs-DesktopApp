@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -122,6 +121,7 @@ public class gameController implements Controller {
             System.out.println("Ok shot. Landed on: " + landed);
 
             // TODO - find out coordinates of landed
+            // TODO - add "explosion" on map ?
 
             updateStatus();
         }
@@ -248,7 +248,7 @@ public class gameController implements Controller {
         String response[] = gameServer.sendLOOK(stateMgr.getCurrentGameName());
 
         if (response[0].equals("OK")) {
-            stateMgr.setGameMap(stringToCharMap(response[1]));
+            stateMgr.map.setGameMap(stringToCharMap(response[1]));
             drawMap();
         } else {
             System.err.println(response[1]);
@@ -256,48 +256,40 @@ public class gameController implements Controller {
     }
 
     private Character[][] stringToCharMap(String mapResponse) {
-        // Quick fix
-        // Map is currently limited to 32x32 - increasing in the future
         mapResponse = mapResponse.replace("LONG\n", "");
 
-        Character[][] parsedMap = new Character[32][32];
+        Integer size = stateMgr.map.getMapSize();
+        Character[][] parsedMap = new Character[size][size];
 
         int i = 0; // String index
 
-        for(int r=0; r<32; r++) // rows
-            for(int c=0; c<32; c++) { // columns
-                if(mapResponse.charAt(i) == '\n') // skip this character
+        for(int r=0; r<size; r++)
+            for(int c=0; c<size; c++) {
+                if(mapResponse.charAt(i) == '\n') // Skip this character
                     i++;
 
                 parsedMap[r][c] = mapResponse.charAt(i);
-
-                i++; // now we need to increase anyways
+                i++;
             }
 
         return parsedMap;
     }
 
     private void drawMap() {
-        // TODO update when maps won't be simply 32x32
-        int xCanvas = 0, yCanvas = 0, cellDimension = 13;
-        Character charMap[][] = stateMgr.getGameMap();
+        Integer size = stateMgr.map.getMapSize();
+        Integer cellSize = stateMgr.map.getCellSize();
+        Character charMap[][] = stateMgr.map.getGameMap();
 
-        for(int r=0; r<32; r++) { // rows
-            for (int c = 0; c < 32; c++) { // columns
-                System.out.print(charMap[r][c]);
-            }
-            System.out.println("");
-        }
-
-        for(int r=0; r<32; r++) { // rows
-            for (int c = 0; c < 32; c++) { // columns
+        int xCanvas = 0, yCanvas = 0;
+        for(int r=0; r<size; r++) {
+            for (int c = 0; c < size; c++) {
                 setColor(charMap[r][c]);
 
-                canvasContext.fillRect(xCanvas, yCanvas, cellDimension, cellDimension);
+                canvasContext.fillRect(xCanvas, yCanvas, cellSize, cellSize);
 
-                xCanvas += cellDimension;
+                xCanvas += cellSize;
             }
-            yCanvas += cellDimension;
+            yCanvas += cellSize;
             xCanvas = 0;
         }
     }
