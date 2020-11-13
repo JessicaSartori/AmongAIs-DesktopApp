@@ -18,46 +18,50 @@ public class createGameController implements Controller {
     private GameServerDriver gameServer;
 
     @FXML
-    private TextField gamenameField;
+    private TextField gameNameField;
     @FXML
-    private Label gamenameErrorLabel;
+    private Label gameNameErrorLabel;
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
         gameServer = GameServerDriver.getInstance();
 
-        gamenameErrorLabel.setText("");
+        gameNameErrorLabel.setText("");
 
         System.out.println("Create Match Controller done");
     }
 
     @FXML
     private void btnCreateMatchPressed(ActionEvent event) {
-        String gameName = gamenameField.getText();
+        // Check if the game name is valid
+        String gameName = gameNameField.getText();
         if(gameName.isBlank()) {
-            gamenameErrorLabel.setText("Invalid Game Name");
+            gameNameErrorLabel.setText("Invalid Game Name");
             return;
         }
 
+        // Send NEW request
         GameServerResponse res = gameServer.sendNEW(gameName);
-        if(res.code == ResponseCode.ERROR) {
-            gamenameErrorLabel.setText("Cannot create the match");
-            System.err.println((String) res.get("freeText"));
+        if(res.code != ResponseCode.OK) {
+            gameNameErrorLabel.setText("Cannot create the match");
+            System.err.println(res.freeText);
             return;
         }
-        System.out.println((String) res.get("freeText"));
+        System.out.println(res.freeText);
 
+        // Send JOIN request
         res = gameServer.sendJOIN(gameName, stateMgr.getUsername(), 'H', "Test");
-        if(res.code == ResponseCode.ERROR) {
-            gamenameErrorLabel.setText("Cannot join the lobby");
-            System.err.println((String) res.get("freeText"));
+        if(res.code != ResponseCode.OK) {
+            gameNameErrorLabel.setText("Cannot join the lobby");
+            System.err.println(res.freeText);
             return;
         }
-        System.out.println((String) res.get("freeText"));
+        System.out.println(res.freeText);
 
-        stateMgr.setCurrentGameName(gameName);
-        stateMgr.setCreator(true);
+        // Update state
+        stateMgr.setInGame(gameName, true);
 
+        // Change scene
         Renderer.getInstance().show("gameScene");
     }
 

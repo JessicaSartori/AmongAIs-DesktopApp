@@ -18,38 +18,41 @@ public class JoinMatchController implements Controller {
     private GameServerDriver gameServer;
 
     @FXML
-    private TextField gamenameField;
+    private TextField gameNameField;
     @FXML
-    private Label gamenameErrorLabel;
+    private Label gameNameErrorLabel;
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
         gameServer = GameServerDriver.getInstance();
 
-        gamenameErrorLabel.setText("");
+        gameNameErrorLabel.setText("");
 
         System.out.println("Join Match Controller done");
     }
 
     @FXML
     private void btnJoinMatchPressed(ActionEvent event) {
-        String gameName = gamenameField.getText();
+        // Check if the game name is valid
+        String gameName = gameNameField.getText();
         if(gameName.isBlank()) {
-            gamenameErrorLabel.setText("Gamename not valid");
+            gameNameErrorLabel.setText("Invalid Game Name");
             return;
         }
 
+        // Send JOIN request
         GameServerResponse res = gameServer.sendJOIN(gameName, stateMgr.getUsername(), 'H', "Test");
-        if(res.code == ResponseCode.ERROR) {
-            gamenameErrorLabel.setText("Cannot join the lobby");
-            System.err.println((String) res.get("freeText"));
+        if(res.code != ResponseCode.OK) {
+            gameNameErrorLabel.setText("Cannot join the lobby");
+            System.err.println(res.freeText);
             return;
         }
-        System.out.println((String) res.get("freeText"));
+        System.out.println(res.freeText);
 
-        stateMgr.setCurrentGameName(gameName);
-        stateMgr.setCreator(false);
+        // Update the state
+        stateMgr.setInGame(gameName, false);
 
+        // Change scene
         Renderer.getInstance().show("gameScene");
     }
 
