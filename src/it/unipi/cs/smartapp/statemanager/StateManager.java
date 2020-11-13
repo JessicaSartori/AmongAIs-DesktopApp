@@ -1,5 +1,7 @@
 package it.unipi.cs.smartapp.statemanager;
 
+import java.util.HashMap;
+
 public class StateManager {
 
     static private StateManager instance = null;
@@ -9,19 +11,16 @@ public class StateManager {
         return instance;
     }
 
-
     private String username = null;
+
+    public PlayerStatus player;
+    public HashMap<String, PlayerStatus> playerList = null;
+
     private String currentGameName = null;
-
-    private Integer team = null;
-    private Integer loyalty = null;
-
-    private Integer energy = null;
-    private Integer score = null;
-    private Boolean creator = null;
-    private Character symbol = null;
-
+    private String gameState = null;
     private Character[][] gameMap = null;
+    private Integer mapSize = null;
+    private Boolean creator = null;
 
     /*
      * Setters
@@ -30,16 +29,8 @@ public class StateManager {
     public void setCurrentGameName(String s) {
         currentGameName = s;
     }
-    public void setTeam(Integer t) {
-        team = t;
-    }
-    public void setLoyalty(Integer l) {
-        loyalty = l;
-    }
-    public void setEnergy(Integer e) { energy = e; }
-    public void setScore(Integer s) { score = s; }
-    public void setCreator(Boolean c) { creator = c; }
-    public void setSymbol(Character c) { symbol = c; }
+    public void setEnergy(Integer e) { player.energy = e; }
+    public void setScore(Integer s) { player.score = s; }
     public void setGameMap(Character[][] m) { gameMap = m; }
 
     /*
@@ -51,12 +42,40 @@ public class StateManager {
     public String getCurrentGameName() {
         return currentGameName;
     }
-    public Integer getTeam() { return team; }
-    public Integer getLoyalty() { return loyalty; }
-    public Integer getEnergy() { return energy; }
-    public Integer getScore() { return score; }
+    public Integer getTeam() { return player.team; }
+    public Integer getLoyalty() { return player.loyalty; }
+    public Integer getEnergy() { return player.energy; }
+    public Integer getScore() { return player.score; }
     public Boolean getCreator() { return creator; }
-    public Character getSymbol() { return symbol; }
+    public Character getSymbol() { return player.symbol; }
     public Character[][] getGameMap() { return gameMap; }
 
+
+    public void setInGame(String gameName, Boolean created) {
+        player = new PlayerStatus();
+        playerList = new HashMap<>();
+
+        currentGameName = gameName;
+        gameState = "LOBBY";
+        creator = created;
+    }
+
+    public void updateGameState(String info) {
+        String[] tokens = info.split("[ =]");
+
+        for(int i=0; i < tokens.length; i += 2) {
+            String keyword = tokens[i], value = tokens[i+1];
+            switch (keyword) {
+                case "name" -> currentGameName = value;
+                case "state" -> gameState = value;
+                case "size" -> mapSize = Integer.parseInt(value);
+            }
+        }
+    }
+
+    public void updatePlayerStatus(String info) {
+        PlayerStatus pl = new PlayerStatus();
+        pl.updateWith(info);
+        playerList.put(pl.username, pl);
+    }
 }
