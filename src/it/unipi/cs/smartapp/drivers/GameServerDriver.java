@@ -52,35 +52,36 @@ public class GameServerDriver {
      * -	generate command (according to Game Protocol);
      * -	send command to Game Server;
      * -	get response from Game Server;
-     * -	do basic preprocessing (string split).
+     * -	do basic preprocessing
      *
-     * These methods return an array of two strings:
-     * -	response[0] is either OK or ERROR;
-     * -	response[1] contains the rest of the data.
-     *
-     * Further processing of response[1] is left to business logic.
+     * These methods return a GameServerResponse instance containing:
+     * -	the response code (enum ResponseCode)
+     * -	some free text describing the outcome of the request
+     * -    eventual (partially processed) data
      */
 
     // <game> NOP : resets command timer
     public GameServerResponse sendNOP(String gameName) {
         String command = gameName + " NOP";
-        String[] rawResponse = sendCommand(command).split(" ", 2);
+        String[] rawResponse = sendCommand(command);
         ResponseCode code = ResponseCode.fromString(rawResponse[0]);
 
         return new GameServerResponse(code, null, rawResponse[1]);
     }
 
+    // <game> NEW : creates new game
     public GameServerResponse sendNEW(String gameName) {
         String command = "NEW " + gameName;
-        String[] rawResponse = sendCommand(command).split(" ", 2);
+        String[] rawResponse = sendCommand(command);
         ResponseCode code = ResponseCode.fromString(rawResponse[0]);
 
         return new GameServerResponse(code, null, rawResponse[1]);
     }
 
+    // <game> JOIN <player-name> <nature> <role> <user-info> : joins game
     public GameServerResponse sendJOIN(String gameName, String playerName, char nature, String userInfo) {
         String command = gameName + " JOIN " + playerName + " " + nature + " - " + userInfo;
-        String[] rawResponse = sendCommand(command).split(" ", 2);
+        String[] rawResponse = sendCommand(command);
         ResponseCode code = ResponseCode.fromString(rawResponse[0]);
 
         return new GameServerResponse(code, null, rawResponse[1]);
@@ -89,30 +90,40 @@ public class GameServerDriver {
     // <game> START : starts game (if possible)
     public GameServerResponse sendSTART(String gameName) {
         String command = gameName + " START";
-        String[] rawResponse = sendCommand(command).split(" ", 2);
+        String[] rawResponse = sendCommand(command);
         ResponseCode code = ResponseCode.fromString(rawResponse[0]);
 
         return new GameServerResponse(code, null, rawResponse[1]);
     }
 
     // <game> LOOK : request to see the map
-    public String[] sendLOOK(String gameName) {
+    public GameServerResponse sendLOOK(String gameName) {
         String command = gameName + " LOOK";
-        String rawResponse = sendCommandLong(command, "ENDOFMAP");
-        return rawResponse.split(" ", 2);
+        String[] rawResponse = sendCommandLong(command, "ENDOFMAP").split(" ", 2);
+
+        ResponseCode code = ResponseCode.fromString(rawResponse[0]);
+        GameServerResponse res;
+
+        if(code == ResponseCode.OK) {
+            String[] content = rawResponse[1].split("\n");
+            res = new GameServerResponse(code, Arrays.copyOfRange(content, 1, content.length), "Looked");
+        } else {
+            res = new GameServerResponse(code, null, rawResponse[1]);
+        }
+
+        return res;
     }
 
     // <game> MOVE <direction> : request to move player
     public String[] sendMOVE(String gameName, char direction) {
         String command = gameName + " MOVE " + direction;
-        String rawResponse = sendCommand(command);
-        return rawResponse.split(" ", 2);
+        return sendCommand(command);
     }
 
     // <game> SHOOT <direction> : request to shoot
     public GameServerResponse sendSHOOT(String gameName, char direction) {
         String command = gameName + " SHOOT " + direction;
-        String[] rawResponse = sendCommand(command).split(" ", 2);
+        String[] rawResponse = sendCommand(command);
 
         ResponseCode code = ResponseCode.fromString(rawResponse[0]);
         GameServerResponse res;
@@ -120,7 +131,7 @@ public class GameServerDriver {
         if(code == ResponseCode.OK) {
             if(rawResponse[1].length() == 1) {
                 // A single char -> map cell
-                res = new GameServerResponse(code, rawResponse[1].toCharArray()[0], "Shot");
+                res = new GameServerResponse(code, rawResponse[1].charAt(0), "Shot");
             } else {
                 // A normal string -> didn't actually shoot
                 res = new GameServerResponse(ResponseCode.ERROR, null, rawResponse[1]);
@@ -132,6 +143,7 @@ public class GameServerDriver {
         return res;
     }
 
+    // <game> STATUS : request to get the status
     public GameServerResponse sendSTATUS(String gameName) {
         String command = gameName + " STATUS";
         String[] rawResponse = sendCommandLong(command, "ENDOFSTATUS").split(" ", 2);
@@ -141,7 +153,7 @@ public class GameServerDriver {
 
         if(code == ResponseCode.OK) {
             String[] content = rawResponse[1].split("\n");
-            res = new GameServerResponse(code, Arrays.copyOfRange(content, 1, content.length), content[0]);
+            res = new GameServerResponse(code, Arrays.copyOfRange(content, 1, content.length), "Status");
         } else {
             res = new GameServerResponse(code, null, rawResponse[1]);
         }
@@ -157,7 +169,7 @@ public class GameServerDriver {
     // <game> LEAVE <reason> : player leaves game
     public GameServerResponse sendLEAVE(String gameName, String reason) {
         String command = gameName + " LEAVE " + reason;
-        String[] rawResponse = sendCommand(command).split(" ", 2);
+        String[] rawResponse = sendCommand(command);
         ResponseCode code = ResponseCode.fromString(rawResponse[0]);
 
         clearSocket();
@@ -166,7 +178,7 @@ public class GameServerDriver {
     }
 
     // Send a general command and wait for the response
-    private synchronized String sendCommand(String command) {
+    private synchronized String[] sendCommand(String command) {
         String rawResponse;
 
         try {
@@ -187,7 +199,8 @@ public class GameServerDriver {
             rawResponse = "FAIL Can not communicate with Game Server";
             clearSocket();
         }
-        return rawResponse;
+
+        return rawResponse.split(" ", 2);
     }
 
     // Send command with a long response to be retrieved
@@ -216,6 +229,7 @@ public class GameServerDriver {
             rawResponse = "FAIL Socket closed";
             clearSocket();
         }
+
         return rawResponse;
     }
 
@@ -320,6 +334,6 @@ class NOPSender implements Runnable {
                 System.out.println("Nop Thread: " + res.freeText);
             }
         } catch (InterruptedException ignored) { }
-        System.out.println("NOP Thread interrupted");
+        System.out.println("NOP Thread: Interrupted");
     }
 }

@@ -51,7 +51,6 @@ public class gameController implements Controller {
     public void initialize() {
         stateMgr = StateManager.getInstance();
         gameServer = GameServerDriver.getInstance();
-
         canvasContext = mapCanvas.getGraphicsContext2D();
 
         System.out.println("Game Controller done");
@@ -168,7 +167,6 @@ public class gameController implements Controller {
             message.showAndWait();
             return;
         }
-
         System.out.println(res.freeText);
 
         Alert message = new Alert(Alert.AlertType.INFORMATION);
@@ -185,26 +183,36 @@ public class gameController implements Controller {
 
         stateMgr.setEnergy(energyValue);
         PlayerEnergy.setText(energyValue.toString());
-        Double barValue = (energyValue < 0) ? 0 : (energyValue / 256.0);
+        Double barValue = energyValue / 256.0;
         PlayerEnergyBar.setProgress(Double.parseDouble(barValue.toString()));
     }
 
     // Update general Status
     public void updateStatus() {
+        // Send the request and get the response
         GameServerResponse res = gameServer.sendSTATUS(stateMgr.getCurrentGameName());
-
         if (res.code != ResponseCode.OK) {
             System.err.println(res.freeText);
             return;
         }
         System.out.println(res.freeText);
-
         String[] data = (String[]) res.data;
 
         // Update game status
         String GA = data[0].substring(4); // Remove "GA: "
         stateMgr.updateGameState(GA);
 
+        // Update player status
+        String ME = data[1].substring(4); // Remove "ME: "
+        stateMgr.player.updateWith(ME);
+
+        // Update list of players
+        for (int i = 2; i < data.length; i++) {
+            String PL = data[i].substring(4); // Remove "PL: "
+            stateMgr.updatePlayerStatus(PL);
+        }
+
+        // Show message in case the game started
         if (stateMgr.getGameState().equals("ACTIVE") && firstTime) {
             Alert message = new Alert(Alert.AlertType.INFORMATION);
             message.setTitle("Information");
@@ -213,75 +221,63 @@ public class gameController implements Controller {
             firstTime = false;
         }
 
-        // Update player status
-        String ME = data[1].substring(4); // Remove "ME: "
-        stateMgr.player.updateWith(ME);
-
-        for (int i = 2; i < data.length; i++) {
-            String PL = data[i].substring(4); // Remove "PL: "
-            stateMgr.updatePlayerStatus(PL);
-        }
-
-        // Update Game View Values
+        // Display username
         PlayerName.setText(stateMgr.getUsername());
 
+        // Display team
         String team = (stateMgr.getTeam() == 0) ? "Red Team" : "Blue Team";
         PlayerTeam.setText(team);
-        if (PlayerTeam.getText() == "Blue Team") {
+        if (PlayerTeam.getText().equals("Blue Team")) {
             PlayerTeam.setStyle("-fx-background-color: blue");
         } else {
             PlayerTeam.setStyle("-fx-background-color: red");
         }
 
-        PlayerScore.setText(stateMgr.getScore().toString());
-        PlayerEnergy.setText(stateMgr.getEnergy().toString());
-        updateEnergy(stateMgr.getEnergy());
-
+        // Display loyalty
         String loyalty = (stateMgr.getLoyalty() == 0) ? "Normal" : "Impostor";
         PlayerLoyalty.setText(loyalty);
-        if (PlayerLoyalty.getText() == "Impostor") {
+        if (PlayerLoyalty.getText().equals("Impostor")) {
             PlayerLoyalty.setStyle("-fx-text-fill: red;");
         } else {
             PlayerLoyalty.setStyle("-fx-text-fill: black;");
         }
+
+        // Display score and energy
+        PlayerScore.setText(stateMgr.getScore().toString());
+        PlayerEnergy.setText(stateMgr.getEnergy().toString());
+        updateEnergy(stateMgr.getEnergy());
     }
 
     // Update gameMap
     public void updateMap() {
-        String response[] = gameServer.sendLOOK(stateMgr.getCurrentGameName());
+        GameServerResponse response = gameServer.sendLOOK(stateMgr.getCurrentGameName());
 
-        if (response[0].equals("OK")) {
-            stateMgr.map.setGameMap(stringToCharMap(response[1]));
-            drawMap();
-        } else {
-            System.err.println(response[1]);
+        if (response.code != ResponseCode.OK) {
+            System.err.println(response.freeText);
+            return;
         }
+        System.out.println(response.freeText);
+
+        stateMgr.map.setGameMap(stringToCharMap((String[]) response.data));
+        drawMap();
     }
 
-    private Character[][] stringToCharMap(String mapResponse) {
-        mapResponse = mapResponse.replace("LONG\n", "");
-
+    private Character[][] stringToCharMap(String[] rows) {
         Integer size = stateMgr.map.getMapSize();
         Character[][] parsedMap = new Character[size][size];
 
-        int i = 0; // String index
-
-        for(int r=0; r<size; r++)
+        for(int r=0; r<size; r++) {
             for(int c=0; c<size; c++) {
-                if(mapResponse.charAt(i) == '\n') // Skip this character
-                    i++;
-
-                parsedMap[r][c] = mapResponse.charAt(i);
-                i++;
+                parsedMap[r][c] = rows[r].charAt(c);
             }
-
+        }
         return parsedMap;
     }
 
     private void drawMap() {
         Integer size = stateMgr.map.getMapSize();
         Integer cellSize = stateMgr.map.getCellSize();
-        Character charMap[][] = stateMgr.map.getGameMap();
+        Character[][] charMap = stateMgr.map.getGameMap();
 
         int xCanvas = 0, yCanvas = 0;
         for(int r=0; r<size; r++) {
