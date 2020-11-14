@@ -32,7 +32,6 @@ public class StateManager {
     public void setEnergy(Integer e) { player.energy = e; }
     public void setScore(Integer s) { player.score = s; }
     public void setGameState(String s) { gameState = s; }
-    public void setGameMap(Character[][] m) { gameMap = m; }
 
     /*
      * Getters

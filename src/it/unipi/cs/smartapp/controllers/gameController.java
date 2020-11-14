@@ -88,15 +88,12 @@ public class gameController implements Controller {
                     case "A":
                         movePlayer('W');
                         break;
-
                     case "W":
                         movePlayer('N');
                         break;
-
                     case "D":
                         movePlayer('E');
                         break;
-
                     case "S":
                         movePlayer('S');
                         break;
@@ -172,38 +169,6 @@ public class gameController implements Controller {
         txtMessage.setText("");
     }
 
-    @FXML
-    public void btnStartMatchPressed(ActionEvent event) {
-        GameServerResponse res = gameServer.sendSTART(stateMgr.getCurrentGameName());
-
-        if (res.code != ResponseCode.OK) {
-            Alert message = new Alert(Alert.AlertType.ERROR);
-            message.setTitle("Error");
-            message.setContentText(res.freeText);
-            message.showAndWait();
-            return;
-        }
-
-        System.out.println(res.freeText);
-
-        Alert message = new Alert(Alert.AlertType.INFORMATION);
-        message.setTitle("Game started!");
-        message.setContentText("The minimum number of player is reached, the game is started!");
-        message.showAndWait();
-    }
-
-    // Update ProgressBar correctly
-    public void updateEnergy(Integer energyValue) {
-        if (energyValue < 0) {
-            energyValue = 0;
-        }
-
-        stateMgr.setEnergy(energyValue);
-        PlayerEnergy.setText(energyValue.toString());
-        Double barValue = (energyValue < 0) ? 0 : (energyValue / 256.0);
-        PlayerEnergyBar.setProgress(Double.parseDouble(barValue.toString()));
-    }
-
     // Update general Status
     public void updateStatus() {
         GameServerResponse res = gameServer.sendSTATUS(stateMgr.getCurrentGameName());
@@ -212,7 +177,10 @@ public class gameController implements Controller {
             System.err.println(res.freeText);
             return;
         }
+
         System.out.println(res.freeText);
+
+        txtChat.appendText("\nWelcome, you are in " + stateMgr.getCurrentGameName());
 
         String[] data = (String[]) res.data;
 
@@ -222,6 +190,7 @@ public class gameController implements Controller {
 
         // Alert (do the same with the ending of the game)
         if (stateMgr.getGameState().equals("ACTIVE") && firstTime) {
+            txtChat.appendText("\nGame state: " + stateMgr.getGameState());
             Alert message = new Alert(Alert.AlertType.INFORMATION);
             message.setTitle("Information");
             message.setContentText("Game started!");
@@ -260,12 +229,6 @@ public class gameController implements Controller {
         } else {
             PlayerLoyalty.setStyle("-fx-text-fill: black;");
         }
-    }
-
-    @FXML
-    public void txtSendMessage(ActionEvent event) {
-        txtChat.appendText("\n" + stateMgr.getUsername() + ": " + txtMessage.getText());
-        txtMessage.setText("");
     }
 
     @FXML
