@@ -37,10 +37,12 @@ public class loginController implements Controller {
     @FXML
     private void btnPlayAsGuestPressed(ActionEvent event) {
         String username = usernameField.getText();
-        if(username.isBlank()) {
+
+        if(username.isBlank() || username.contains(" ")) {
             usernameErrorLabel.setText("Username not valid");
             return;
         }
+
         usernameErrorLabel.setText("");
 
         stateMgr.setUsername(username);
