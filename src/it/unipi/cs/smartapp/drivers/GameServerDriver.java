@@ -110,10 +110,26 @@ public class GameServerDriver {
     }
 
     // <game> SHOOT <direction> : request to shoot
-    public String[] sendSHOOT(String gameName, char direction) {
+    public GameServerResponse sendSHOOT(String gameName, char direction) {
         String command = gameName + " SHOOT " + direction;
-        String rawResponse = sendCommand(command);
-        return rawResponse.split(" ", 2);
+        String[] rawResponse = sendCommand(command).split(" ", 2);
+
+        ResponseCode code = ResponseCode.fromString(rawResponse[0]);
+        GameServerResponse res;
+
+        if(code == ResponseCode.OK) {
+            if(rawResponse[1].length() == 1) {
+                // A single char -> map cell
+                res = new GameServerResponse(code, rawResponse[1].toCharArray()[0], "Shot");
+            } else {
+                // A normal string -> didn't actually shoot
+                res = new GameServerResponse(ResponseCode.ERROR, null, rawResponse[1]);
+            }
+        } else {
+            res = new GameServerResponse(code, null, rawResponse[1]);
+        }
+
+        return res;
     }
 
     public GameServerResponse sendSTATUS(String gameName) {
@@ -176,11 +192,10 @@ public class GameServerDriver {
 
     // Send command with a long response to be retrieved
     private synchronized String sendCommandLong(String command, String endString) {
-        String rawResponse = "", line;
+        String rawResponse, line;
 
         try {
-            if(socket == null)
-                setupSocket();
+            if(socket == null) setupSocket();
 
             // Send request
             forcedWait(System.currentTimeMillis());
@@ -217,7 +232,6 @@ public class GameServerDriver {
                 e.printStackTrace();
             }
         }
-        // System.err.println(timeDifference);
     }
 
     // Send a NOP request in case the last sent request happened more than 30 seconds ago
@@ -248,6 +262,7 @@ public class GameServerDriver {
             lastCommandSent = 0;
 
             connectionSaver = new Thread(new NOPSender(10));
+            connectionSaver.setDaemon(true);
             connectionSaver.start();
 
         } catch (UnknownHostException e) {
@@ -267,12 +282,13 @@ public class GameServerDriver {
         try { socket.close(); }
         catch (Exception e) { System.err.println("clearSocket: " + e.toString()); }
 
-        try { connectionSaver.interrupt(); connectionSaver.join(); }
+        try { connectionSaver.interrupt(); }
         catch (Exception e) { System.err.println("clearSocket: " + e.toString()); }
 
         inSocket = null;
         outSocket = null;
         socket = null;
+        connectionSaver = null;
 
         System.err.println("Socket closed");
     }
@@ -298,10 +314,10 @@ class NOPSender implements Runnable {
                 GameServerResponse res = GameServerDriver.getInstance().sendConditionalNOP(StateManager.getInstance().getCurrentGameName());
                 if(res == null) continue;
                 if(res.code == ResponseCode.FAIL) {
-                    System.err.println(res.freeText);
+                    System.err.println("Nop Thread: " + res.freeText);
                     return;
                 }
-                System.out.println(res.freeText);
+                System.out.println("Nop Thread: " + res.freeText);
             }
         } catch (InterruptedException ignored) { }
         System.out.println("NOP Thread interrupted");

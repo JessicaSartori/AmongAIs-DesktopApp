@@ -65,7 +65,7 @@ public class gameController implements Controller {
         }
 
         // Retrieve other player info from the Game Server
-        btnUpdStatusPressed(null);
+        updateStatus();
 
         // Update the map
         updateMap();
@@ -75,6 +75,7 @@ public class gameController implements Controller {
 
             @Override
             public void handle(KeyEvent keyEvent) {
+
                 if (!stateMgr.getGameState().equals("ACTIVE")) {
                     Alert message = new Alert(Alert.AlertType.INFORMATION);
                     message.setTitle("Information");
@@ -99,9 +100,39 @@ public class gameController implements Controller {
                     case "S":
                         movePlayer('S');
                         break;
+
+                    case "I":
+                        tryToShoot('N');
+                        break;
+                    case "J":
+                        tryToShoot('W');
+                        break;
+                    case "K":
+                        tryToShoot('S');
+                        break;
+                    case "L":
+                        tryToShoot('E');
+                        break;
                 }
             }
         });
+    }
+
+    public void tryToShoot(Character direction){
+        GameServerResponse res = gameServer.sendSHOOT(stateMgr.getCurrentGameName(), direction);
+
+        if(res.code != ResponseCode.OK) {
+            System.err.println(res.freeText);
+            return;
+        }
+
+        Character landed = (Character) res.data;
+        System.out.println("Ok shot. Landed on: " + landed);
+
+        // TODO - find out coordinates of landed
+        // TODO - add "explosion" on map ?
+
+        updateStatus();
     }
 
     public void movePlayer(Character position) {
@@ -133,7 +164,48 @@ public class gameController implements Controller {
     private void btnUpdMapPressed(ActionEvent event) { updateMap(); }
 
     @FXML
-    private void btnUpdStatusPressed(ActionEvent event) {
+    private void btnUpdStatusPressed(ActionEvent event) { updateStatus(); }
+
+    @FXML
+    public void txtSendMessage(ActionEvent event) {
+        txtChat.appendText("\n" + stateMgr.getUsername() + ": " + txtMessage.getText());
+        txtMessage.setText("");
+    }
+
+    @FXML
+    public void btnStartMatchPressed(ActionEvent event) {
+        GameServerResponse res = gameServer.sendSTART(stateMgr.getCurrentGameName());
+
+        if (res.code != ResponseCode.OK) {
+            Alert message = new Alert(Alert.AlertType.ERROR);
+            message.setTitle("Error");
+            message.setContentText(res.freeText);
+            message.showAndWait();
+            return;
+        }
+
+        System.out.println(res.freeText);
+
+        Alert message = new Alert(Alert.AlertType.INFORMATION);
+        message.setTitle("Game started!");
+        message.setContentText("The minimum number of player is reached, the game is started!");
+        message.showAndWait();
+    }
+
+    // Update ProgressBar correctly
+    public void updateEnergy(Integer energyValue) {
+        if (energyValue < 0) {
+            energyValue = 0;
+        }
+
+        stateMgr.setEnergy(energyValue);
+        PlayerEnergy.setText(energyValue.toString());
+        Double barValue = (energyValue < 0) ? 0 : (energyValue / 256.0);
+        PlayerEnergyBar.setProgress(Double.parseDouble(barValue.toString()));
+    }
+
+    // Update general Status
+    public void updateStatus() {
         GameServerResponse res = gameServer.sendSTATUS(stateMgr.getCurrentGameName());
 
         if (res.code != ResponseCode.OK) {
@@ -230,61 +302,53 @@ public class gameController implements Controller {
         PlayerEnergyBar.setProgress(Double.parseDouble(barValue.toString()));
     }
 
+    // Update gameMap
     public void updateMap() {
         String response[] = gameServer.sendLOOK(stateMgr.getCurrentGameName());
 
         if (response[0].equals("OK")) {
-            stateMgr.setGameMap(stringToCharMap(response[1]));
+            stateMgr.map.setGameMap(stringToCharMap(response[1]));
             drawMap();
         } else {
-            canvasContext.setStroke(Color.RED);
-            canvasContext.strokeText("CANVAS ERROR!", 314, 314);
+            System.err.println(response[1]);
         }
     }
 
     private Character[][] stringToCharMap(String mapResponse) {
-        // Quick fix
-        // Map is currently limited to 32x32 - increasing in the future
         mapResponse = mapResponse.replace("LONG\n", "");
 
-        Character[][] parsedMap = new Character[32][32];
+        Integer size = stateMgr.map.getMapSize();
+        Character[][] parsedMap = new Character[size][size];
 
         int i = 0; // String index
 
-        for(int r=0; r<32; r++) // rows
-            for(int c=0; c<32; c++) { // columns
-                if(mapResponse.charAt(i) == '\n') // skip this character
+        for(int r=0; r<size; r++)
+            for(int c=0; c<size; c++) {
+                if(mapResponse.charAt(i) == '\n') // Skip this character
                     i++;
 
                 parsedMap[r][c] = mapResponse.charAt(i);
-
-                i++; // now we need to increase anyways
+                i++;
             }
 
         return parsedMap;
     }
 
     private void drawMap() {
-        // TODO update when maps won't be simply 32x32
-        int xCanvas = 0, yCanvas = 0, cellDimension = 13;
-        Character charMap[][] = stateMgr.getGameMap();
+        Integer size = stateMgr.map.getMapSize();
+        Integer cellSize = stateMgr.map.getCellSize();
+        Character charMap[][] = stateMgr.map.getGameMap();
 
-        for(int r=0; r<32; r++) { // rows
-            for (int c = 0; c < 32; c++) { // columns
-                System.out.print(charMap[r][c]);
-            }
-            System.out.println("");
-        }
-
-        for(int r=0; r<32; r++) { // rows
-            for (int c = 0; c < 32; c++) { // columns
+        int xCanvas = 0, yCanvas = 0;
+        for(int r=0; r<size; r++) {
+            for (int c = 0; c < size; c++) {
                 setColor(charMap[r][c]);
 
-                canvasContext.fillRect(xCanvas, yCanvas, cellDimension, cellDimension);
+                canvasContext.fillRect(xCanvas, yCanvas, cellSize, cellSize);
 
-                xCanvas += cellDimension;
+                xCanvas += cellSize;
             }
-            yCanvas += cellDimension;
+            yCanvas += cellSize;
             xCanvas = 0;
         }
     }
