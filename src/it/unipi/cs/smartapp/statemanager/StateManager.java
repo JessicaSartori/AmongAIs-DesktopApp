@@ -11,6 +11,7 @@ public class StateManager {
         return instance;
     }
 
+
     private String username = null;
 
     public PlayerStatus player;
@@ -26,21 +27,15 @@ public class StateManager {
      * Setters
      */
     public void setUsername(String s) { username = s; }
-    public void setCurrentGameName(String s) {
-        currentGameName = s;
-    }
+    public void setCurrentGameName(String s) { currentGameName = s; }
     public void setEnergy(Integer e) { player.energy = e; }
     public void setScore(Integer s) { player.score = s; }
 
     /*
      * Getters
      */
-    public String getUsername() {
-        return username;
-    }
-    public String getCurrentGameName() {
-        return currentGameName;
-    }
+    public String getUsername() { return username; }
+    public String getCurrentGameName() { return currentGameName; }
     public Integer getTeam() { return player.team; }
     public Integer getLoyalty() { return player.loyalty; }
     public Integer getEnergy() { return player.energy; }
