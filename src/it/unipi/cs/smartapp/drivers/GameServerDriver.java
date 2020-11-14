@@ -115,9 +115,17 @@ public class GameServerDriver {
     }
 
     // <game> MOVE <direction> : request to move player
-    public String[] sendMOVE(String gameName, char direction) {
+    public GameServerResponse sendMOVE(String gameName, char direction) {
         String command = gameName + " MOVE " + direction;
-        return sendCommand(command);
+        String[] rawResponse = sendCommand(command);
+        ResponseCode code = ResponseCode.fromString(rawResponse[0]);
+
+        if(code == ResponseCode.OK && rawResponse[1].equals("blocked")) {
+            // Didn't actually move
+            code = ResponseCode.ERROR;
+        }
+
+        return new GameServerResponse(code, null, rawResponse[1]);
     }
 
     // <game> SHOOT <direction> : request to shoot
