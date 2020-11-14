@@ -62,6 +62,9 @@ public class gameController implements Controller {
             btnStartMatch.setVisible(false);
         }
 
+        // Add lobby name in the chat
+        txtChat.appendText("\nLobby name: " + stateMgr.getCurrentGameName());
+
         // Retrieve other player info from the Game Server
         updateStatus();
 
@@ -219,6 +222,7 @@ public class gameController implements Controller {
         stateMgr.updateGameState(GA);
 
         if (stateMgr.getGameState().equals("ACTIVE") && firstTime) {
+            txtChat.appendText("\nGame state changed to: " + stateMgr.getGameState());
             Alert message = new Alert(Alert.AlertType.INFORMATION);
             message.setTitle("Information");
             message.setContentText("Game started, now you can move and shoot!");
