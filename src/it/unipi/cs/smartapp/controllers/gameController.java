@@ -4,6 +4,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.chart.Chart;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -77,26 +78,40 @@ public class gameController implements Controller {
                 if (!stateMgr.getGameState().equals("ACTIVE")) {
                     Alert message = new Alert(Alert.AlertType.INFORMATION);
                     message.setTitle("Information");
-                    message.setContentText("You can move or shoot only with a started game.\n Game state: " + stateMgr.getGameState());
+                    message.setContentText("The game must start or not finished.\nGame state: " + stateMgr.getGameState());
                     message.showAndWait();
                     return;
                 }
 
                 switch (keyEvent.getCode().toString()) {
                     case "A":
+                        movePlayer('W');
                         break;
 
                     case "W":
+                        movePlayer('N');
                         break;
 
                     case "D":
+                        movePlayer('E');
                         break;
 
                     case "S":
+                        movePlayer('S');
                         break;
                 }
             }
         });
+    }
+
+    public void movePlayer(Character position) {
+        String[] res = gameServer.sendMOVE(stateMgr.getCurrentGameName(), position);
+
+        if (res[0].equals("OK")) {
+            updateMap();
+        }
+
+        System.out.println(res[1]);
     }
 
     @FXML
@@ -133,10 +148,11 @@ public class gameController implements Controller {
         String GA = data[0].substring(4); // Remove "GA: "
         stateMgr.updateGameState(GA);
 
+        // Alert (do the same with the ending of the game)
         if (stateMgr.getGameState().equals("ACTIVE") && firstTime) {
             Alert message = new Alert(Alert.AlertType.INFORMATION);
             message.setTitle("Information");
-            message.setContentText("Game started, now you can move and shoot!");
+            message.setContentText("Game started!");
             message.showAndWait();
             firstTime = false;
         }
@@ -192,11 +208,13 @@ public class gameController implements Controller {
             return;
         }
 
+        stateMgr.setGameState("ACTIVE");
+
         System.out.println(res.freeText);
 
         Alert message = new Alert(Alert.AlertType.INFORMATION);
         message.setTitle("Game started!");
-        message.setContentText("The minimum number of player is reached, the game is started!");
+        message.setContentText("The game is started, enjoy!");
         message.showAndWait();
     }
 
