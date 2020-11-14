@@ -247,31 +247,27 @@ public class gameController implements Controller {
 
     // Update gameMap
     public void updateMap() {
-        String response[] = gameServer.sendLOOK(stateMgr.getCurrentGameName());
+        GameServerResponse response = gameServer.sendLOOK(stateMgr.getCurrentGameName());
 
-        if (response[0].equals("OK")) {
-            stateMgr.map.setGameMap(stringToCharMap(response[1]));
-            drawMap();
-        } else {
-            System.err.println(response[1]);
+        if (response.code != ResponseCode.OK) {
+            System.err.println(response.freeText);
+            return;
         }
+        System.out.println(response.freeText);
+
+
+        stateMgr.map.setGameMap(stringToCharMap((String[]) response.data));
+        drawMap();
     }
 
-    private Character[][] stringToCharMap(String mapResponse) {
-        mapResponse = mapResponse.replace("LONG\n", "");
-
+    private Character[][] stringToCharMap(String[] rows) {
         Integer size = stateMgr.map.getMapSize();
         Character[][] parsedMap = new Character[size][size];
 
-        int i = 0; // String index
 
         for(int r=0; r<size; r++)
             for(int c=0; c<size; c++) {
-                if(mapResponse.charAt(i) == '\n') // Skip this character
-                    i++;
-
-                parsedMap[r][c] = mapResponse.charAt(i);
-                i++;
+                parsedMap[r][c] = rows[r].charAt(c);
             }
 
         return parsedMap;
