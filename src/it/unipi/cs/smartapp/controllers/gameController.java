@@ -84,15 +84,19 @@ public class gameController implements Controller {
 
                 switch (keyEvent.getCode().toString()) {
                     case "A":
+                        movePlayer('W');
                         break;
 
                     case "W":
+                        movePlayer('N');
                         break;
 
                     case "D":
+                        movePlayer('E');
                         break;
 
                     case "S":
+                        movePlayer('S');
                         break;
 
                     case "I":
@@ -110,6 +114,16 @@ public class gameController implements Controller {
                 }
             }
         });
+    }
+
+    public void movePlayer(Character position) {
+        String[] res = gameServer.sendMOVE(stateMgr.getCurrentGameName(), position);
+
+        if (res[0].equals("OK")) {
+            updateMap();
+        }
+
+        System.out.println(res[1]);
     }
 
     public void tryToShoot(Character direction){
