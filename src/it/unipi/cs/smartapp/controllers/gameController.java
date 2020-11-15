@@ -58,9 +58,10 @@ public class gameController implements Controller {
 
     @Override
     public void updateContent() {
-        if (!stateMgr.getCreator()) {
+        if (!stateMgr.getCreator())
             btnStartMatch.setVisible(false);
-        }
+        else
+            btnStartMatch.setVisible(true);
 
         // Add lobby name in the chat
         txtChat.appendText("\nLobby name: " + stateMgr.getCurrentGameName());
@@ -181,6 +182,9 @@ public class gameController implements Controller {
         message.setTitle("Game started!");
         message.setContentText("The minimum number of player is reached, the game is started!");
         message.showAndWait();
+
+        // Should remove in future
+        updateStatus();
     }
 
     // Update ProgressBar correctly
@@ -269,9 +273,8 @@ public class gameController implements Controller {
         Integer size = stateMgr.map.getMapSize();
         Character[][] parsedMap = new Character[size][size];
 
-
-        for(int r=0; r<size; r++)
-            for(int c=0; c<size; c++) {
+        for(int r=0; r < size; r++)
+            for(int c=0; c < size; c++) {
                 parsedMap[r][c] = rows[r].charAt(c);
             }
 
@@ -284,7 +287,7 @@ public class gameController implements Controller {
         Character[][] charMap = stateMgr.map.getGameMap();
 
         int xCanvas = 0, yCanvas = 0;
-        for(int r=0; r<size; r++) {
+        for(int r=0; r < size; r++) {
             for (int c = 0; c < size; c++) {
                 setColor(charMap[r][c]);
 
