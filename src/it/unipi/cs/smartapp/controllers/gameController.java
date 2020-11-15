@@ -72,29 +72,24 @@ public class gameController implements Controller {
         updateMap();
 
         // Keyboard events for moving
-        gamePanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
+        gamePanel.setOnKeyPressed(keyEvent -> {
+            if (!stateMgr.getGameState().equals("ACTIVE")) {
+                Alert message = new Alert(Alert.AlertType.INFORMATION);
+                message.setTitle("Information");
+                message.setContentText("You can move or shoot only with a started game.\n Game state: " + stateMgr.getGameState());
+                message.showAndWait();
+                return;
+            }
 
-            @Override
-            public void handle(KeyEvent keyEvent) {
-
-                if (!stateMgr.getGameState().equals("ACTIVE")) {
-                    Alert message = new Alert(Alert.AlertType.INFORMATION);
-                    message.setTitle("Information");
-                    message.setContentText("You can move or shoot only with a started game.\n Game state: " + stateMgr.getGameState());
-                    message.showAndWait();
-                    return;
-                }
-
-                switch (keyEvent.getCode().toString()) {
-                    case "W" -> movePlayer('N');
-                    case "A" -> movePlayer('W');
-                    case "S" -> movePlayer('S');
-                    case "D" -> movePlayer('E');
-                    case "I" -> tryToShoot('N');
-                    case "J" -> tryToShoot('W');
-                    case "K" -> tryToShoot('S');
-                    case "L" -> tryToShoot('E');
-                }
+            switch (keyEvent.getCode().toString()) {
+                case "W" -> movePlayer('N');
+                case "A" -> movePlayer('W');
+                case "S" -> movePlayer('S');
+                case "D" -> movePlayer('E');
+                case "I" -> tryToShoot('N');
+                case "J" -> tryToShoot('W');
+                case "K" -> tryToShoot('S');
+                case "L" -> tryToShoot('E');
             }
         });
     }
@@ -286,7 +281,7 @@ public class gameController implements Controller {
     private void drawMap() {
         Integer size = stateMgr.map.getMapSize();
         Integer cellSize = stateMgr.map.getCellSize();
-        Character charMap[][] = stateMgr.map.getGameMap();
+        Character[][] charMap = stateMgr.map.getGameMap();
 
         int xCanvas = 0, yCanvas = 0;
         for(int r=0; r<size; r++) {
@@ -304,7 +299,7 @@ public class gameController implements Controller {
 
     private void setColor(Character value) {
 
-        Color color = Color.web("#000000");;
+        Color color = Color.web("#000000");
 
         switch (value) {
             case '.' -> color = Color.web("#009432"); // Grass
