@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.spectateController">
+   <children>
+      <Button fx:id="btnStopSpectate" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" text="Stop spectate" />
+      <Label fx:id="txtGameChat" layoutX="523.0" layoutY="30.0" text="Game Chat:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="txtChat" editable="false" layoutX="523.0" layoutY="61.0" prefHeight="392.0" prefWidth="263.0" />
+      <Label layoutX="20.0" layoutY="513.0" text="Game info:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="22.0" layoutY="550.0" text="Your name:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Canvas fx:id="GameCanvas" height="416.0" layoutX="68.0" layoutY="69.0" width="416.0" />
+      <Label fx:id="txtUsername" layoutX="110.0" layoutY="550.0" text="Label">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font></Label>
+      <Label layoutX="200.0" layoutY="550.0" text="Lobby:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="txtLobby" layoutX="260.0" layoutY="550.0" text="Label">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnUpdateMap" layoutX="612.0" layoutY="498.0" mnemonicParsing="false" onAction="#btnUpdateMapPressed" prefHeight="38.0" prefWidth="86.0" text="Update Map" />
+   </children>
+</AnchorPane>

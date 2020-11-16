@@ -12,7 +12,7 @@ import it.unipi.cs.smartapp.statemanager.StateManager;
 import it.unipi.cs.smartapp.screens.Renderer;
 
 
-public class JoinMatchController implements Controller {
+public class joinMatchController implements Controller {
 
     private StateManager stateMgr;
     private GameServerDriver gameServer;
@@ -54,6 +54,33 @@ public class JoinMatchController implements Controller {
 
         // Change scene
         Renderer.getInstance().show("gameScene");
+    }
+
+    @FXML
+    private void btnSpectateMatchPressed(ActionEvent event) {
+        // Check if the game name is valid
+        String gameName = gameNameField.getText();
+        if(gameName.isBlank()) {
+            gameNameErrorLabel.setText("Invalid Game Name");
+            return;
+        }
+
+        // Check lobby existence
+        GameServerResponse response = gameServer.sendLOOK(gameName);
+
+        if (response.code != ResponseCode.OK) {
+            System.err.println("Lobby doesn't exist.");
+            gameNameErrorLabel.setText("Oops, the lobby doesn't exist.");
+            return;
+        }
+        System.out.println("Lobby exists.");
+        stateMgr.setCurrentGameName(gameName);
+
+        // Update the state
+        stateMgr.setInGame(gameName, false);
+
+        // Update player state and redirect to game view
+        Renderer.getInstance().show("spectateScene");
     }
 
     @FXML
