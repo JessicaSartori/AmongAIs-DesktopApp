@@ -1,11 +1,9 @@
 package it.unipi.cs.smartapp.controllers;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
@@ -13,6 +11,7 @@ import javafx.event.ActionEvent;
 import it.unipi.cs.smartapp.drivers.GameServerDriver;
 import it.unipi.cs.smartapp.drivers.GameServerResponse;
 import it.unipi.cs.smartapp.drivers.ResponseCode;
+import it.unipi.cs.smartapp.drivers.ChatSystemDriver;
 import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.statemanager.StateManager;
 
@@ -20,6 +19,7 @@ import it.unipi.cs.smartapp.statemanager.StateManager;
 public class gameController implements Controller {
     private StateManager stateMgr;
     private GameServerDriver gameServer;
+    private ChatSystemDriver chatSystem;
 
     private GraphicsContext canvasContext;
 
@@ -51,6 +51,9 @@ public class gameController implements Controller {
     public void initialize() {
         stateMgr = StateManager.getInstance();
         gameServer = GameServerDriver.getInstance();
+        chatSystem = ChatSystemDriver.getInstance();
+        chatSystem.setMessageCallback(new MessageCallback(this));
+
         canvasContext = mapCanvas.getGraphicsContext2D();
 
         System.out.println("Game Controller done");
@@ -58,13 +61,15 @@ public class gameController implements Controller {
 
     @Override
     public void updateContent() {
-        if (!stateMgr.getCreator())
-            btnStartMatch.setVisible(false);
-        else
-            btnStartMatch.setVisible(true);
+        btnStartMatch.setVisible(stateMgr.getCreator());
 
         // Add lobby name in the chat
         txtChat.appendText("\nLobby name: " + stateMgr.getCurrentGameName());
+
+        // Subscribe to chat channels
+        chatSystem.sendNAME(stateMgr.getUsername());
+        chatSystem.sendJOIN(stateMgr.getCurrentGameName());
+        chatSystem.sendJOIN("#GLOBAL");
 
         // Retrieve other player info from the Game Server
         updateStatus();
@@ -106,18 +111,24 @@ public class gameController implements Controller {
 
     @FXML
     public void txtSendMessage(ActionEvent event) {
-        txtChat.appendText("\n" + stateMgr.getUsername() + ": " + txtMessage.getText());
+        chatSystem.sendPOST(stateMgr.getCurrentGameName(), txtMessage.getText());
         txtMessage.setText("");
     }
 
-    public void quit(){
-        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Leaving the game");
+    public void txtReceiveMessage(String s) {
+        txtChat.appendText("\n" + s);
+    }
 
-        if (response.code != ResponseCode.OK) {
-            System.err.println(response.freeText);
-        } else {
-            System.out.println(response.freeText);
-        }
+    public void quit(){
+        // Close connection with game server
+        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Leaving the game");
+        if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
+        else { System.out.println(response.freeText); }
+
+        // Unsubscribe from all chat channels
+        chatSystem.sendLEAVE(stateMgr.getCurrentGameName());
+        chatSystem.sendLEAVE("#GLOBAL");
+        // TODO: should close also chat connection?
 
         stateMgr.setCurrentGameName(null);
 
@@ -337,5 +348,22 @@ public class gameController implements Controller {
             }
         }
         canvasContext.setFill(color);
+    }
+}
+
+class MessageCallback implements Runnable {
+
+    gameController controller;
+
+    public MessageCallback(gameController c) {
+        controller = c;
+    }
+
+    @Override
+    public void run() {
+        String[] message = StateManager.getInstance().newMessage;
+        StateManager.getInstance().newMessage = null;
+
+        controller.txtReceiveMessage("(" + message[0] + ") " + message[1] + ": " + message[2]);
     }
 }

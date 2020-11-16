@@ -23,6 +23,8 @@ public class StateManager {
     private String gameState = null;
     private Boolean creator = null;
 
+    public String[] newMessage = null;
+
     /*
      * Setters
      */
