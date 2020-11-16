@@ -308,7 +308,7 @@ public class gameController implements Controller {
         Integer cellSize = stateMgr.map.getCellSize();
         Character[][] charMap = stateMgr.map.getGameMap();
 
-        int xCanvas = 0, yCanvas = 0;
+        int xCanvas = cellSize, yCanvas = cellSize;
         for(int r=0; r < size; r++) {
             for (int c = 0; c < size; c++) {
                 setColor(charMap[r][c]);
@@ -318,7 +318,7 @@ public class gameController implements Controller {
                 xCanvas += cellSize;
             }
             yCanvas += cellSize;
-            xCanvas = 0;
+            xCanvas = cellSize;
         }
     }
 

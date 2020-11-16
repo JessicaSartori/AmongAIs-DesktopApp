@@ -6,7 +6,7 @@ public class MapStatus {
     private Integer mapSize = null;
 
     // Constant - Size of canvas in gameScene
-    private static final int CANVAS_SIZE = 416;
+    private static final int CANVAS_SIZE = 442;
 
     public MapStatus(){}
 
@@ -21,5 +21,5 @@ public class MapStatus {
      */
     public Character[][] getGameMap(){ return gameMap; }
     public Integer getMapSize(){ return mapSize; }
-    public Integer getCellSize(){ return Math.round(CANVAS_SIZE/mapSize); }
+    public Integer getCellSize(){ return Math.round(CANVAS_SIZE / (mapSize + 2)); }
 }
