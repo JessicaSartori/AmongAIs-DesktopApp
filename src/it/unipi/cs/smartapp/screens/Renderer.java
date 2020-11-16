@@ -25,11 +25,13 @@ public class Renderer {
         return instance;
     }
 
-    /* ==============================
+    /*
+     * ******************************
      * Instance variables and methods
-     * ============================== */
-    private Map<String, Scene> scenesMap;
-    private Stage stage;
+     * ******************************
+     */
+    private final Map<String, Scene> scenesMap;
+    private final Stage stage;
 
     private Renderer(Stage primaryStage) {
         stage = primaryStage;
@@ -76,5 +78,4 @@ public class Renderer {
     public void showStage() {
         stage.show();
     }
-
 }
