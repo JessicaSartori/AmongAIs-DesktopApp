@@ -96,19 +96,7 @@ public class gameController implements Controller {
     }
 
     @FXML
-    public void btnGoBackPressed(ActionEvent event) {
-        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Leaving the game");
-
-        if (response.code != ResponseCode.OK) {
-            System.err.println(response.freeText);
-        } else {
-            System.out.println(response.freeText);
-        }
-
-        stateMgr.setCurrentGameName(null);
-
-        Renderer.getInstance().show("mainMenu");
-    }
+    public void btnGoBackPressed(ActionEvent event) { quit(); }
 
     @FXML
     private void btnUpdMapPressed(ActionEvent event) { updateMap(); }
@@ -120,6 +108,20 @@ public class gameController implements Controller {
     public void txtSendMessage(ActionEvent event) {
         txtChat.appendText("\n" + stateMgr.getUsername() + ": " + txtMessage.getText());
         txtMessage.setText("");
+    }
+
+    public void quit(){
+        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Leaving the game");
+
+        if (response.code != ResponseCode.OK) {
+            System.err.println(response.freeText);
+        } else {
+            System.out.println(response.freeText);
+        }
+
+        stateMgr.setCurrentGameName(null);
+
+        Renderer.getInstance().show("mainMenu");
     }
 
     public void movePlayer(Character position) {
@@ -180,7 +182,7 @@ public class gameController implements Controller {
 
         Alert message = new Alert(Alert.AlertType.INFORMATION);
         message.setTitle("Game started!");
-        message.setContentText("The minimum number of player is reached, the game is started!");
+        message.setContentText("The minimum number of player is reached, the game has started!");
         message.showAndWait();
 
         // Should remove in future
@@ -229,6 +231,15 @@ public class gameController implements Controller {
             message.setContentText("Game started, now you can move and shoot!");
             message.showAndWait();
             firstTime = false;
+        }
+
+        // Check finished game
+        if (stateMgr.getGameState().equals("FINISHED")) {
+            Alert message = new Alert(Alert.AlertType.INFORMATION);
+            message.setTitle("Game finished!");
+            message.setHeaderText("Your final score is: " + stateMgr.getScore());
+            message.setContentText("Go back to main menu.");
+            message.showAndWait().ifPresent(response -> quit());
         }
 
         PlayerName.setText(stateMgr.getUsername());
