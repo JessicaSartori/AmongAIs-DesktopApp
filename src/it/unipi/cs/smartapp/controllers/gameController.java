@@ -60,6 +60,8 @@ public class gameController implements Controller {
     public void updateContent() {
         if (!stateMgr.getCreator()) {
             btnStartMatch.setVisible(false);
+        } else {
+            btnStartMatch.setVisible(true);
         }
 
         // Add lobby name in the chat
