@@ -32,7 +32,7 @@ public class GameServerDriver {
     // Constant - Game Server port
     public static final int PORT = 8421;
     // Constant - Milliseconds before next command can be sent to Game Server
-    private static final long MIN_DELAY = 600;
+    private static final long MIN_DELAY = 500;
     // Constant - Milliseconds of inactivity before NOP is sent
     private static final long NOP_DELAY = 30*1000;
 
@@ -115,9 +115,17 @@ public class GameServerDriver {
     }
 
     // <game> MOVE <direction> : request to move player
-    public String[] sendMOVE(String gameName, char direction) {
+    public GameServerResponse sendMOVE(String gameName, char direction) {
         String command = gameName + " MOVE " + direction;
-        return sendCommand(command);
+        String[] rawResponse = sendCommand(command);
+        ResponseCode code = ResponseCode.fromString(rawResponse[0]);
+
+        if(code == ResponseCode.OK && rawResponse[1].equals("blocked")) {
+            // Didn't actually move
+            code = ResponseCode.ERROR;
+        }
+
+        return new GameServerResponse(code, null, rawResponse[1]);
     }
 
     // <game> SHOOT <direction> : request to shoot
@@ -187,7 +195,6 @@ public class GameServerDriver {
             // Send request
             forcedWait(System.currentTimeMillis());
             outSocket.println(command);
-            lastCommandSent = System.currentTimeMillis();
 
             // Wait for response
             rawResponse = inSocket.readLine();
@@ -199,6 +206,7 @@ public class GameServerDriver {
             rawResponse = "FAIL Can not communicate with Game Server";
             clearSocket();
         }
+        lastCommandSent = System.currentTimeMillis();
 
         return rawResponse.split(" ", 2);
     }
@@ -213,7 +221,6 @@ public class GameServerDriver {
             // Send request
             forcedWait(System.currentTimeMillis());
             outSocket.println(command);
-            lastCommandSent = System.currentTimeMillis();
 
             rawResponse = inSocket.readLine();
             if(!rawResponse.contains("ERROR")) {
@@ -229,6 +236,7 @@ public class GameServerDriver {
             rawResponse = "FAIL Socket closed";
             clearSocket();
         }
+        lastCommandSent = System.currentTimeMillis();
 
         return rawResponse;
     }
