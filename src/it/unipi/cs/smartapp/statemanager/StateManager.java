@@ -26,6 +26,8 @@ public class StateManager {
     private String currentGameName = null;
     private String gameState = null;
 
+    public String[] newMessage = null;
+
     /*
      * Setters
      */

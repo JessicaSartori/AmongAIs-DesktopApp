@@ -328,7 +328,7 @@ class NOPSender implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("NOP Thread started");
+        System.out.println("NOP Thread: Started");
         try {
             while(!Thread.currentThread().isInterrupted()) {
                 Thread.sleep(secondsToWait*1000);
