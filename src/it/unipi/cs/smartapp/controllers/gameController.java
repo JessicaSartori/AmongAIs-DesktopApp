@@ -1,11 +1,9 @@
 package it.unipi.cs.smartapp.controllers;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
@@ -63,6 +61,9 @@ public class gameController implements Controller {
 
     @Override
     public void updateContent() {
+        // Fix Chat System
+        chatSystem.setMessageCallback(new MessageCallback(this));
+
         btnStartMatch.setVisible(stateMgr.getCreator());
 
         // Add lobby name in the chat
@@ -115,6 +116,7 @@ public class gameController implements Controller {
     public void txtSendMessage(ActionEvent event) {
         if (txtMessage.getText().isBlank()) {
             txtMessage.setStyle("-fx-border-color: red");
+            txtMessage.setText("");
         } else {
             txtMessage.setStyle("-fx-border-color: none");
             chatSystem.sendPOST(stateMgr.getCurrentGameName(), txtMessage.getText());
@@ -126,7 +128,7 @@ public class gameController implements Controller {
         txtChat.appendText("\n" + s);
     }
 
-    public void quit() {
+    public void quit(){
         // Close connection with game server
         GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Leaving the game");
         if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
@@ -356,22 +358,21 @@ public class gameController implements Controller {
         }
         canvasContext.setFill(color);
     }
-}
 
-class MessageCallback implements Runnable {
+    class MessageCallback implements Runnable {
 
-    gameController controller;
+        gameController controller;
 
-    public MessageCallback(gameController c) {
-        controller = c;
-    }
+        public MessageCallback(gameController c) {
+            controller = c;
+        }
 
-    @Override
-    public void run() {
-        String[] message = StateManager.getInstance().newMessage;
-        System.out.println("Chat message: " + message[1] + ": " + message[2]);
-        StateManager.getInstance().newMessage = null;
+        @Override
+        public void run() {
+            String[] message = StateManager.getInstance().newMessage;
+            StateManager.getInstance().newMessage = null;
 
-        controller.txtReceiveMessage(message[1] + ": " + message[2]);
+            controller.txtReceiveMessage("(" + message[0] + ") " + message[1] + ": " + message[2]);
+        }
     }
 }

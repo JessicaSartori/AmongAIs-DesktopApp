@@ -11,20 +11,17 @@ public class StateManager {
         return instance;
     }
 
-    // Player state
-    private String username = null;
-    private Boolean creator = null;
 
-    // Players state
+    private String username = null;
+
     public PlayerStatus player;
     public HashMap<String, PlayerStatus> playerList = null;
 
-    // Map state
     public MapStatus map;
 
-    // Game state
     private String currentGameName = null;
     private String gameState = null;
+    private Boolean creator = null;
 
     public String[] newMessage = null;
 

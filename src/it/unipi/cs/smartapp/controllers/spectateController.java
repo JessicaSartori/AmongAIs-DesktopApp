@@ -45,6 +45,9 @@ public class spectateController implements Controller {
 
     @Override
     public void updateContent() {
+        // Fix Chat System
+        chatSystem.setMessageCallback(new MessageCallback(this));
+
         txtUsername.setText(stateMgr.getUsername());
         txtLobby.setText(stateMgr.getCurrentGameName());
 
