@@ -8,10 +8,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
 
-import it.unipi.cs.smartapp.drivers.GameServerDriver;
-import it.unipi.cs.smartapp.drivers.GameServerResponse;
-import it.unipi.cs.smartapp.drivers.ResponseCode;
-import it.unipi.cs.smartapp.drivers.ChatSystemDriver;
+import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.statemanager.StateManager;
 
@@ -26,21 +23,13 @@ public class gameController implements Controller {
     private Boolean firstTime = true;
 
     @FXML
-    private Label PlayerName;
-    @FXML
-    private Label PlayerTeam;
-    @FXML
-    private Label PlayerScore;
-    @FXML
-    private Label PlayerLoyalty;
-    @FXML
-    private Label PlayerEnergy;
+    private Label playerName, playerTeam, playerLoyalty, playerEnergy, playerScore;
     @FXML
     private TextArea txtChat;
     @FXML
     private TextField txtMessage;
     @FXML
-    private ProgressBar PlayerEnergyBar;
+    private ProgressBar playerEnergyBar;
     @FXML
     private Button btnStartMatch;
     @FXML
@@ -52,7 +41,6 @@ public class gameController implements Controller {
         stateMgr = StateManager.getInstance();
         gameServer = GameServerDriver.getInstance();
         chatSystem = ChatSystemDriver.getInstance();
-        chatSystem.setMessageCallback(new MessageCallback(this));
 
         canvasContext = mapCanvas.getGraphicsContext2D();
 
@@ -61,15 +49,17 @@ public class gameController implements Controller {
 
     @Override
     public void updateContent() {
-        // Fix Chat System
-        chatSystem.setMessageCallback(new MessageCallback(this));
-
         btnStartMatch.setVisible(stateMgr.getCreator());
 
         // Add lobby name in the chat
         txtChat.appendText("\nLobby name: " + stateMgr.getCurrentGameName());
 
-        // Subscribe to chat channels
+        // Setup chat
+        chatSystem.setMessageCallback(() -> {
+            String[] message = stateMgr.newMessage;
+            stateMgr.newMessage = null;
+            txtChat.appendText("\n(" + message[0] + ") " + message[1] + ": " + message[2]);
+        });
         chatSystem.sendNAME(stateMgr.getUsername());
         chatSystem.sendJOIN(stateMgr.getCurrentGameName());
         chatSystem.sendJOIN("#GLOBAL");
@@ -80,7 +70,7 @@ public class gameController implements Controller {
         // Update the map
         updateMap();
 
-        // Keyboard events for moving
+        // Keyboard events
         gamePanel.setOnKeyPressed(keyEvent -> {
             if (!stateMgr.getGameState().equals("ACTIVE")) {
                 Alert message = new Alert(Alert.AlertType.INFORMATION);
@@ -114,21 +104,16 @@ public class gameController implements Controller {
 
     @FXML
     public void txtSendMessage(ActionEvent event) {
-        if (txtMessage.getText().isBlank()) {
+        if(txtMessage.getText().isBlank()) {
             txtMessage.setStyle("-fx-border-color: red");
-            txtMessage.setText("");
         } else {
             txtMessage.setStyle("-fx-border-color: none");
             chatSystem.sendPOST(stateMgr.getCurrentGameName(), txtMessage.getText());
-            txtMessage.setText("");
         }
+        txtMessage.setText("");
     }
 
-    public void txtReceiveMessage(String s) {
-        txtChat.appendText("\n" + s);
-    }
-
-    public void quit(){
+    public void quit() {
         // Close connection with game server
         GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Leaving the game");
         if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
@@ -214,8 +199,8 @@ public class gameController implements Controller {
         if (energyValue < 0) energyValue = 0;
 
         stateMgr.setEnergy(energyValue);
-        PlayerEnergy.setText(energyValue.toString());
-        PlayerEnergyBar.setProgress(((double) energyValue) / 256.0);
+        playerEnergy.setText(energyValue.toString());
+        playerEnergyBar.setProgress(((double) energyValue) / 256.0);
     }
 
     // Update general Status
@@ -262,26 +247,26 @@ public class gameController implements Controller {
             message.showAndWait().ifPresent(response -> quit());
         }
 
-        PlayerName.setText(stateMgr.getUsername());
+        playerName.setText(stateMgr.getUsername());
 
         String team = (stateMgr.getTeam() == 0) ? "Red Team" : "Blue Team";
-        PlayerTeam.setText(team);
-        if (PlayerTeam.getText().equals("Blue Team")) {
-            PlayerTeam.setStyle("-fx-background-color: blue");
+        playerTeam.setText(team);
+        if (playerTeam.getText().equals("Blue Team")) {
+            playerTeam.setStyle("-fx-background-color: blue");
         } else {
-            PlayerTeam.setStyle("-fx-background-color: red");
+            playerTeam.setStyle("-fx-background-color: red");
         }
 
         String loyalty = (stateMgr.getLoyalty() == 0) ? "Normal" : "Impostor";
-        PlayerLoyalty.setText(loyalty);
-        if (PlayerLoyalty.getText().equals("Impostor")) {
-            PlayerLoyalty.setStyle("-fx-text-fill: red;");
+        playerLoyalty.setText(loyalty);
+        if (playerLoyalty.getText().equals("Impostor")) {
+            playerLoyalty.setStyle("-fx-text-fill: red;");
         } else {
-            PlayerLoyalty.setStyle("-fx-text-fill: black;");
+            playerLoyalty.setStyle("-fx-text-fill: black;");
         }
 
-        PlayerScore.setText(stateMgr.getScore().toString());
-        PlayerEnergy.setText(stateMgr.getEnergy().toString());
+        playerScore.setText(stateMgr.getScore().toString());
+        playerEnergy.setText(stateMgr.getEnergy().toString());
         updateEnergy(stateMgr.getEnergy());
     }
 
@@ -357,22 +342,5 @@ public class gameController implements Controller {
             }
         }
         canvasContext.setFill(color);
-    }
-
-    class MessageCallback implements Runnable {
-
-        gameController controller;
-
-        public MessageCallback(gameController c) {
-            controller = c;
-        }
-
-        @Override
-        public void run() {
-            String[] message = StateManager.getInstance().newMessage;
-            StateManager.getInstance().newMessage = null;
-
-            controller.txtReceiveMessage("(" + message[0] + ") " + message[1] + ": " + message[2]);
-        }
     }
 }

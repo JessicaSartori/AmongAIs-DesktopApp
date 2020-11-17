@@ -17,13 +17,13 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <ProgressBar fx:id="PlayerEnergyBar" layoutX="293.0" layoutY="508.0" prefHeight="27.0" prefWidth="153.0" progress="1.0" />
+      <ProgressBar fx:id="playerEnergyBar" layoutX="293.0" layoutY="508.0" prefHeight="27.0" prefWidth="153.0" progress="1.0" />
       <Label fx:id="txtTeam" layoutX="13.0" layoutY="555.0" text="Team affiliation:">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label fx:id="PlayerTeam" alignment="CENTER" contentDisplay="CENTER" layoutX="125.0" layoutY="551.0" prefHeight="27.0" prefWidth="76.0" style="-fx-background-color: #ff0000;" text="Team Red" textFill="WHITE">
+      <Label fx:id="playerTeam" alignment="CENTER" contentDisplay="CENTER" layoutX="125.0" layoutY="551.0" prefHeight="27.0" prefWidth="76.0" style="-fx-background-color: #ff0000;" text="Team Red" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
@@ -33,7 +33,7 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label fx:id="PlayerLoyalty" layoutX="289.0" layoutY="555.0" prefHeight="18.0" prefWidth="76.0" text="Normal">
+      <Label fx:id="playerLoyalty" layoutX="289.0" layoutY="555.0" prefHeight="18.0" prefWidth="76.0" text="Normal">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
@@ -51,7 +51,7 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label fx:id="PlayerName" layoutX="100.0" layoutY="510.0" text="Guest_1234">
+      <Label fx:id="playerName" layoutX="100.0" layoutY="510.0" text="Guest_1234">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
@@ -61,12 +61,12 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label fx:id="PlayerScore" layoutX="470.0" layoutY="555.0" text="0">
+      <Label fx:id="playerScore" layoutX="470.0" layoutY="555.0" text="0">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label fx:id="PlayerEnergy" alignment="CENTER" contentDisplay="CENTER" layoutX="455.0" layoutY="512.0" style="-fx-scale-z: 1000;" text="256" textFill="BLACK">
+      <Label fx:id="playerEnergy" alignment="CENTER" contentDisplay="CENTER" layoutX="455.0" layoutY="512.0" style="-fx-scale-z: 1000;" text="256" textFill="BLACK">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
