@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
@@ -173,6 +174,8 @@ public class gameController implements Controller {
 
         // TODO - find out coordinates of landed
         // TODO - add "explosion" on map ?
+        drawCell(1, 1, "", "");
+        drawCell(31, 31, "", "");
 
         // Should remove in future
         updateStatus();
@@ -322,8 +325,23 @@ public class gameController implements Controller {
         }
     }
 
-    private void setColor(Character value) {
+    private void drawCell(Integer x, Integer y, String shape, String color) {
+        Integer cellSize = stateMgr.map.getCellSize();
+        Integer xCanvas = x*cellSize, yCanvas = y*cellSize;
 
+        if(shape.equals("square")) {
+            // Draw a square
+            canvasContext.fillRect(xCanvas, yCanvas, cellSize, cellSize);
+            canvasContext.setFill(Color.web(color));
+        }
+        else {
+            // Draw explosion
+            Image explosion = new Image(getClass().getResourceAsStream("file:../sprites/explosion.png"));
+            canvasContext.drawImage(explosion, xCanvas, yCanvas, cellSize, cellSize);
+        }
+    }
+
+    private void setColor(Character value) {
         Color color = Color.web("#000000");
 
         switch (value) {
