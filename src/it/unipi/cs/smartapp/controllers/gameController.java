@@ -6,7 +6,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
 
 import it.unipi.cs.smartapp.drivers.GameServerDriver;
@@ -125,9 +124,7 @@ public class gameController implements Controller {
         }
     }
 
-    public void txtReceiveMessage(String s) {
-        txtChat.appendText("\n" + s);
-    }
+    public void txtReceiveMessage(String s) { txtChat.appendText("\n" + s); }
 
     public void quit(){
         // Close connection with game server
@@ -335,7 +332,6 @@ public class gameController implements Controller {
             return;
         }
         System.out.println(response.freeText);
-
 
         stateMgr.map.setGameMap(stringToCharMap((String[]) response.data));
         drawMap();
