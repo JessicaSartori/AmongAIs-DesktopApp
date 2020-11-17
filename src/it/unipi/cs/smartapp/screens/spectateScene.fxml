@@ -24,7 +24,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Canvas fx:id="GameCanvas" height="416.0" layoutX="68.0" layoutY="69.0" width="416.0" />
+      <Canvas fx:id="gameCanvas" height="442.0" layoutX="41.0" layoutY="61.0" width="442.0" />
       <Label fx:id="txtUsername" layoutX="110.0" layoutY="550.0" text="Label">
          <font>
             <Font name="System Bold" size="14.0" />

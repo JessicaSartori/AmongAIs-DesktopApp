@@ -10,11 +10,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 
 public class spectateController implements Controller {
     private StateManager stateMgr;
@@ -28,7 +26,7 @@ public class spectateController implements Controller {
     @FXML
     private TextArea txtChat;
     @FXML
-    private Canvas GameCanvas;
+    private Canvas gameCanvas;
 
     private GraphicsContext canvasContext;
 
@@ -38,7 +36,7 @@ public class spectateController implements Controller {
         chatSystem = ChatSystemDriver.getInstance();
         chatSystem.setMessageCallback(new MessageCallback(this));
 
-        canvasContext = GameCanvas.getGraphicsContext2D();
+        canvasContext = gameCanvas.getGraphicsContext2D();
 
         System.out.println("Spectate Controller done");
     }
@@ -116,46 +114,43 @@ public class spectateController implements Controller {
         Integer cellSize = stateMgr.map.getCellSize();
         Character[][] charMap = stateMgr.map.getGameMap();
 
-        int xCanvas = 0, yCanvas = 0;
-        for (int r = 0; r < size; r++) {
-            for (int c = 0; c < size; c++) {
-                setColor(charMap[r][c]);
+        // Clear canvas
+        canvasContext.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
 
-                canvasContext.fillRect(xCanvas, yCanvas, cellSize, cellSize);
+        int xCanvas = cellSize, yCanvas = cellSize;
+        for(int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+                Image sprite = setSprite(charMap[r][c]);
+                canvasContext.drawImage(sprite, xCanvas, yCanvas, cellSize, cellSize);
 
                 xCanvas += cellSize;
             }
             yCanvas += cellSize;
-            xCanvas = 0;
+            xCanvas = cellSize;
         }
     }
 
-    private void setColor(Character value) {
+    private Image setSprite(Character value) {
+        Integer cellSize = stateMgr.map.getCellSize();
 
-        Color color = Color.web("#000000");
+        Image sprite = new Image("it/unipi/cs/smartapp/sprites/transparent.png");
 
         switch (value) {
-            case '.' -> color = Color.web("#009432"); // Grass
-            case '#' -> color = Color.web("#718093"); // Wall
-            case '~' -> color = Color.web("#00FFFF"); // River
-            case '@' -> color = Color.web("#006b6b"); // Ocean
-            case '!' -> color = Color.web("#ff8a00"); // Trap
-            case '$' -> color = Color.web("#fffd50"); // Energy recharge
-            case '&' -> color = Color.web("#3b1909"); // Barrier
-            case 'X' -> color = Color.web("#fdbda7"); // Flag team 0
-            case 'x' -> color = Color.web("#b7beff"); // Flag team 1
+            case '.' -> sprite = new Image("it/unipi/cs/smartapp/sprites/grass.png"); // Grass
+            case '#' -> sprite = new Image("it/unipi/cs/smartapp/sprites/wall.png"); // Wall
+            case '~' -> sprite = new Image("it/unipi/cs/smartapp/sprites/river.png"); // River
+            case '@' -> sprite = new Image("it/unipi/cs/smartapp/sprites/ocean.png"); // Ocean
+            case '!' -> sprite = new Image("it/unipi/cs/smartapp/sprites/trap.png"); // Trap
+            case '$' -> sprite = new Image("it/unipi/cs/smartapp/sprites/energy.png"); // Energy recharge
+            case '&' -> sprite = new Image("it/unipi/cs/smartapp/sprites/barrier.png"); // Barrier
+            case 'X' -> sprite = new Image("it/unipi/cs/smartapp/sprites/flagRed.png"); // Flag team 0
+            case 'x' -> sprite = new Image("it/unipi/cs/smartapp/sprites/flagBlue.png"); // Flag team 1
             default -> { // Players
-                if (value == stateMgr.getSymbol()) {
-                    // Current player
-                    color = (stateMgr.getTeam() == 0) ? Color.web("#ff0000") : Color.web("#0000ff");
-                } else {
-                    // Other players
-                    if (Character.isUpperCase(value)) color = Color.web("#f25656");
-                    else if (Character.isLowerCase(value)) color = Color.web("#0652DD");
-                }
+                if(Character.isUpperCase(value)) sprite = new Image("it/unipi/cs/smartapp/sprites/playerTopRed.png");
+                else if(Character.isLowerCase(value)) sprite = new Image("it/unipi/cs/smartapp/sprites/playerTopBlue.png");
             }
         }
-        canvasContext.setFill(color);
+        return sprite;
     }
 
     @FXML
