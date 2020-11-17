@@ -49,14 +49,6 @@ public class gameController implements Controller {
     private Canvas mapCanvas;
     @FXML
     private AnchorPane gamePanel;
-    @FXML
-    private Label txtTeam;
-    @FXML
-    private Label txtScore;
-    @FXML
-    private Label txtEnergy;
-    @FXML
-    private Label txtLoyalty;
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
@@ -121,15 +113,20 @@ public class gameController implements Controller {
 
     @FXML
     public void txtSendMessage(ActionEvent event) {
-        chatSystem.sendPOST(stateMgr.getCurrentGameName(), txtMessage.getText());
-        txtMessage.setText("");
+        if (txtMessage.getText().isBlank()) {
+            txtMessage.setStyle("-fx-border-color: red");
+        } else {
+            txtMessage.setStyle("-fx-border-color: none");
+            chatSystem.sendPOST(stateMgr.getCurrentGameName(), txtMessage.getText());
+            txtMessage.setText("");
+        }
     }
 
     public void txtReceiveMessage(String s) {
         txtChat.appendText("\n" + s);
     }
 
-    public void quit(){
+    public void quit() {
         // Close connection with game server
         GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Leaving the game");
         if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
@@ -372,8 +369,9 @@ class MessageCallback implements Runnable {
     @Override
     public void run() {
         String[] message = StateManager.getInstance().newMessage;
+        System.out.println("Chat message: " + message[1] + ": " + message[2]);
         StateManager.getInstance().newMessage = null;
 
-        controller.txtReceiveMessage("(" + message[0] + ") " + message[1] + ": " + message[2]);
+        controller.txtReceiveMessage(message[1] + ": " + message[2]);
     }
 }

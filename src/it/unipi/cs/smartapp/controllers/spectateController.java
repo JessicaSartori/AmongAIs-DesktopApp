@@ -1,5 +1,6 @@
 package it.unipi.cs.smartapp.controllers;
 
+import it.unipi.cs.smartapp.drivers.ChatSystemDriver;
 import it.unipi.cs.smartapp.drivers.GameServerDriver;
 import it.unipi.cs.smartapp.drivers.GameServerResponse;
 import it.unipi.cs.smartapp.drivers.ResponseCode;
@@ -15,10 +16,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 
-
 public class spectateController implements Controller {
     private StateManager stateMgr;
     private GameServerDriver gameServer;
+    private ChatSystemDriver chatSystem;
 
     @FXML
     private Label txtUsername;
@@ -28,24 +29,29 @@ public class spectateController implements Controller {
     private TextArea txtChat;
     @FXML
     private Canvas GameCanvas;
-    @FXML
-    private Button btnUpdateMap;
 
     private GraphicsContext canvasContext;
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
         gameServer = GameServerDriver.getInstance();
+        chatSystem = ChatSystemDriver.getInstance();
+        chatSystem.setMessageCallback(new MessageCallback(this));
 
         canvasContext = GameCanvas.getGraphicsContext2D();
 
-        System.out.println("Create Spectate Controller done");
+        System.out.println("Spectate Controller done");
     }
 
     @Override
     public void updateContent() {
         txtUsername.setText(stateMgr.getUsername());
         txtLobby.setText(stateMgr.getCurrentGameName());
+
+        // Subscribe to chat channels
+        chatSystem.sendNAME(stateMgr.getUsername());
+        chatSystem.sendJOIN(stateMgr.getCurrentGameName());
+        chatSystem.sendJOIN("#GLOBAL");
 
         // Update status
         updateStatus();
@@ -151,9 +157,37 @@ public class spectateController implements Controller {
 
     @FXML
     public void btnGoBackPressed(ActionEvent event) {
+        // Unsubscribe from all chat channels
+        chatSystem.sendLEAVE(stateMgr.getCurrentGameName());
+        chatSystem.sendLEAVE("#GLOBAL");
+        // TODO: should close also chat connection?
+
+        stateMgr.setCurrentGameName(null);
+
         Renderer.getInstance().show("mainMenu");
     }
 
     @FXML
     private void btnUpdateMapPressed(ActionEvent event) { updateMap(); }
+
+    public void txtReceiveMessage(String s) {
+        txtChat.appendText("\n" + s);
+    }
+
+    class MessageCallback implements Runnable {
+
+        spectateController controller;
+
+        public MessageCallback(spectateController c) {
+            controller = c;
+        }
+
+        @Override
+        public void run() {
+            String[] message = StateManager.getInstance().newMessage;
+            StateManager.getInstance().newMessage = null;
+
+            controller.txtReceiveMessage(message[1] + ": " + message[2]);
+        }
+    }
 }
