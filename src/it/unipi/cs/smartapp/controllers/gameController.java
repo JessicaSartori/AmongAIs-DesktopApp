@@ -185,66 +185,47 @@ public class gameController implements Controller {
         // Should remove in future
         updateStatus();
 
-        Integer[] coords = shotCoordinates(direction, landed, energy);
-        drawCell(coords[0], coords[1], "", "#000000");
-
-        // TODO - add "explosion" on map ?
+        drawShot(direction, landed, energy);
     }
 
-    private Integer[] shotCoordinates(Character shotDirection, Character landed, Integer prevEnergy) {
+    private void drawShot(Character shotDirection, Character landed, Integer prevEnergy) {
         Character[][] map = stateMgr.map.getGameMap();
         Integer size = stateMgr.map.getMapSize();
         Integer[] playerPos = stateMgr.player.position;
         Integer c = playerPos[0], r = playerPos[1];
+        String playerFile = "", color = (stateMgr.getTeam() == 0) ? "Red" : "Blue";
 
         switch (shotDirection) {
             case 'N' -> {
                 if(landed == '?') r = -1;
-                else if(landed == '.') {
-                    r -= prevEnergy;
-                }
-                else{
-                    while(map[r][c] != landed) {
-                        r--;
-                    }
-                }
+                else if(landed == '.') r -= prevEnergy;
+                else while(map[r][c] != landed) r--;
+                playerFile = "playerTop";
             }
             case 'S' -> {
                 if(landed == '?') r = size;
-                else if(landed == '.') {
-                    r += prevEnergy;
-                }
-                else{
-                    while(map[r][c] != landed) {
-                        r++;
-                    }
-                }
+                else if(landed == '.') r += prevEnergy;
+                else while(map[r][c] != landed) r++;
+                playerFile = "playerDown";
             }
             case 'W' -> {
                 if(landed == '?') c = -1;
-                else if(landed == '.') {
-                    c -= prevEnergy;
-                }
-                else{
-                    while(map[r][c] != landed) {
-                        c--;
-                    }
-                }
+                else if(landed == '.') c -= prevEnergy;
+                else while(map[r][c] != landed) c--;
+                playerFile = "playerLeft";
             }
             case 'E' -> {
                 if(landed == '?') c = size;
-                else if(landed == '.') {
-                    c += prevEnergy;
-                }
-                else{
-                    while(map[r][c] != landed) {
-                        c++;
-                    }
-                }
+                else if(landed == '.') c += prevEnergy;
+                else while(map[r][c] != landed) c++;
+                playerFile = "playerRight";
             }
         }
 
-        return new Integer[]{c + 1, r + 1};
+        Image player = new Image("it/unipi/cs/smartapp/sprites/" + playerFile + color + ".png");
+        drawCell(playerPos[0] + 1, playerPos[1] + 1, player);
+        Image explosion = new Image("it/unipi/cs/smartapp/sprites/explosion.png");
+        drawCell(c + 1, r + 1, explosion);
     }
 
     @FXML
@@ -364,8 +345,8 @@ public class gameController implements Controller {
         Integer size = stateMgr.map.getMapSize();
         Character[][] parsedMap = new Character[size][size];
 
-        for(int r=0; r < size; r++)
-            for(int c=0; c < size; c++) {
+        for(int r = 0; r < size; r++)
+            for(int c = 0; c < size; c++) {
                 parsedMap[r][c] = rows[r].charAt(c);
             }
 
@@ -381,11 +362,10 @@ public class gameController implements Controller {
         canvasContext.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
 
         int xCanvas = cellSize, yCanvas = cellSize;
-        for(int r=0; r < size; r++) {
+        for(int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
-                setColor(charMap[r][c]);
-
-                canvasContext.fillRect(xCanvas, yCanvas, cellSize, cellSize);
+                Image sprite = setSprite(charMap[r][c]);
+                canvasContext.drawImage(sprite, xCanvas, yCanvas, cellSize, cellSize);
 
                 xCanvas += cellSize;
             }
@@ -394,47 +374,34 @@ public class gameController implements Controller {
         }
     }
 
-    private void drawCell(Integer x, Integer y, String shape, String color) {
+    private void drawCell(Integer x, Integer y, Image image) {
         Integer cellSize = stateMgr.map.getCellSize();
         Integer xCanvas = x*cellSize, yCanvas = y*cellSize;
 
-        if(shape.equals("square")) {
-            // Draw a square
-            canvasContext.setFill(Color.web(color));
-            canvasContext.fillRect(xCanvas, yCanvas, cellSize, cellSize);
-        }
-        else {
-            // Draw explosion
-            Image explosion = new Image(getClass().getResourceAsStream("file:../sprites/explosion.png"));
-            canvasContext.drawImage(explosion, xCanvas, yCanvas, cellSize, cellSize);
-        }
+        canvasContext.drawImage(image, xCanvas, yCanvas, cellSize, cellSize);
     }
 
-    private void setColor(Character value) {
-        Color color = Color.web("#000000");
+    private Image setSprite(Character value) {
+        Integer cellSize = stateMgr.map.getCellSize();
+
+        Image sprite = new Image("it/unipi/cs/smartapp/sprites/transparent.png");
 
         switch (value) {
-            case '.' -> color = Color.web("#009432"); // Grass
-            case '#' -> color = Color.web("#718093"); // Wall
-            case '~' -> color = Color.web("#00FFFF"); // River
-            case '@' -> color = Color.web("#006b6b"); // Ocean
-            case '!' -> color = Color.web("#ff8a00"); // Trap
-            case '$' -> color = Color.web("#fffd50"); // Energy recharge
-            case '&' -> color = Color.web("#3b1909"); // Barrier
-            case 'X' -> color = Color.web("#fdbda7"); // Flag team 0
-            case 'x' -> color = Color.web("#b7beff"); // Flag team 1
+            case '.' -> sprite = new Image("it/unipi/cs/smartapp/sprites/grass.png"); // Grass
+            case '#' -> sprite = new Image("it/unipi/cs/smartapp/sprites/wall.png"); // Wall
+            case '~' -> sprite = new Image("it/unipi/cs/smartapp/sprites/river.png"); // River
+            case '@' -> sprite = new Image("it/unipi/cs/smartapp/sprites/ocean.png"); // Ocean
+            case '!' -> sprite = new Image("it/unipi/cs/smartapp/sprites/trap.png"); // Trap
+            case '$' -> sprite = new Image("it/unipi/cs/smartapp/sprites/energy.png"); // Energy recharge
+            case '&' -> sprite = new Image("it/unipi/cs/smartapp/sprites/barrier.png"); // Barrier
+            case 'X' -> sprite = new Image("it/unipi/cs/smartapp/sprites/flagRed.png"); // Flag team 0
+            case 'x' -> sprite = new Image("it/unipi/cs/smartapp/sprites/flagBlue.png"); // Flag team 1
             default -> { // Players
-                if (value == stateMgr.getSymbol()) {
-                    // Current player
-                    color = (stateMgr.getTeam() == 0) ? Color.web("#ff0000") : Color.web("#0000ff");
-                } else {
-                    // Other players
-                    if(Character.isUpperCase(value)) color = Color.web("#f25656");
-                    else if(Character.isLowerCase(value)) color = Color.web("#0652DD");
-                }
+                if(Character.isUpperCase(value)) sprite = new Image("it/unipi/cs/smartapp/sprites/playerTopRed.png");
+                else if(Character.isLowerCase(value)) sprite = new Image("it/unipi/cs/smartapp/sprites/playerTopBlue.png");
             }
         }
-        canvasContext.setFill(color);
+        return sprite;
     }
 
     class MessageCallback implements Runnable {
