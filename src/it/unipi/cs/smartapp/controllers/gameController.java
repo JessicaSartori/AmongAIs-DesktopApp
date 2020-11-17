@@ -62,6 +62,9 @@ public class gameController implements Controller {
 
     @Override
     public void updateContent() {
+        // Fix Chat System
+        chatSystem.setMessageCallback(new MessageCallback(this));
+
         btnStartMatch.setVisible(stateMgr.getCreator());
 
         // Add lobby name in the chat
@@ -112,8 +115,14 @@ public class gameController implements Controller {
 
     @FXML
     public void txtSendMessage(ActionEvent event) {
-        chatSystem.sendPOST(stateMgr.getCurrentGameName(), txtMessage.getText());
-        txtMessage.setText("");
+        if (txtMessage.getText().isBlank()) {
+            txtMessage.setStyle("-fx-border-color: red");
+            txtMessage.setText("");
+        } else {
+            txtMessage.setStyle("-fx-border-color: none");
+            chatSystem.sendPOST(stateMgr.getCurrentGameName(), txtMessage.getText());
+            txtMessage.setText("");
+        }
     }
 
     public void txtReceiveMessage(String s) {
@@ -169,16 +178,73 @@ public class gameController implements Controller {
             case OK -> System.out.println(res.freeText);
         }
 
+        Integer energy = stateMgr.getEnergy();
         Character landed = (Character) res.data;
         System.out.println("Ok shot. Landed on: " + landed);
 
-        // TODO - find out coordinates of landed
-        // TODO - add "explosion" on map ?
-        drawCell(1, 1, "", "");
-        drawCell(31, 31, "", "");
-
         // Should remove in future
         updateStatus();
+
+        Integer[] coords = shotCoordinates(direction, landed, energy);
+        drawCell(coords[0], coords[1], "", "#000000");
+
+        // TODO - add "explosion" on map ?
+    }
+
+    private Integer[] shotCoordinates(Character shotDirection, Character landed, Integer prevEnergy) {
+        Character[][] map = stateMgr.map.getGameMap();
+        Integer size = stateMgr.map.getMapSize();
+        Integer[] playerPos = stateMgr.player.position;
+        Integer c = playerPos[0], r = playerPos[1];
+
+        switch (shotDirection) {
+            case 'N' -> {
+                if(landed == '?') r = -1;
+                else if(landed == '.') {
+                    r -= prevEnergy;
+                }
+                else{
+                    while(map[r][c] != landed) {
+                        r--;
+                    }
+                }
+            }
+            case 'S' -> {
+                if(landed == '?') r = size;
+                else if(landed == '.') {
+                    r += prevEnergy;
+                }
+                else{
+                    while(map[r][c] != landed) {
+                        r++;
+                    }
+                }
+            }
+            case 'W' -> {
+                if(landed == '?') c = -1;
+                else if(landed == '.') {
+                    c -= prevEnergy;
+                }
+                else{
+                    while(map[r][c] != landed) {
+                        c--;
+                    }
+                }
+            }
+            case 'E' -> {
+                if(landed == '?') c = size;
+                else if(landed == '.') {
+                    c += prevEnergy;
+                }
+                else{
+                    while(map[r][c] != landed) {
+                        c++;
+                    }
+                }
+            }
+        }
+
+        return new Integer[]{c + 1, r + 1};
     }
 
     @FXML
@@ -311,6 +377,9 @@ public class gameController implements Controller {
         Integer cellSize = stateMgr.map.getCellSize();
         Character[][] charMap = stateMgr.map.getGameMap();
 
+        // Clear canvas
+        canvasContext.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
+
         int xCanvas = cellSize, yCanvas = cellSize;
         for(int r=0; r < size; r++) {
             for (int c = 0; c < size; c++) {
@@ -331,8 +400,8 @@ public class gameController implements Controller {
 
         if(shape.equals("square")) {
             // Draw a square
-            canvasContext.fillRect(xCanvas, yCanvas, cellSize, cellSize);
             canvasContext.setFill(Color.web(color));
+            canvasContext.fillRect(xCanvas, yCanvas, cellSize, cellSize);
         }
         else {
             // Draw explosion
@@ -367,21 +436,21 @@ public class gameController implements Controller {
         }
         canvasContext.setFill(color);
     }
-}
 
-class MessageCallback implements Runnable {
+    class MessageCallback implements Runnable {
 
-    gameController controller;
+        gameController controller;
 
-    public MessageCallback(gameController c) {
-        controller = c;
-    }
+        public MessageCallback(gameController c) {
+            controller = c;
+        }
 
-    @Override
-    public void run() {
-        String[] message = StateManager.getInstance().newMessage;
-        StateManager.getInstance().newMessage = null;
+        @Override
+        public void run() {
+            String[] message = StateManager.getInstance().newMessage;
+            StateManager.getInstance().newMessage = null;
 
-        controller.txtReceiveMessage("(" + message[0] + ") " + message[1] + ": " + message[2]);
+            controller.txtReceiveMessage("(" + message[0] + ") " + message[1] + ": " + message[2]);
+        }
     }
 }

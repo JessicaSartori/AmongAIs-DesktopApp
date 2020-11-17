@@ -75,5 +75,9 @@ public class StateManager {
         PlayerStatus pl = new PlayerStatus();
         pl.updateWith(info);
         playerList.put(pl.username, pl);
+
+        // Added to guarantee current player coordinates are updated correctly
+        if(pl.username.equals(player.username))
+            player.updateWith(info);
     }
 }
