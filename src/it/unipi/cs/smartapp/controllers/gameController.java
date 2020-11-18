@@ -372,6 +372,12 @@ public class gameController implements Controller {
         canvasContext.drawImage(image, xCanvas, yCanvas, cellSize, cellSize);
     }
 
+    private Image setSprite(Character value) {
+        if(Character.isUpperCase(value) && value != 'X') return sprites.get('8');
+        if(Character.isLowerCase(value) && value != 'x') return sprites.get('7');
+        return sprites.get(value);
+    }
+
     private void loadSprites(){
         Image icon = new Image("it/unipi/cs/smartapp/sprites/transparent.png");
         sprites.put(' ', icon);
@@ -413,11 +419,5 @@ public class gameController implements Controller {
         sprites.put('7', icon);
         icon = new Image("it/unipi/cs/smartapp/sprites/playerTopRed.png");
         sprites.put('8', icon);
-    }
-
-    private Image setSprite(Character value) {
-        if(Character.isUpperCase(value) && value != 'X') return sprites.get('8');
-        if(Character.isLowerCase(value) && value != 'x') return sprites.get('7');
-        return sprites.get(value);
     }
 }

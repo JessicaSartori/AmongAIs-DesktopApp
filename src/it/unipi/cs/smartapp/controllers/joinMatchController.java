@@ -31,6 +31,9 @@ public class joinMatchController implements Controller {
         System.out.println("Join Match Controller done");
     }
 
+    @Override
+    public void updateContent() { gameNameErrorLabel.setText(""); }
+
     @FXML
     private void btnJoinMatchPressed(ActionEvent event) {
         // Check if the game name is valid

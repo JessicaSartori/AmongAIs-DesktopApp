@@ -31,6 +31,9 @@ public class createGameController implements Controller {
         System.out.println("Create Match Controller done");
     }
 
+    @Override
+    public void updateContent() { gameNameErrorLabel.setText(""); }
+
     @FXML
     private void btnCreateMatchPressed(ActionEvent event) {
         // Check if the game name is valid
