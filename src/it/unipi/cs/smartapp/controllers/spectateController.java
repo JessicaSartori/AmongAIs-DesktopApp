@@ -49,16 +49,23 @@ public class spectateController implements Controller {
 
     @Override
     public void updateContent() {
-        // Fix Chat System
-        chatSystem.setMessageCallback(new MessageCallback(this));
+
+        // Add lobby name in the chat
+        txtChat.setText("Lobby name: " + stateMgr.getCurrentGameName());
 
         txtUsername.setText(stateMgr.getUsername());
         txtLobby.setText(stateMgr.getCurrentGameName());
 
-        // Subscribe to chat channels
+        // Setup chat
+        chatSystem.openConnection();
+        chatSystem.setMessageCallback(() -> {
+            String[] message = stateMgr.newMessage;
+            stateMgr.newMessage = null;
+            txtChat.appendText("\n(" + message[0] + ") " + message[1] + ": " + message[2]);
+        });
         chatSystem.sendNAME(stateMgr.getUsername());
         chatSystem.sendJOIN(stateMgr.getCurrentGameName());
-        chatSystem.sendJOIN("#GLOBAL");
+        //chatSystem.sendJOIN("#GLOBAL");
 
         // Update status
         updateStatus();
@@ -187,10 +194,16 @@ public class spectateController implements Controller {
 
     @FXML
     public void btnGoBackPressed(ActionEvent event) {
-        // Unsubscribe from all chat channels
+        // Close connection with game server
+        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Leaving the game");
+        if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
+        else { System.out.println(response.freeText); }
+        gameServer.closeConnection();
+
+        // Unsubscribe from all chat channels and close connection
         chatSystem.sendLEAVE(stateMgr.getCurrentGameName());
-        chatSystem.sendLEAVE("#GLOBAL");
-        // TODO: should close also chat connection?
+        //chatSystem.sendLEAVE("#GLOBAL");
+        chatSystem.closeConnection();
 
         stateMgr.setCurrentGameName(null);
 

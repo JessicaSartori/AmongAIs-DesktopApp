@@ -72,6 +72,13 @@ public class joinMatchController implements Controller {
             return;
         }
 
+        // Open connection to Game Server
+        gameServer.openConnection();
+        if(!gameServer.isConnected()) {
+            gameNameErrorLabel.setText("Cannot connect to server");
+            return;
+        }
+
         // Check lobby existence
         GameServerResponse response = gameServer.sendLOOK(gameName);
 

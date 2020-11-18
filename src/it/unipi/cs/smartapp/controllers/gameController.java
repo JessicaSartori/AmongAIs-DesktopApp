@@ -58,7 +58,7 @@ public class gameController implements Controller {
         btnStartMatch.setVisible(stateMgr.getCreator());
 
         // Add lobby name in the chat
-        txtChat.appendText("\nLobby name: " + stateMgr.getCurrentGameName());
+        txtChat.setText("Lobby name: " + stateMgr.getCurrentGameName());
 
         // Setup chat
         chatSystem.openConnection();
