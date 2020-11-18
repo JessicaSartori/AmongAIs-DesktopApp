@@ -6,7 +6,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
 
 import it.unipi.cs.smartapp.drivers.*;
@@ -56,6 +55,7 @@ public class gameController implements Controller {
         txtChat.appendText("\nLobby name: " + stateMgr.getCurrentGameName());
 
         // Setup chat
+        chatSystem.openConnection();
         chatSystem.setMessageCallback(() -> {
             String[] message = stateMgr.newMessage;
             stateMgr.newMessage = null;
@@ -63,7 +63,7 @@ public class gameController implements Controller {
         });
         chatSystem.sendNAME(stateMgr.getUsername());
         chatSystem.sendJOIN(stateMgr.getCurrentGameName());
-        chatSystem.sendJOIN("#GLOBAL");
+        //chatSystem.sendJOIN("#GLOBAL");
 
         // Retrieve other player info from the Game Server
         updateStatus();
@@ -119,11 +119,12 @@ public class gameController implements Controller {
         GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Leaving the game");
         if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
         else { System.out.println(response.freeText); }
+        gameServer.closeConnection();
 
-        // Unsubscribe from all chat channels
+        // Unsubscribe from all chat channels and close connection
         chatSystem.sendLEAVE(stateMgr.getCurrentGameName());
-        chatSystem.sendLEAVE("#GLOBAL");
-        // TODO: should close also chat connection?
+        //chatSystem.sendLEAVE("#GLOBAL");
+        chatSystem.closeConnection();
 
         stateMgr.setCurrentGameName(null);
 

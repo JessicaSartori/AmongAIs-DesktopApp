@@ -40,6 +40,13 @@ public class joinMatchController implements Controller {
             return;
         }
 
+        // Open connection to Game Server
+        gameServer.openConnection();
+        if(!gameServer.isConnected()) {
+            gameNameErrorLabel.setText("Cannot connect to server");
+            return;
+        }
+
         // Send JOIN request
         GameServerResponse res = gameServer.sendJOIN(gameName, stateMgr.getUsername(), 'H', "Test");
         if(res.code != ResponseCode.OK) {

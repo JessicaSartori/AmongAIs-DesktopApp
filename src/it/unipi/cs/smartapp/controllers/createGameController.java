@@ -40,6 +40,13 @@ public class createGameController implements Controller {
             return;
         }
 
+        // Open connection to Game Server
+        gameServer.openConnection();
+        if(!gameServer.isConnected()) {
+            gameNameErrorLabel.setText("Cannot connect to server");
+            return;
+        }
+
         // Send NEW request
         GameServerResponse res = gameServer.sendNEW(gameName);
         if(res.code != ResponseCode.OK) {
