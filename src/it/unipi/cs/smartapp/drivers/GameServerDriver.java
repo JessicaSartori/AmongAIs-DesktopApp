@@ -1,49 +1,38 @@
 package it.unipi.cs.smartapp.drivers;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.io.*;
 import java.util.Arrays;
 
 import it.unipi.cs.smartapp.statemanager.StateManager;
 
 
-public class GameServerDriver {
+public class GameServerDriver extends SocketDriver {
     // Instance reference
     private static GameServerDriver instance = null;
-    // Socket (connection to Game Server)
-    private Socket socket;
-    // Read from socket (input stream)
-    private BufferedReader inSocket = null;
-    // Write on socket (output stream)
-    private PrintWriter outSocket = null;
-    // Last command timestamp (milliseconds)
-    private long lastCommandSent = 0;
-    // Thread to send NOP in case of inactivity
-    private Thread connectionSaver = null;
-
-    // Constant - Game Server hostname
-    public static final String HOSTNAME = "margot.di.unipi.it";
-    // Constant - Game Server port
-    public static final int PORT = 8421;
-    // Constant - Milliseconds before next command can be sent to Game Server
-    private static final long MIN_DELAY = 500;
-    // Constant - Milliseconds of inactivity before NOP is sent
-    private static final long NOP_DELAY = 30*1000;
-
-    // Constructor
-    private GameServerDriver() { }
 
     // Make instance available to the outside
     public static GameServerDriver getInstance() {
         if(instance == null) instance = new GameServerDriver();
         return instance;
     }
+
+
+    // Last command timestamp (milliseconds)
+    private long lastCommandSent = 0;
+    // Thread to send NOP in case of inactivity
+    private Thread connectionSaver = null;
+
+    // Constant - Milliseconds before next command can be sent to Game Server
+    private static final long MIN_DELAY = 500;
+    // Constant - Milliseconds of inactivity before NOP is sent
+    private static final long NOP_DELAY = 30*1000;
+
+    // Constructor
+    private GameServerDriver() {
+        HOSTNAME = "margot.di.unipi.it";
+        PORT = 8421;
+    }
+
 
     /*
      * List of commands to send to Game Server
@@ -180,31 +169,30 @@ public class GameServerDriver {
         String[] rawResponse = sendCommand(command);
         ResponseCode code = ResponseCode.fromString(rawResponse[0]);
 
-        clearSocket();
-
         return new GameServerResponse(code, null, rawResponse[1]);
     }
+
 
     // Send a general command and wait for the response
     private synchronized String[] sendCommand(String command) {
         String rawResponse;
 
-        try {
-            if(socket == null) setupSocket();
+        if(!isConnected()) { return "FAIL Not connected".split(" ", 2); }
 
+        try {
             // Send request
-            forcedWait(System.currentTimeMillis());
+            forcedWait();
             outSocket.println(command);
 
             // Wait for response
             rawResponse = inSocket.readLine();
             if(rawResponse == null) {
                 rawResponse = "FAIL Socket closed";
-                clearSocket();
+                closeConnection();
             }
         } catch (IOException e) {
             rawResponse = "FAIL Can not communicate with Game Server";
-            clearSocket();
+            closeConnection();
         }
         lastCommandSent = System.currentTimeMillis();
 
@@ -215,13 +203,14 @@ public class GameServerDriver {
     private synchronized String sendCommandLong(String command, String endString) {
         String rawResponse, line;
 
-        try {
-            if(socket == null) setupSocket();
+        if(!isConnected()) { return "FAIL Not connected"; }
 
+        try {
             // Send request
-            forcedWait(System.currentTimeMillis());
+            forcedWait();
             outSocket.println(command);
 
+            // Read response
             rawResponse = inSocket.readLine();
             if(!rawResponse.contains("ERROR")) {
                 rawResponse = rawResponse.concat("\n");
@@ -231,10 +220,10 @@ public class GameServerDriver {
             }
         } catch (IOException e) {
             rawResponse = "FAIL Can not communicate with Game Server";
-            clearSocket();
+            closeConnection();
         } catch (NullPointerException e) {
             rawResponse = "FAIL Socket closed";
-            clearSocket();
+            closeConnection();
         }
         lastCommandSent = System.currentTimeMillis();
 
@@ -242,17 +231,12 @@ public class GameServerDriver {
     }
 
     // Forces to wait at least MIN_DELAY
-    private void forcedWait(long currentTime) {
-        // Time difference in milliseconds
-        long timeDifference = currentTime - lastCommandSent;
+    private void forcedWait() {
+        long timeDifference = System.currentTimeMillis() - lastCommandSent;
 
         if(timeDifference < MIN_DELAY) {
-            try {
-                Thread.sleep(MIN_DELAY - timeDifference);
-            } catch (InterruptedException e) {
-                System.err.println("Thread.sleep(...) failed");
-                e.printStackTrace();
-            }
+            try { Thread.sleep(MIN_DELAY - timeDifference); }
+            catch (InterruptedException e) { e.printStackTrace(); }
         }
     }
 
@@ -265,61 +249,36 @@ public class GameServerDriver {
         return res;
     }
 
-    // Create a new socket to the game server and the corresponding input/output streams
-    private void setupSocket() throws IOException {
-        try {
-            // Create new socket
-            socket = new Socket(HOSTNAME, PORT);
-            System.out.println("Client socket: " + socket);
 
-            // Create input stream from socket
-            InputStreamReader isr = new InputStreamReader(socket.getInputStream());
-            inSocket = new BufferedReader(isr);
+    @Override
+    public synchronized void openConnection()  {
+        if(isConnected()) return;
+        super.openConnection();
 
-            // Create output stream to socket
-            OutputStreamWriter osw = new OutputStreamWriter(socket.getOutputStream());
-            BufferedWriter bw = new BufferedWriter(osw);
-            outSocket = new PrintWriter(bw, true);
-
+        if(isConnected()) {
             lastCommandSent = 0;
 
             connectionSaver = new Thread(new NOPSender(10));
             connectionSaver.setDaemon(true);
             connectionSaver.start();
-
-        } catch (UnknownHostException e) {
-            System.err.println("Can not find " + HOSTNAME);
-            clearSocket();
+            System.out.println("Game Server connection open");
         }
     }
 
-    // Close the sockets and the input/output streams
-    private void clearSocket() {
-        try { inSocket.close(); }
-        catch (Exception e) { System.err.println("clearSocket: " + e.toString()); }
+    @Override
+    public synchronized void closeConnection() {
+        if(!isConnected()) return;
+        super.closeConnection();
 
-        try { outSocket.close(); }
-        catch (Exception e) { System.err.println("clearSocket: " + e.toString()); }
-
-        try { socket.close(); }
-        catch (Exception e) { System.err.println("clearSocket: " + e.toString()); }
-
-        try { connectionSaver.interrupt(); }
-        catch (Exception e) { System.err.println("clearSocket: " + e.toString()); }
-
-        inSocket = null;
-        outSocket = null;
-        socket = null;
+        connectionSaver.interrupt();
         connectionSaver = null;
 
-        System.err.println("Socket closed");
+        System.out.println("Game Server connection closed");
     }
 }
 
-/*
- * Runnable to maintain the connection to the game server open
- * in case of inactivity
- */
+
+// Runnable to maintain the connection to the game server open in case of inactivity
 class NOPSender implements Runnable {
 
     private final long secondsToWait;

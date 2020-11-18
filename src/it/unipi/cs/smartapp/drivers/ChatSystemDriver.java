@@ -1,20 +1,14 @@
 package it.unipi.cs.smartapp.drivers;
 
-import it.unipi.cs.smartapp.statemanager.StateManager;
+import java.io.*;
 import javafx.application.Platform;
 
-import java.io.*;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import it.unipi.cs.smartapp.statemanager.StateManager;
 
 
-public class ChatSystemDriver {
+public class ChatSystemDriver extends SocketDriver {
     // Instance reference
     private static ChatSystemDriver instance = null;
-    // Constant - Game Server hostname
-    public static final String HOSTNAME = "margot.di.unipi.it";
-    // Constant - Game Server port
-    public static final int PORT = 8422;
 
     // Make instance available to the outside
     public static ChatSystemDriver getInstance() {
@@ -23,22 +17,19 @@ public class ChatSystemDriver {
     }
 
 
-    // Socket (connection to Game Server)
-    private Socket socket;
-    // Read from socket (input stream)
-    private BufferedReader inSocket = null;
-    // Write on socket (output stream)
-    private PrintWriter outSocket = null;
     // Callback for message arrival
     private Runnable callback = null;
     // Thread listening for messages
     private Thread receiver = null;
 
     // Constructor
-    private ChatSystemDriver() { }
+    private ChatSystemDriver() {
+        HOSTNAME = "margot.di.unipi.it";
+        PORT = 8422;
+    }
 
+    // Register a callback to be executed when a message arrives
     public void setMessageCallback(Runnable c) { callback = c; }
-
 
     // NAME <name> : declare the client name
     public synchronized void sendNAME(String name) {
@@ -65,102 +56,58 @@ public class ChatSystemDriver {
     }
 
     private void sendCommand(String command) {
-        try {
-            if(socket == null) setupSocket();
-            outSocket.println(command);
-        } catch (IOException e) {
-            clearSocket();
-        }
-
+        if(isConnected()) { outSocket.println(command); }
+        else { System.err.println("Not connected to Chat System"); }
     }
 
     public String[] receive() {
         String[] res;
 
-        try {
-            if(socket == null) setupSocket();
+        if(!isConnected()) { return "FAIL Not connected".split(" ", 2); }
 
-            String message = inSocket.readLine();
-            res = message.split(" ", 3);
+        try {
+            res = inSocket.readLine().split(" ", 3);
         } catch (IOException e) {
-            res = new String[]{"FAIL", "IOException"};
-            clearSocket();
+            res = "FAIL IOException".split(" ", 2);
+            closeConnection();
         } catch (NullPointerException e) {
-            res = new String[]{"FAIL", "NullPointerException"};
-            clearSocket();
+            res = "FAIL NullPointerException".split(" ", 2);
+            closeConnection();
         }
 
         return res;
     }
 
-    private void setupSocket() throws IOException {
-        try {
-            // Create new socket
-            socket = new Socket(HOSTNAME, PORT);
-            System.out.println("Client socket: " + socket);
+    @Override
+    public synchronized void openConnection() {
+        if(isConnected()) return;
+        super.openConnection();
 
-            // Create input stream from socket
-            InputStreamReader isr = new InputStreamReader(socket.getInputStream());
-            inSocket = new BufferedReader(isr);
+        if(isConnected()) {
+            receiver = new Thread(() -> {
+                System.out.println("Receiver Thread: started");
 
-            // Create output stream to socket
-            OutputStreamWriter osw = new OutputStreamWriter(socket.getOutputStream());
-            BufferedWriter bw = new BufferedWriter(osw);
-            outSocket = new PrintWriter(bw, true);
+                while(true) {
+                    String[] message = receive();
+                    if(message[0].equals("FAIL")) { break; }
 
-            receiver = new Thread(new receiver(callback));
+                    StateManager.getInstance().newMessage = message;
+                    Platform.runLater(callback);
+                }
+                System.out.println("Receiver Thread: stopped");
+            });
+
             receiver.setDaemon(true);
             receiver.start();
-
-        } catch (UnknownHostException e) {
-            System.err.println("Can not find " + HOSTNAME);
-            clearSocket();
+            System.out.println("Chat System connection open");
         }
-    }
-
-    private void clearSocket() {
-        try { inSocket.close(); }
-        catch (Exception e) { System.err.println("clearSocket: " + e.toString()); }
-
-        try { outSocket.close(); }
-        catch (Exception e) { System.err.println("clearSocket: " + e.toString()); }
-
-        try { socket.close(); }
-        catch (Exception e) { System.err.println("clearSocket: " + e.toString()); }
-
-        inSocket = null;
-        outSocket = null;
-        socket = null;
-        receiver = null;
-    }
-}
-
-class receiver implements Runnable {
-
-    Runnable callback;
-
-    public receiver(Runnable c) {
-        callback  = c;
     }
 
     @Override
-    public void run() {
-        System.out.println("Listener Thread: started");
-
-        ChatSystemDriver driver = ChatSystemDriver.getInstance();
-        boolean failed = false;
-
-        while(!failed) {
-            String[] message = driver.receive();
-
-            if(message[0].equals("FAIL")) {
-                failed = true;
-                System.err.println("Listener Thread: " + message[1]);
-            } else {
-                StateManager.getInstance().newMessage = message;
-                Platform.runLater(callback);
-            }
-        }
-        System.out.println("Listener Thread: stopped");
+    public synchronized void closeConnection() {
+        if(!isConnected()) return;
+        super.closeConnection();
+        receiver = null;
+        System.out.println("Chat System connection closed");
     }
 }
