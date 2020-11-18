@@ -14,6 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 
+import java.util.HashMap;
+
 public class spectateController implements Controller {
     private StateManager stateMgr;
     private GameServerDriver gameServer;
@@ -29,6 +31,7 @@ public class spectateController implements Controller {
     private Canvas gameCanvas;
 
     private GraphicsContext canvasContext;
+    private HashMap<Character, Image> sprites = null;
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
@@ -37,6 +40,9 @@ public class spectateController implements Controller {
         chatSystem.setMessageCallback(new MessageCallback(this));
 
         canvasContext = gameCanvas.getGraphicsContext2D();
+
+        sprites = new HashMap<>();
+        loadSprites();
 
         System.out.println("Spectate Controller done");
     }
@@ -130,27 +136,53 @@ public class spectateController implements Controller {
         }
     }
 
+    private void loadSprites(){
+        Image icon = new Image("it/unipi/cs/smartapp/sprites/transparent.png");
+        sprites.put(' ', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/grass.png"); // Grass
+        sprites.put('.', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/wall.png"); // Wall
+        sprites.put('#', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/river.png"); // River
+        sprites.put('~', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/ocean.png"); // Ocean
+        sprites.put('@', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/trap.png"); // Trap
+        sprites.put('!', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/energy.png"); // Energy recharge
+        sprites.put('$', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/barrier.png"); // Barrier
+        sprites.put('&', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/flagRed.png"); // Flag team 0
+        sprites.put('X', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/flagBlue.png"); // Flag team 1
+        sprites.put('x', icon);
+
+        icon = new Image("it/unipi/cs/smartapp/sprites/explosion.png");
+        sprites.put('*', icon);
+
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerDownBlue.png");
+        sprites.put('1', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerDownRed.png");
+        sprites.put('2', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerLeftBlue.png");
+        sprites.put('3', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerLeftRed.png");
+        sprites.put('4', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerRightBlue.png");
+        sprites.put('5', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerRightRed.png");
+        sprites.put('6', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerTopBlue.png");
+        sprites.put('7', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerTopRed.png");
+        sprites.put('8', icon);
+    }
+
     private Image setSprite(Character value) {
-        Integer cellSize = stateMgr.map.getCellSize();
-
-        Image sprite = new Image("it/unipi/cs/smartapp/sprites/transparent.png");
-
-        switch (value) {
-            case '.' -> sprite = new Image("it/unipi/cs/smartapp/sprites/grass.png"); // Grass
-            case '#' -> sprite = new Image("it/unipi/cs/smartapp/sprites/wall.png"); // Wall
-            case '~' -> sprite = new Image("it/unipi/cs/smartapp/sprites/river.png"); // River
-            case '@' -> sprite = new Image("it/unipi/cs/smartapp/sprites/ocean.png"); // Ocean
-            case '!' -> sprite = new Image("it/unipi/cs/smartapp/sprites/trap.png"); // Trap
-            case '$' -> sprite = new Image("it/unipi/cs/smartapp/sprites/energy.png"); // Energy recharge
-            case '&' -> sprite = new Image("it/unipi/cs/smartapp/sprites/barrier.png"); // Barrier
-            case 'X' -> sprite = new Image("it/unipi/cs/smartapp/sprites/flagRed.png"); // Flag team 0
-            case 'x' -> sprite = new Image("it/unipi/cs/smartapp/sprites/flagBlue.png"); // Flag team 1
-            default -> { // Players
-                if(Character.isUpperCase(value)) sprite = new Image("it/unipi/cs/smartapp/sprites/playerTopRed.png");
-                else if(Character.isLowerCase(value)) sprite = new Image("it/unipi/cs/smartapp/sprites/playerTopBlue.png");
-            }
-        }
-        return sprite;
+        if(Character.isUpperCase(value) && value != 'X') return sprites.get('8');
+        if(Character.isLowerCase(value) && value != 'x') return sprites.get('7');
+        return sprites.get(value);
     }
 
     @FXML
