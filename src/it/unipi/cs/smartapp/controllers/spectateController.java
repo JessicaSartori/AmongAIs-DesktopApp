@@ -1,13 +1,7 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.drivers.ChatSystemDriver;
-import it.unipi.cs.smartapp.drivers.GameServerDriver;
-import it.unipi.cs.smartapp.drivers.GameServerResponse;
-import it.unipi.cs.smartapp.drivers.ResponseCode;
-import it.unipi.cs.smartapp.screens.Renderer;
-import it.unipi.cs.smartapp.statemanager.StateManager;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -16,28 +10,31 @@ import javafx.scene.image.Image;
 
 import java.util.HashMap;
 
+import it.unipi.cs.smartapp.drivers.*;
+import it.unipi.cs.smartapp.screens.Renderer;
+import it.unipi.cs.smartapp.statemanager.StateManager;
+
+
 public class spectateController implements Controller {
     private StateManager stateMgr;
     private GameServerDriver gameServer;
     private ChatSystemDriver chatSystem;
 
+    private GraphicsContext canvasContext;
+    private HashMap<Character, Image> sprites = null;
+
     @FXML
-    private Label txtUsername;
-    @FXML
-    private Label txtLobby;
+    private Label txtUsername, txtLobby;
     @FXML
     private TextArea txtChat;
     @FXML
     private Canvas gameCanvas;
 
-    private GraphicsContext canvasContext;
-    private HashMap<Character, Image> sprites = null;
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
         gameServer = GameServerDriver.getInstance();
         chatSystem = ChatSystemDriver.getInstance();
-        chatSystem.setMessageCallback(new MessageCallback(this));
 
         canvasContext = gameCanvas.getGraphicsContext2D();
 
@@ -49,7 +46,6 @@ public class spectateController implements Controller {
 
     @Override
     public void updateContent() {
-
         // Add lobby name in the chat
         txtChat.setText("Lobby name: " + stateMgr.getCurrentGameName());
 
@@ -61,7 +57,9 @@ public class spectateController implements Controller {
         chatSystem.setMessageCallback(() -> {
             String[] message = stateMgr.newMessage;
             stateMgr.newMessage = null;
-            txtChat.appendText("\n(" + message[0] + ") " + message[1] + ": " + message[2]);
+            if(!stateMgr.getCurrentGameName().equals(message[0])) txtChat.appendText("\n(" + message[0] + ") ");
+            txtChat.appendText(message[1] + ": " + message[2]);
+
         });
         chatSystem.sendNAME(stateMgr.getUsername());
         chatSystem.sendJOIN(stateMgr.getCurrentGameName());
@@ -149,7 +147,7 @@ public class spectateController implements Controller {
         return sprites.get(value);
     }
 
-    private void loadSprites(){
+    private void loadSprites() {
         Image icon = new Image("it/unipi/cs/smartapp/sprites/transparent.png");
         sprites.put(' ', icon);
         icon = new Image("it/unipi/cs/smartapp/sprites/grass.png"); // Grass
@@ -202,7 +200,6 @@ public class spectateController implements Controller {
 
         // Unsubscribe from all chat channels and close connection
         chatSystem.sendLEAVE(stateMgr.getCurrentGameName());
-        //chatSystem.sendLEAVE("#GLOBAL");
         chatSystem.closeConnection();
 
         stateMgr.setCurrentGameName(null);
@@ -212,25 +209,4 @@ public class spectateController implements Controller {
 
     @FXML
     private void btnUpdateMapPressed(ActionEvent event) { updateMap(); }
-
-    public void txtReceiveMessage(String s) {
-        txtChat.appendText("\n" + s);
-    }
-
-    class MessageCallback implements Runnable {
-
-        spectateController controller;
-
-        public MessageCallback(spectateController c) {
-            controller = c;
-        }
-
-        @Override
-        public void run() {
-            String[] message = StateManager.getInstance().newMessage;
-            StateManager.getInstance().newMessage = null;
-
-            controller.txtReceiveMessage(message[1] + ": " + message[2]);
-        }
-    }
 }

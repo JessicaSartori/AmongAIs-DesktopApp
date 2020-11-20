@@ -55,9 +55,8 @@ public class gameController implements Controller {
 
     @Override
     public void updateContent() {
+        // Prepare the interface
         btnStartMatch.setVisible(stateMgr.getCreator());
-
-        // Add lobby name in the chat
         txtChat.setText("Lobby name: " + stateMgr.getCurrentGameName());
 
         // Setup chat
@@ -65,11 +64,12 @@ public class gameController implements Controller {
         chatSystem.setMessageCallback(() -> {
             String[] message = stateMgr.newMessage;
             stateMgr.newMessage = null;
-            txtChat.appendText("\n(" + message[0] + ") " + message[1] + ": " + message[2]);
+            if(!stateMgr.getCurrentGameName().equals(message[0])) txtChat.appendText("\n(" + message[0] + ") ");
+            txtChat.appendText(message[1] + ": " + message[2]);
+
         });
         chatSystem.sendNAME(stateMgr.getUsername());
         chatSystem.sendJOIN(stateMgr.getCurrentGameName());
-        //chatSystem.sendJOIN("#GLOBAL");
 
         // Retrieve other player info from the Game Server
         updateStatus();
@@ -122,14 +122,13 @@ public class gameController implements Controller {
 
     public void quit() {
         // Close connection with game server
-        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Leaving the game");
+        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Cause yes");
         if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
         else { System.out.println(response.freeText); }
         gameServer.closeConnection();
 
         // Unsubscribe from all chat channels and close connection
         chatSystem.sendLEAVE(stateMgr.getCurrentGameName());
-        //chatSystem.sendLEAVE("#GLOBAL");
         chatSystem.closeConnection();
 
         stateMgr.setCurrentGameName(null);
