@@ -16,12 +16,12 @@ public class loginController implements Controller {
     @FXML
     private TextField usernameField;
     @FXML
-    private Label usernameErrorLabel;
+    private Label errorLabel;
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
 
-        usernameErrorLabel.setText("");
+        errorLabel.setText("");
 
         System.out.println("Login Controller done");
     }
@@ -39,11 +39,11 @@ public class loginController implements Controller {
         String username = usernameField.getText();
 
         if(username.isBlank() || username.contains(" ")) {
-            usernameErrorLabel.setText("Username not valid");
+            errorLabel.setText("Username not valid");
             return;
         }
 
-        usernameErrorLabel.setText("");
+        errorLabel.setText("");
 
         stateMgr.setUsername(username);
         Renderer.getInstance().show("mainMenu");

@@ -4,24 +4,41 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.loginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="it.unipi.cs.smartapp.controllers.loginController">
 
-   <children>
-      <Label alignment="CENTER" layoutX="297.0" layoutY="38.0" prefHeight="137.0" prefWidth="206.0" text="AmongAIs" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="50.0">
-         <font>
-            <Font name="Segoe UI Bold Italic" size="36.0" />
-         </font>
-      </Label>
+   <Label alignment="CENTER" layoutX="297.0" layoutY="38.0" prefHeight="137.0" prefWidth="206.0" text="AmongAIs"
+          AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="50.0">
+      <font>
+         <Font name="Segoe UI Bold Italic" size="36.0"/>
+      </font>
+   </Label>
 
-      <TextField fx:id="usernameField" layoutX="300.0" layoutY="271.0" prefHeight="25.0" prefWidth="187.0" promptText="Username" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="270.0" />
+   <TextField fx:id="usernameField" layoutX="300.0" layoutY="270.0" promptText="Username" AnchorPane.leftAnchor="275.0"
+              AnchorPane.rightAnchor="275.0" AnchorPane.topAnchor="270.0">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </TextField>
 
-      <Button layoutX="350.0" layoutY="321.0" mnemonicParsing="false" onAction="#btnPlayAsGuestPressed" text="Play as Guest" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="320.0" />
-      <Label fx:id="usernameErrorLabel" layoutX="300.0" layoutY="253.0" prefHeight="17.0" prefWidth="200.0" text="usernameErrorLabel" textFill="RED" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="253.0" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="367.0" layoutY="187.0" prefHeight="17.0" prefWidth="66.0" text="Login" AnchorPane.leftAnchor="367.0" AnchorPane.rightAnchor="367.0" AnchorPane.topAnchor="190.0">
-         <font>
-            <Font name="Segoe UI Bold" size="18.0" />
-         </font>
-      </Label>
-   </children>
-
+   <Button layoutX="350.0" layoutY="321.0" mnemonicParsing="false" onAction="#btnPlayAsGuestPressed"
+           text="Play as Guest" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="350.0"
+           AnchorPane.topAnchor="320.0">
+      <font>
+         <Font size="13.0"/>
+      </font>
+   </Button>
+   <Label fx:id="errorLabel" layoutX="275.0" layoutY="245.0" prefHeight="25.0" text="errorrLabel" textFill="RED"
+          AnchorPane.leftAnchor="275.0" AnchorPane.rightAnchor="275.0" AnchorPane.topAnchor="245.0">
+      <font>
+         <Font size="14.0"/>
+      </font>
+   </Label>
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="367.0" layoutY="187.0" prefHeight="17.0" prefWidth="66.0"
+          text="Login" AnchorPane.leftAnchor="367.0" AnchorPane.rightAnchor="367.0" AnchorPane.topAnchor="190.0">
+      <font>
+         <Font name="Segoe UI Bold" size="18.0"/>
+      </font>
+   </Label>
 </AnchorPane>

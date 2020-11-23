@@ -1,7 +1,6 @@
 package it.unipi.cs.smartapp.controllers;
 
 import javafx.fxml.FXML;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 
 import it.unipi.cs.smartapp.screens.Renderer;
@@ -30,17 +29,13 @@ public class menuController implements Controller {
     }
 
     @FXML
-    private void btnNewMatchPressed(ActionEvent event) {
-        Renderer.getInstance().show("createMatch");
-    }
-
-    @FXML
-    private void btnJoinMatchPressed(ActionEvent event) {
+    private void btnPLAYPressed() {
         Renderer.getInstance().show("joinMatch");
     }
 
+
     @FXML
-    private void btnBackPressed(ActionEvent event) {
+    private void btnBackPressed() {
         Renderer.getInstance().show("login");
     }
 
