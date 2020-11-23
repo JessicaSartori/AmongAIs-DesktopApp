@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="it.unipi.cs.smartapp.controllers.joinController">
+
+    <Label alignment="CENTER" layoutX="297.0" layoutY="38.0" prefHeight="137.0" prefWidth="206.0" text="AmongAIs"
+           AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="50.0">
+        <font>
+            <Font name="Segoe UI Bold Italic" size="36.0"/>
+        </font>
+    </Label>
+
+    <TextField fx:id="gameNameField" layoutX="275.0" layoutY="238.0" promptText="Gamename" AnchorPane.leftAnchor="275.0"
+               AnchorPane.rightAnchor="275.0" AnchorPane.topAnchor="238.0">
+        <font>
+        <Font size="14.0"/>
+        </font>
+    </TextField>
+
+    <Button layoutX="297.0" layoutY="286.0" mnemonicParsing="false" onAction="#btnCreatePressed" text="Create"
+            AnchorPane.leftAnchor="290.0" AnchorPane.rightAnchor="410.0" AnchorPane.topAnchor="286.0">
+        <font>
+        <Font size="13.0"/>
+        </font>
+    </Button>
+    <Label fx:id="errorLabel" layoutX="275.0" layoutY="213.0" prefHeight="25.0" text="errorLabel" textFill="RED"
+           AnchorPane.leftAnchor="275.0" AnchorPane.rightAnchor="275.0" AnchorPane.topAnchor="213.0">
+        <font>
+        <Font size="14.0"/>
+        </font>
+    </Label>
+    <Button layoutX="37.0" layoutY="38.0" mnemonicParsing="false" onAction="#backBtnPressed" text="Back"
+            AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="700.0" AnchorPane.topAnchor="40.0">
+        <font>
+        <Font size="13.0"/>
+        </font>
+    </Button>
+    <Button layoutX="413.0" layoutY="286.0" mnemonicParsing="false" onAction="#btnJoinPressed" text="Join"
+            AnchorPane.leftAnchor="410.0" AnchorPane.rightAnchor="290.0" AnchorPane.topAnchor="286.0">
+        <font>
+          <Font size="13.0"/>
+        </font>
+    </Button>
+    <Button layoutX="350.0" layoutY="326.0" mnemonicParsing="false" onAction="#btnSpectatePressed" text="Spectate"
+            AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="326.0">
+        <font>
+          <Font size="13.0"/>
+        </font>
+    </Button>
+</AnchorPane>

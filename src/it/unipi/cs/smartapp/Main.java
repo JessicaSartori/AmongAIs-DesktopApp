@@ -18,8 +18,7 @@ public class Main extends Application {
 
         r.addScene("login", "/it/unipi/cs/smartapp/screens/loginScene.fxml");
         r.addScene("mainMenu", "/it/unipi/cs/smartapp/screens/mainMenuScene.fxml");
-        r.addScene("createMatch", "/it/unipi/cs/smartapp/screens/createMatchScene.fxml");
-        r.addScene("joinMatch", "/it/unipi/cs/smartapp/screens/joinMatchScene.fxml");
+        r.addScene("joinMatch", "/it/unipi/cs/smartapp/screens/joinScene.fxml");
         r.addScene("gameScene", "/it/unipi/cs/smartapp/screens/gameScene.fxml");
         r.addScene("spectateScene", "/it/unipi/cs/smartapp/screens/spectateScene.fxml");
 
