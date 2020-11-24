@@ -76,10 +76,11 @@ public class joinController implements Controller {
                 System.err.println(res.freeText);
                 errorLabel.setText("Cannot spectate the lobby");
             }
+            case OK -> {
+                stateMgr.setInGame(gameName, false);
+                Renderer.getInstance().show("spectateScene");
+            }
         }
-
-        stateMgr.setInGame(gameName, false);
-        Renderer.getInstance().show("spectateScene");
     }
 
     // Check if the game name is valid (no whitespaces)

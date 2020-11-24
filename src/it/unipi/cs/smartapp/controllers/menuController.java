@@ -39,5 +39,6 @@ public class menuController implements Controller {
         Renderer.getInstance().show("login");
     }
 
-
+    @FXML
+    private void btnGameSettings() { Renderer.getInstance().show("gameSettings");}
 }
