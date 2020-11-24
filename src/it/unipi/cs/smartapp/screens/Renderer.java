@@ -52,7 +52,7 @@ public class Renderer {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(FXMLFile));
             Parent pane = loader.load();
-            Scene scene = new Scene(pane, 800, 600);
+            Scene scene = new Scene(pane, 1280, 720);
             Controller sceneController = loader.getController();
             scene.setUserData(sceneController);
             scenesMap.put(name, scene);
