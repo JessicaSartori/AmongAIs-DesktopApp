@@ -1,50 +1,31 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.drivers.ChatSystemDriver;
-import it.unipi.cs.smartapp.drivers.GameServerDriver;
-import it.unipi.cs.smartapp.screens.Renderer;
-import it.unipi.cs.smartapp.statemanager.PlayerSettings;
-import it.unipi.cs.smartapp.statemanager.StateManager;
+import javafx.fxml.FXML;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
+
+import it.unipi.cs.smartapp.screens.Renderer;
+import it.unipi.cs.smartapp.statemanager.PlayerSettings;
 
 
 public class settingsController implements Controller {
     private PlayerSettings settings;
 
     @FXML
-    private Slider StatusSlider;
+    private Slider StatusSlider, MapSlider;
     @FXML
-    private Slider MapSlider;
+    private Label lblStatusFrequency, lblMapFrequency;
     @FXML
-    private Label lblStatusFrequency;
+    private Button btnMoveUp, btnMoveDown, btnMoveLeft, btnMoveRight;
     @FXML
-    private Label lblMapFrequency;
-    @FXML
-    private Button btnMoveUp;
-    @FXML
-    private Button btnMoveDown;
-    @FXML
-    private Button btnMoveLeft;
-    @FXML
-    private Button btnMoveRight;
-    @FXML
-    private Button btnShootUp;
-    @FXML
-    private Button btnShootDown;
-    @FXML
-    private Button btnShootLeft;
-    @FXML
-    private Button btnShootRight;
+    private Button btnShootUp, btnShootDown, btnShootLeft, btnShootRight;
 
 
     public void initialize() {
@@ -136,7 +117,6 @@ public class settingsController implements Controller {
             }
 
             btn.setText(oldValue);
-            return;
         });
     }
 

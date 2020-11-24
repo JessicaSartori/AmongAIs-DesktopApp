@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.settingsController">
+   <Button fx:id="btnGoBack" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefHeight="29.0" prefWidth="80.0" text="Go back" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+      <font>
+         <Font size="13.0" />
+      </font></Button>
+   <Label alignment="CENTER" layoutX="557.0" layoutY="41.0" text="Settings" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" AnchorPane.topAnchor="40.0">
+      <font>
+         <Font size="36.0" />
+      </font>
+   </Label>
+   <Label layoutX="310.0" layoutY="186.0" prefHeight="20.0" prefWidth="200.0" text="Change update map frequency:" AnchorPane.leftAnchor="310.0" AnchorPane.topAnchor="186.0">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+   <Label layoutX="740.0" layoutY="186.0" prefHeight="20.0" prefWidth="220.0" text="Change update status frequency:" AnchorPane.leftAnchor="740.0" AnchorPane.topAnchor="186.0">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+   <Slider fx:id="MapSlider" blockIncrement="200.0" layoutX="310.0" layoutY="216.0" majorTickUnit="200.0" max="2000.0" min="200.0" minorTickCount="0" prefHeight="20.0" prefWidth="200.0" showTickMarks="true" snapToTicks="true" AnchorPane.leftAnchor="310.0" AnchorPane.topAnchor="216.0" />
+   <Slider fx:id="StatusSlider" blockIncrement="200.0" layoutX="740.0" layoutY="216.0" majorTickUnit="200.0" max="2000.0" min="200.0" minorTickCount="0" prefHeight="20.0" prefWidth="200.0" showTickMarks="true" snapToTicks="true" AnchorPane.leftAnchor="740.0" AnchorPane.topAnchor="216.0" />
+   <Label fx:id="lblMapFrequency" layoutX="520.0" layoutY="216.0" text="0 ms" AnchorPane.leftAnchor="520.0" AnchorPane.topAnchor="216.0">
+      <font>
+         <Font size="13.0" />
+      </font></Label>
+   <Label fx:id="lblStatusFrequency" layoutX="950.0" layoutY="216.0" text="0 ms" AnchorPane.leftAnchor="950.0" AnchorPane.topAnchor="216.0">
+      <font>
+         <Font size="13.0" />
+      </font></Label>
+   <Label layoutX="310.0" layoutY="296.0" text="Movement keys bindings:" AnchorPane.leftAnchor="310.0" AnchorPane.topAnchor="296.0">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+   <Label layoutX="740.0" layoutY="296.0" text="Shooting keys bindings:" AnchorPane.leftAnchor="740.0" AnchorPane.topAnchor="296.0">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+   <Button fx:id="btnMoveUp" layoutX="363.0" layoutY="332.0" mnemonicParsing="false" onAction="#btnMoveUpPressed" prefHeight="34.0" prefWidth="52.0" text="W">
+      <font>
+         <Font size="13.0" />
+      </font></Button>
+   <Button fx:id="btnMoveDown" layoutX="363.0" layoutY="373.0" mnemonicParsing="false" onAction="#btnMoveDownPressed" prefHeight="34.0" prefWidth="52.0" text="S">
+      <font>
+         <Font size="13.0" />
+      </font></Button>
+   <Button fx:id="btnMoveLeft" layoutX="303.0" layoutY="373.0" mnemonicParsing="false" onAction="#btnMoveLeftPressed" prefHeight="34.0" prefWidth="52.0" text="A">
+      <font>
+         <Font size="13.0" />
+      </font></Button>
+   <Button fx:id="btnMoveRight" layoutX="423.0" layoutY="373.0" mnemonicParsing="false" onAction="#btnMoveRightPressed" prefHeight="34.0" prefWidth="52.0" text="D">
+      <font>
+         <Font size="13.0" />
+      </font></Button>
+   <Button fx:id="btnShootUp" layoutX="788.0" layoutY="329.0" mnemonicParsing="false" onAction="#btnShootUpPressed" prefHeight="34.0" prefWidth="52.0" text="I">
+      <font>
+         <Font size="13.0" />
+      </font></Button>
+   <Button fx:id="btnShootDown" layoutX="788.0" layoutY="370.0" mnemonicParsing="false" onAction="#btnShootDownPressed" prefHeight="34.0" prefWidth="52.0" text="K">
+      <font>
+         <Font size="13.0" />
+      </font></Button>
+   <Button fx:id="btnShootLeft" layoutX="727.0" layoutY="370.0" mnemonicParsing="false" onAction="#btnShootLeftPressed" prefHeight="34.0" prefWidth="52.0" text="J">
+      <font>
+         <Font size="13.0" />
+      </font></Button>
+   <Button fx:id="btnShootRight" layoutX="849.0" layoutY="370.0" mnemonicParsing="false" onAction="#btnShootRightPressed" prefHeight="34.0" prefWidth="52.0" text="L">
+      <font>
+         <Font size="13.0" />
+      </font></Button>
+</AnchorPane>

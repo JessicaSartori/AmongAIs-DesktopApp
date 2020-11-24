@@ -79,6 +79,7 @@ public class gameController implements Controller {
 
         // Keyboard events
         gamePanel.setOnKeyPressed(keyEvent -> {
+            System.out.println(keyEvent.getCode());
             if (!stateMgr.getGameState().equals("ACTIVE")) {
                 Alert message = new Alert(Alert.AlertType.INFORMATION);
                 message.setTitle("Information");
@@ -87,15 +88,15 @@ public class gameController implements Controller {
                 return;
             }
 
-            switch (keyEvent.getCode().toString()) {
-                case "W" -> movePlayer('N');
-                case "A" -> movePlayer('W');
-                case "S" -> movePlayer('S');
-                case "D" -> movePlayer('E');
-                case "I" -> tryToShoot('N');
-                case "J" -> tryToShoot('W');
-                case "K" -> tryToShoot('S');
-                case "L" -> tryToShoot('E');
+            switch (keyEvent.getCode()) {
+                case W -> movePlayer('N');
+                case A -> movePlayer('W');
+                case S -> movePlayer('S');
+                case D -> movePlayer('E');
+                case I -> tryToShoot('N');
+                case J -> tryToShoot('W');
+                case K -> tryToShoot('S');
+                case L -> tryToShoot('E');
             }
         });
     }

@@ -4,43 +4,46 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.menuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.menuController">
 
-   <children>
-      <Label alignment="CENTER" layoutX="297.0" layoutY="31.0" prefHeight="137.0" prefWidth="206.0" text="AmongAIs" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="50.0">
-         <font>
-            <Font name="Segoe UI Bold Italic" size="36.0" />
-         </font>
-      </Label>
-      <Button layoutX="310.0" layoutY="228.0" mnemonicParsing="false" onAction="#btnPLAYPressed" text="Play" AnchorPane.leftAnchor="310.0" AnchorPane.rightAnchor="310.0" AnchorPane.topAnchor="230.0">
-         <font>
-            <Font size="13.0" />
-         </font></Button>
-      <Button fx:id="btnTournaments" layoutX="310.0" layoutY="308.0" mnemonicParsing="false" text="Tournaments" AnchorPane.leftAnchor="310.0" AnchorPane.rightAnchor="310.0" AnchorPane.topAnchor="310.0">
-         <font>
-            <Font size="13.0" />
-         </font></Button>
-      <Button fx:id="btnGameHistory" layoutX="310.0" layoutY="348.0" mnemonicParsing="false" text="Game History" AnchorPane.leftAnchor="310.0" AnchorPane.rightAnchor="310.0" AnchorPane.topAnchor="350.0">
-         <font>
-            <Font size="13.0" />
-         </font></Button>
-      <Label fx:id="welcomeLabel" alignment="CENTER" layoutX="310.0" layoutY="189.0" prefHeight="15.0" prefWidth="180.0" text="welcomeLabel" AnchorPane.topAnchor="180.0">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Button layoutX="355.0" layoutY="391.0" mnemonicParsing="false" onAction="#btnBackPressed" prefHeight="30.0" prefWidth="90.0" text="Exit" AnchorPane.leftAnchor="355.0" AnchorPane.rightAnchor="355.0" AnchorPane.topAnchor="390.0">
-         <font>
-            <Font size="14.0" />
-         </font></Button>
-      <Button fx:id="btnHowToPlay" layoutX="310.0" layoutY="268.0" mnemonicParsing="false" text="How to Play" AnchorPane.leftAnchor="310.0" AnchorPane.rightAnchor="310.0" AnchorPane.topAnchor="270.0">
-         <font>
-            <Font size="13.0" />
-         </font></Button>
-      <Button fx:id="btnSettings" layoutX="670.0" layoutY="31.0" mnemonicParsing="false" onAction="#btnGameSettings" prefHeight="29.0" prefWidth="90.0" text="Settings" AnchorPane.leftAnchor="670.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="31.0">
-         <font>
-            <Font size="13.0" />
-         </font></Button>
-   </children>
-
+   <Label alignment="CENTER" layoutX="297.0" layoutY="31.0" prefHeight="137.0" prefWidth="206.0" text="AmongAIs" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="50.0">
+      <font>
+         <Font name="Segoe UI Bold Italic" size="36.0" />
+      </font>
+   </Label>
+   <Button layoutX="500.0" layoutY="264.0" mnemonicParsing="false" onAction="#btnPLAYPressed" text="Play" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" AnchorPane.topAnchor="260.0">
+      <font>
+         <Font size="13.0" />
+      </font>
+   </Button>
+   <Button fx:id="btnTournaments" layoutX="500.0" layoutY="344.0" mnemonicParsing="false" text="Tournaments" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" AnchorPane.topAnchor="340.0">
+      <font>
+         <Font size="13.0" />
+      </font>
+   </Button>
+   <Button fx:id="btnGameHistory" layoutX="500.0" layoutY="384.0" mnemonicParsing="false" text="Game History" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" AnchorPane.topAnchor="380.0">
+      <font>
+         <Font size="13.0" />
+      </font>
+   </Button>
+   <Label fx:id="welcomeLabel" alignment="CENTER" layoutX="500.0" layoutY="214.0" prefHeight="27.0" prefWidth="230.0" text="welcomeLabel" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" AnchorPane.topAnchor="200.0">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Label>
+   <Button layoutX="550.0" layoutY="424.0" mnemonicParsing="false" onAction="#btnBackPressed" prefHeight="30.0" prefWidth="90.0" text="Exit" AnchorPane.leftAnchor="550.0" AnchorPane.rightAnchor="550.0" AnchorPane.topAnchor="420.0">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </Button>
+   <Button fx:id="btnHowToPlay" layoutX="500.0" layoutY="304.0" mnemonicParsing="false" text="How to Play" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" AnchorPane.topAnchor="300.0">
+      <font>
+         <Font size="13.0" />
+      </font>
+   </Button>
+   <Button fx:id="btnSettings" layoutX="1134.0" layoutY="31.0" mnemonicParsing="false" onAction="#btnGameSettings" prefHeight="29.0" prefWidth="100.0" text="Settings" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="30.0">
+      <font>
+         <Font size="13.0" />
+      </font>
+   </Button>
 </AnchorPane>
