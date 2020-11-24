@@ -1,5 +1,6 @@
 package it.unipi.cs.smartapp.controllers;
 
+import it.unipi.cs.smartapp.statemanager.PlayerSettings;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -14,6 +15,7 @@ import it.unipi.cs.smartapp.statemanager.StateManager;
 
 public class gameController implements Controller {
     private StateManager stateMgr;
+    private PlayerSettings playerSettings;
     private GameServerDriver gameServer;
     private ChatSystemDriver chatSystem;
 
@@ -38,6 +40,7 @@ public class gameController implements Controller {
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
+        playerSettings = PlayerSettings.getInstance();
         gameServer = GameServerDriver.getInstance();
         chatSystem = ChatSystemDriver.getInstance();
 
@@ -81,16 +84,15 @@ public class gameController implements Controller {
                 return;
             }
 
-            switch (keyEvent.getCode()) {
-                case W -> movePlayer('N');
-                case A -> movePlayer('W');
-                case S -> movePlayer('S');
-                case D -> movePlayer('E');
-                case I -> tryToShoot('N');
-                case J -> tryToShoot('W');
-                case K -> tryToShoot('S');
-                case L -> tryToShoot('E');
-            }
+            Character key = keyEvent.getCode().toString().charAt(0);
+            if(key == playerSettings.getMoveUp()) movePlayer('N');
+            else if (key == playerSettings.getMoveLeft()) movePlayer('W');
+            else if (key == playerSettings.getMoveDown()) movePlayer('S');
+            else if (key == playerSettings.getMoveRight()) movePlayer('E');
+            else if (key == playerSettings.getShootUp()) tryToShoot('N');
+            else if (key == playerSettings.getShootLeft()) tryToShoot('W');
+            else if (key == playerSettings.getShootDown()) tryToShoot('S');
+            else if (key == playerSettings.getShootRight()) tryToShoot('E');
         });
     }
 

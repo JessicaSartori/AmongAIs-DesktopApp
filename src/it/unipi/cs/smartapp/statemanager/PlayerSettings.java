@@ -50,7 +50,7 @@ public class PlayerSettings {
     public void setMoveUp(Character up) { moveUp = up; }
     public void setMoveDown(Character down) { moveDown = down; }
     public void setMoveLeft(Character left) { moveLeft = left; }
-    public void setMoveRigth(Character right) { moveRight = right; }
+    public void setMoveRight(Character right) { moveRight = right; }
     public void setShootUp(Character up) { shootUp = up; }
     public void setShootDown(Character down) { shootDown = down; }
     public void setShootLeft(Character left) { shootLeft = left; }

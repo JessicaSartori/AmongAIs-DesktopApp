@@ -105,7 +105,17 @@ public class settingsController implements Controller {
             if (!newValue.equals(oldValue)) {
                 if (!settings.isAlreadySet(newValue.charAt(0))) {
                     btn.setText(newValue);
-                    settings.setMoveUp(newValue.charAt(0));
+
+                    switch (btn.getId()){
+                        case "btnMoveUp" -> settings.setMoveUp(newValue.charAt(0));
+                        case "btnMoveDown" -> settings.setMoveDown(newValue.charAt(0));
+                        case "btnMoveLeft" -> settings.setMoveLeft(newValue.charAt(0));
+                        case "btnMoveRight" -> settings.setMoveRight(newValue.charAt(0));
+                        case "btnShootUp" -> settings.setShootUp(newValue.charAt(0));
+                        case "btnShootDown" -> settings.setShootDown(newValue.charAt(0));
+                        case "btnShootLeft" -> settings.setShootLeft(newValue.charAt(0));
+                        case "btnShootRight" -> settings.setShootRight(newValue.charAt(0));
+                    }
                 } else {
                     btn.setText(oldValue);
                     Alert message = new Alert(Alert.AlertType.ERROR);
