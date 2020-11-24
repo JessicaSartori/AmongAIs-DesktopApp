@@ -11,7 +11,6 @@ public class StateManager {
         return instance;
     }
 
-
     private String username = null;
 
     public PlayerStatus player;

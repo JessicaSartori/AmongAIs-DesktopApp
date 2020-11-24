@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.settingsController">
+   <children>
+      <Button fx:id="btnGoBack" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefHeight="27.0" prefWidth="77.0" text="Go back" />
+      <Label layoutX="338.0" layoutY="41.0" text="Settings">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Label layoutX="122.0" layoutY="160.0" text="Change update map frequency:" />
+      <Label layoutX="495.0" layoutY="160.0" text="Change update status frequency:" />
+      <Slider fx:id="MapSlider" blockIncrement="200.0" layoutX="122.0" layoutY="190.0" majorTickUnit="200.0" max="2000.0" min="200.0" minorTickCount="0" prefHeight="16.0" prefWidth="172.0" showTickMarks="true" snapToTicks="true" />
+      <Slider fx:id="StatusSlider" blockIncrement="200.0" layoutX="499.0" layoutY="190.0" majorTickUnit="200.0" max="2000.0" min="200.0" minorTickCount="0" prefHeight="16.0" prefWidth="172.0" showTickMarks="true" snapToTicks="true" />
+      <Label fx:id="lblMapFrequency" layoutX="311.0" layoutY="189.0" text="0 ms" />
+      <Label fx:id="lblStatusFrequency" layoutX="693.0" layoutY="189.0" text="0 ms" />
+      <Label layoutX="142.0" layoutY="292.0" text="Movement keys bindings:" />
+      <Label layoutX="520.0" layoutY="292.0" text="Shooting keys bindings:" />
+      <Button fx:id="btnMoveUp" layoutX="182.0" layoutY="329.0" mnemonicParsing="false" onAction="#btnMoveUpPressed" prefHeight="34.0" prefWidth="52.0" text="W" />
+      <Button fx:id="btnMoveDown" layoutX="182.0" layoutY="370.0" mnemonicParsing="false" onAction="#btnMoveDownPressed" prefHeight="34.0" prefWidth="52.0" text="S" />
+      <Button fx:id="btnMoveLeft" layoutX="122.0" layoutY="370.0" mnemonicParsing="false" onAction="#btnMoveLeftPressed" prefHeight="34.0" prefWidth="52.0" text="A" />
+      <Button fx:id="btnMoveRight" layoutX="242.0" layoutY="370.0" mnemonicParsing="false" onAction="#btnMoveRightPressed" prefHeight="34.0" prefWidth="52.0" text="D" />
+      <Button fx:id="btnShootUp" layoutX="569.0" layoutY="329.0" mnemonicParsing="false" onAction="#btnShootUpPressed" prefHeight="34.0" prefWidth="52.0" text="I" />
+      <Button fx:id="btnShootDown" layoutX="569.0" layoutY="370.0" mnemonicParsing="false" onAction="#btnShootDownPressed" prefHeight="34.0" prefWidth="52.0" text="K" />
+      <Button fx:id="btnShootLeft" layoutX="508.0" layoutY="370.0" mnemonicParsing="false" onAction="#btnShootLeftPressed" prefHeight="34.0" prefWidth="52.0" text="J" />
+      <Button fx:id="btnShootRight" layoutX="630.0" layoutY="370.0" mnemonicParsing="false" onAction="#btnShootRightPressed" prefHeight="34.0" prefWidth="52.0" text="L" />
+   </children>
+</AnchorPane>
