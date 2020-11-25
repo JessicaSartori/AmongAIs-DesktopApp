@@ -1,6 +1,8 @@
 package it.unipi.cs.smartapp.drivers;
 
 import java.io.*;
+
+import it.unipi.cs.smartapp.statemanager.ChatMessage;
 import javafx.application.Platform;
 
 import it.unipi.cs.smartapp.statemanager.StateManager;
@@ -91,7 +93,8 @@ public class ChatSystemDriver extends SocketDriver {
                     String[] message = receive();
                     if(message[0].equals("FAIL")) { break; }
 
-                    StateManager.getInstance().newMessage = message;
+                    ChatMessage msg = new ChatMessage(message[0], message[1], message[2]);
+                    StateManager.getInstance().newMessages.add(msg);
                     Platform.runLater(callback);
                 }
                 System.out.println("Receiver Thread: stopped");
