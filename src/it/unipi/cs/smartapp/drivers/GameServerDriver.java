@@ -292,7 +292,7 @@ class NOPSender implements Runnable {
             while(!Thread.currentThread().isInterrupted()) {
                 Thread.sleep(secondsToWait*1000);
 
-                GameServerResponse res = GameServerDriver.getInstance().sendConditionalNOP(StateManager.getInstance().getCurrentGameName());
+                GameServerResponse res = GameServerDriver.getInstance().sendConditionalNOP(StateManager.getInstance().getGameName());
                 if(res == null) continue;
                 if(res.code == ResponseCode.FAIL) {
                     System.err.println("Nop Thread: " + res.freeText);
