@@ -9,6 +9,7 @@ public class PlayerStatus {
     public Integer loyalty = null;
     public Integer energy = null;
     public Integer score = null;
+    public String state = null;
 
 
     public PlayerStatus() {}
@@ -27,6 +28,7 @@ public class PlayerStatus {
                 case "score" -> score = Integer.parseInt(value);
                 case "x" -> position[0] = Integer.parseInt(value);
                 case "y" -> position[1] = Integer.parseInt(value);
+                case "state" -> state = value.toLowerCase();
             }
         }
     }

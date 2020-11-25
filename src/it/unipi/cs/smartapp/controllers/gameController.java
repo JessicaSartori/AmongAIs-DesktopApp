@@ -1,5 +1,8 @@
 package it.unipi.cs.smartapp.controllers;
 
+import it.unipi.cs.smartapp.statemanager.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -9,10 +12,10 @@ import javafx.event.ActionEvent;
 
 import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.screens.Renderer;
-import it.unipi.cs.smartapp.statemanager.StateManager;
-import it.unipi.cs.smartapp.statemanager.ChatMessage;
-import it.unipi.cs.smartapp.statemanager.PlayerSettings;
-import it.unipi.cs.smartapp.statemanager.GameState;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 
 public class gameController implements Controller {
@@ -39,6 +42,10 @@ public class gameController implements Controller {
     private Canvas mapCanvas;
     @FXML
     private AnchorPane gamePanel;
+    @FXML
+    private Label lobbyName;
+    @FXML
+    private ListView<String> PlayersList = new ListView<>();
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
@@ -55,7 +62,7 @@ public class gameController implements Controller {
     public void updateContent() {
         // Prepare the interface
         btnStartMatch.setVisible(stateMgr.getCreator());
-        txtChat.setText("Lobby name: " + stateMgr.getGameName() + "\n");
+        lobbyName.setText(stateMgr.getGameName());
 
         // Setup chat
         chatSystem.openConnection();
@@ -229,6 +236,17 @@ public class gameController implements Controller {
             stateMgr.updatePlayerStatus(PL);
         }
 
+        ObservableList<String> finalList = FXCollections.observableArrayList();
+        HashMap<String, PlayerStatus> listPlayers = stateMgr.getListOfPlayer();
+
+        for (Map.Entry<String, PlayerStatus> set : listPlayers.entrySet()) {
+            PlayerStatus pl = set.getValue();
+            String playerListName = pl.team + "\t\t\t" + set.getKey() + "\t\t\t\t" + pl.score + "\t" + pl.state;
+            finalList.add(playerListName);
+        }
+
+        PlayersList.setItems(finalList);
+
         // Update Game View Values
         if (stateMgr.getGameState() == GameState.ACTIVE && firstTime) {
             txtChat.appendText("\nGame state changed to: " + stateMgr.getGameState());
@@ -249,14 +267,6 @@ public class gameController implements Controller {
         }
 
         playerName.setText(stateMgr.getUsername());
-
-        String team = (stateMgr.getTeam() == 0) ? "Red Team" : "Blue Team";
-        playerTeam.setText(team);
-        if (playerTeam.getText().equals("Blue Team")) {
-            playerTeam.setStyle("-fx-background-color: blue");
-        } else {
-            playerTeam.setStyle("-fx-background-color: red");
-        }
 
         String loyalty = (stateMgr.getLoyalty() == 0) ? "Normal" : "Impostor";
         playerLoyalty.setText(loyalty);
@@ -282,5 +292,15 @@ public class gameController implements Controller {
 
         stateMgr.map.setGameMap((String[]) response.data);
         stateMgr.map.drawMap(canvasContext, mapCanvas);
+    }
+
+    @FXML
+    private void btnAccusePressed(ActionEvent event) {
+        // TODO
+    }
+
+    @FXML
+    private void btnJudgePressed(ActionEvent event) {
+        // TODO
     }
 }
