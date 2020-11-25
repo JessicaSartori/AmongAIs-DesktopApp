@@ -1,6 +1,7 @@
 package it.unipi.cs.smartapp.statemanager;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class StateManager {
 
@@ -11,50 +12,41 @@ public class StateManager {
         return instance;
     }
 
-    private String username = null;
+
+    private String currentUsername = null;
+    private String currentGameName = null;
+
+    private GameStatus gameStatus;
+    public MapStatus map;
+    public ConcurrentLinkedQueue<ChatMessage> newMessages;
 
     public PlayerStatus player;
-    public HashMap<String, PlayerStatus> playerList = null;
+    public HashMap<String, PlayerStatus> playerList;
 
-    public MapStatus map;
+    // Setters
+    public void setUsername(String s) { currentUsername = s; }
 
-    private String currentGameName = null;
-    private String gameState = null;
-    private Boolean creator = null;
-
-    public String[] newMessage = null;
-
-    /*
-     * Setters
-     */
-    public void setUsername(String s) { username = s; }
-    public void setCurrentGameName(String s) { currentGameName = s; }
-    public void setEnergy(Integer e) { player.energy = e; }
-    public void setScore(Integer s) { player.score = s; }
-    public void setGameState(String s) { gameState = s; }
-
-    /*
-     * Getters
-     */
-    public String getUsername() { return username; }
-    public String getCurrentGameName() { return currentGameName; }
+    // Getters
+    public String getUsername() { return currentUsername; }
+    public String getGameName() { return currentGameName; }
     public Integer getTeam() { return player.team; }
     public Integer getLoyalty() { return player.loyalty; }
     public Integer getEnergy() { return player.energy; }
     public Integer getScore() { return player.score; }
-    public Boolean getCreator() { return creator; }
+    public Boolean getCreator() { return gameStatus.isCreated(); }
     public Character getSymbol() { return player.symbol; }
-    public String getGameState() { return gameState; }
+    public GameState getGameState() { return gameStatus.getState(); }
+
 
     public void setInGame(String gameName, Boolean created) {
         player = new PlayerStatus();
         playerList = new HashMap<>();
 
+        gameStatus = new GameStatus(gameName, created);
         map = new MapStatus();
+        newMessages = new ConcurrentLinkedQueue<>();
 
         currentGameName = gameName;
-        gameState = "LOBBY";
-        creator = created;
     }
 
     public void updateGameState(String info) {
@@ -63,8 +55,7 @@ public class StateManager {
         for(int i=0; i < tokens.length; i += 2) {
             String keyword = tokens[i], value = tokens[i+1];
             switch (keyword) {
-                case "name" -> currentGameName = value;
-                case "state" -> gameState = value;
+                case "state" -> gameStatus.setState(GameState.fromString(value));
                 case "size" -> map.setMapSize(Integer.parseInt(value));
             }
         }

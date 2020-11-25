@@ -1,14 +1,12 @@
 package it.unipi.cs.smartapp.controllers;
 
+import it.unipi.cs.smartapp.statemanager.ChatMessage;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
-
-import java.util.HashMap;
 
 import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.screens.Renderer;
@@ -43,22 +41,22 @@ public class spectateController implements Controller {
     @Override
     public void updateContent() {
         // Add lobby name in the chat
-        txtChat.setText("Lobby name: " + stateMgr.getCurrentGameName());
+        txtChat.setText("Lobby name: " + stateMgr.getGameName());
 
         txtUsername.setText(stateMgr.getUsername());
-        txtLobby.setText(stateMgr.getCurrentGameName());
+        txtLobby.setText(stateMgr.getGameName());
 
         // Setup chat
         chatSystem.openConnection();
         chatSystem.setMessageCallback(() -> {
-            String[] message = stateMgr.newMessage;
-            stateMgr.newMessage = null;
-            if(!stateMgr.getCurrentGameName().equals(message[0])) txtChat.appendText("\n(" + message[0] + ") ");
-            txtChat.appendText(message[1] + ": " + message[2]);
+            ChatMessage message = stateMgr.newMessages.poll();
+            if(message == null) return;
 
+            if(!stateMgr.getGameName().equals(message.channel)) txtChat.appendText("\n(" + message.channel + ") ");
+            txtChat.appendText(message.user + ": " + message.text);
         });
         chatSystem.sendNAME(stateMgr.getUsername());
-        chatSystem.sendJOIN(stateMgr.getCurrentGameName());
+        chatSystem.sendJOIN(stateMgr.getGameName());
         //chatSystem.sendJOIN("#GLOBAL");
 
         // Update status
@@ -70,7 +68,7 @@ public class spectateController implements Controller {
 
     // Update general Status
     public void updateStatus() {
-        GameServerResponse res = gameServer.sendSTATUS(stateMgr.getCurrentGameName());
+        GameServerResponse res = gameServer.sendSTATUS(stateMgr.getGameName());
 
         if (res.code != ResponseCode.OK) {
             System.err.println(res.freeText);
@@ -92,7 +90,7 @@ public class spectateController implements Controller {
 
     // Update gameMap
     public void updateMap() {
-        GameServerResponse response = gameServer.sendLOOK(stateMgr.getCurrentGameName());
+        GameServerResponse response = gameServer.sendLOOK(stateMgr.getGameName());
 
         if (response.code != ResponseCode.OK) {
             System.err.println(response.freeText);
@@ -107,16 +105,14 @@ public class spectateController implements Controller {
     @FXML
     public void btnGoBackPressed(ActionEvent event) {
         // Close connection with game server
-        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Leaving the game");
+        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getGameName(), "Leaving the game");
         if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
         else { System.out.println(response.freeText); }
         gameServer.closeConnection();
 
         // Unsubscribe from all chat channels and close connection
-        chatSystem.sendLEAVE(stateMgr.getCurrentGameName());
+        chatSystem.sendLEAVE(stateMgr.getGameName());
         chatSystem.closeConnection();
-
-        stateMgr.setCurrentGameName(null);
 
         Renderer.getInstance().show("mainMenu");
     }

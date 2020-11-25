@@ -1,6 +1,5 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.statemanager.PlayerSettings;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -11,6 +10,9 @@ import javafx.event.ActionEvent;
 import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.statemanager.StateManager;
+import it.unipi.cs.smartapp.statemanager.ChatMessage;
+import it.unipi.cs.smartapp.statemanager.PlayerSettings;
+import it.unipi.cs.smartapp.statemanager.GameState;
 
 
 public class gameController implements Controller {
@@ -53,19 +55,19 @@ public class gameController implements Controller {
     public void updateContent() {
         // Prepare the interface
         btnStartMatch.setVisible(stateMgr.getCreator());
-        txtChat.setText("Lobby name: " + stateMgr.getCurrentGameName());
+        txtChat.setText("Lobby name: " + stateMgr.getGameName());
 
         // Setup chat
         chatSystem.openConnection();
         chatSystem.setMessageCallback(() -> {
-            String[] message = stateMgr.newMessage;
-            stateMgr.newMessage = null;
-            if(!stateMgr.getCurrentGameName().equals(message[0])) txtChat.appendText("\n(" + message[0] + ") ");
-            txtChat.appendText(message[1] + ": " + message[2]);
+            ChatMessage message = stateMgr.newMessages.poll();
+            if(message == null) return;
 
+            if(!stateMgr.getGameName().equals(message.channel)) txtChat.appendText("\n(" + message.channel + ") ");
+            txtChat.appendText(message.user + ": " + message.text);
         });
         chatSystem.sendNAME(stateMgr.getUsername());
-        chatSystem.sendJOIN(stateMgr.getCurrentGameName());
+        chatSystem.sendJOIN(stateMgr.getGameName());
 
         // Retrieve other player info from the Game Server
         updateStatus();
@@ -76,7 +78,7 @@ public class gameController implements Controller {
         // Keyboard events
         gamePanel.setOnKeyPressed(keyEvent -> {
             System.out.println(keyEvent.getCode());
-            if (!stateMgr.getGameState().equals("ACTIVE")) {
+            if (!(stateMgr.getGameState() == GameState.ACTIVE)) {
                 Alert message = new Alert(Alert.AlertType.INFORMATION);
                 message.setTitle("Information");
                 message.setContentText("You can move or shoot only with a started game.\n Game state: " + stateMgr.getGameState());
@@ -84,7 +86,7 @@ public class gameController implements Controller {
                 return;
             }
 
-            Character key = keyEvent.getCode().toString().charAt(0);
+            char key = keyEvent.getCode().toString().charAt(0);
             if(key == playerSettings.getMoveUp()) movePlayer('N');
             else if (key == playerSettings.getMoveLeft()) movePlayer('W');
             else if (key == playerSettings.getMoveDown()) movePlayer('S');
@@ -97,43 +99,41 @@ public class gameController implements Controller {
     }
 
     @FXML
-    public void btnGoBackPressed(ActionEvent event) { quit(); }
+    public void btnGoBackPressed() { quit(); }
 
     @FXML
-    private void btnUpdMapPressed(ActionEvent event) { updateMap(); }
+    private void btnUpdMapPressed() { updateMap(); }
 
     @FXML
-    private void btnUpdStatusPressed(ActionEvent event) { updateStatus(); }
+    private void btnUpdStatusPressed() { updateStatus(); }
 
     @FXML
-    public void txtSendMessage(ActionEvent event) {
+    public void txtSendMessage() {
         if(txtMessage.getText().isBlank()) {
             txtMessage.setStyle("-fx-border-color: red");
         } else {
             txtMessage.setStyle("-fx-border-color: none");
-            chatSystem.sendPOST(stateMgr.getCurrentGameName(), txtMessage.getText());
+            chatSystem.sendPOST(stateMgr.getGameName(), txtMessage.getText());
         }
         txtMessage.setText("");
     }
 
     public void quit() {
         // Close connection with game server
-        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getCurrentGameName(), "Cause yes");
+        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getGameName(), "Cause yes");
         if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
         else { System.out.println(response.freeText); }
         gameServer.closeConnection();
 
         // Unsubscribe from all chat channels and close connection
-        chatSystem.sendLEAVE(stateMgr.getCurrentGameName());
+        chatSystem.sendLEAVE(stateMgr.getGameName());
         chatSystem.closeConnection();
-
-        stateMgr.setCurrentGameName(null);
 
         Renderer.getInstance().show("mainMenu");
     }
 
     public void movePlayer(Character position) {
-        GameServerResponse res = gameServer.sendMOVE(stateMgr.getCurrentGameName(), position);
+        GameServerResponse res = gameServer.sendMOVE(stateMgr.getGameName(), position);
 
         switch (res.code) {
             case FAIL:
@@ -151,7 +151,7 @@ public class gameController implements Controller {
     }
 
     public void tryToShoot(Character direction){
-        GameServerResponse res = gameServer.sendSHOOT(stateMgr.getCurrentGameName(), direction);
+        GameServerResponse res = gameServer.sendSHOOT(stateMgr.getGameName(), direction);
 
         switch (res.code) {
             case FAIL -> {
@@ -176,8 +176,8 @@ public class gameController implements Controller {
     }
 
     @FXML
-    public void btnStartMatchPressed(ActionEvent event) {
-        GameServerResponse res = gameServer.sendSTART(stateMgr.getCurrentGameName());
+    public void btnStartMatchPressed() {
+        GameServerResponse res = gameServer.sendSTART(stateMgr.getGameName());
 
         if (res.code != ResponseCode.OK) {
             Alert message = new Alert(Alert.AlertType.ERROR);
@@ -198,17 +198,15 @@ public class gameController implements Controller {
     }
 
     // Update ProgressBar correctly
-    public void updateEnergy(Integer energyValue) {
-        if (energyValue < 0) energyValue = 0;
-
-        stateMgr.setEnergy(energyValue);
+    public void updateEnergy() {
+        Integer energyValue = stateMgr.player.energy;
         playerEnergy.setText(energyValue.toString());
         playerEnergyBar.setProgress(((double) energyValue) / 256.0);
     }
 
     // Update general Status
     public void updateStatus() {
-        GameServerResponse res = gameServer.sendSTATUS(stateMgr.getCurrentGameName());
+        GameServerResponse res = gameServer.sendSTATUS(stateMgr.getGameName());
 
         if (res.code != ResponseCode.OK) {
             System.err.println(res.freeText);
@@ -232,7 +230,7 @@ public class gameController implements Controller {
         }
 
         // Update Game View Values
-        if (stateMgr.getGameState().equals("ACTIVE") && firstTime) {
+        if (stateMgr.getGameState() == GameState.ACTIVE && firstTime) {
             txtChat.appendText("\nGame state changed to: " + stateMgr.getGameState());
             Alert message = new Alert(Alert.AlertType.INFORMATION);
             message.setTitle("Information");
@@ -242,7 +240,7 @@ public class gameController implements Controller {
         }
 
         // Check finished game
-        if (stateMgr.getGameState().equals("FINISHED")) {
+        if (stateMgr.getGameState() == GameState.FINISHED) {
             Alert message = new Alert(Alert.AlertType.INFORMATION);
             message.setTitle("Game finished!");
             message.setHeaderText("Your final score is: " + stateMgr.getScore());
@@ -269,13 +267,12 @@ public class gameController implements Controller {
         }
 
         playerScore.setText(stateMgr.getScore().toString());
-        playerEnergy.setText(stateMgr.getEnergy().toString());
-        updateEnergy(stateMgr.getEnergy());
+        updateEnergy();
     }
 
     // Update gameMap
     public void updateMap() {
-        GameServerResponse response = gameServer.sendLOOK(stateMgr.getCurrentGameName());
+        GameServerResponse response = gameServer.sendLOOK(stateMgr.getGameName());
 
         if (response.code != ResponseCode.OK) {
             System.err.println(response.freeText);
