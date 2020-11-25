@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.spectateController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.spectateController">
    <children>
       <Button fx:id="btnStopSpectate" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" text="Stop spectate" />
       <Label fx:id="txtGameChat" layoutX="523.0" layoutY="30.0" text="Game Chat:">
@@ -13,7 +13,7 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <TextArea fx:id="txtChat" editable="false" layoutX="523.0" layoutY="61.0" prefHeight="392.0" prefWidth="263.0" />
+      <TextArea fx:id="txtChat" editable="false" layoutX="523.0" layoutY="61.0" prefHeight="392.0" prefWidth="263.0" wrapText="true" />
       <Label layoutX="20.0" layoutY="513.0" text="Game info:">
          <font>
             <Font size="18.0" />

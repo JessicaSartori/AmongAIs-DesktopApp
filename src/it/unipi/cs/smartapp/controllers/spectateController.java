@@ -41,7 +41,7 @@ public class spectateController implements Controller {
     @Override
     public void updateContent() {
         // Add lobby name in the chat
-        txtChat.setText("Lobby name: " + stateMgr.getGameName());
+        txtChat.setText("Lobby name: " + stateMgr.getGameName() + "\n");
 
         txtUsername.setText(stateMgr.getUsername());
         txtLobby.setText(stateMgr.getGameName());
@@ -52,8 +52,8 @@ public class spectateController implements Controller {
             ChatMessage message = stateMgr.newMessages.poll();
             if(message == null) return;
 
-            if(!stateMgr.getGameName().equals(message.channel)) txtChat.appendText("\n(" + message.channel + ") ");
-            txtChat.appendText(message.user + ": " + message.text);
+            if(!stateMgr.getGameName().equals(message.channel)) txtChat.appendText("(" + message.channel + ") ");
+            txtChat.appendText(message.user + ": " + message.text + "\n");
         });
         chatSystem.sendNAME(stateMgr.getUsername());
         chatSystem.sendJOIN(stateMgr.getGameName());

@@ -55,7 +55,7 @@ public class gameController implements Controller {
     public void updateContent() {
         // Prepare the interface
         btnStartMatch.setVisible(stateMgr.getCreator());
-        txtChat.setText("Lobby name: " + stateMgr.getGameName());
+        txtChat.setText("Lobby name: " + stateMgr.getGameName() + "\n");
 
         // Setup chat
         chatSystem.openConnection();
@@ -63,8 +63,8 @@ public class gameController implements Controller {
             ChatMessage message = stateMgr.newMessages.poll();
             if(message == null) return;
 
-            if(!stateMgr.getGameName().equals(message.channel)) txtChat.appendText("\n(" + message.channel + ") ");
-            txtChat.appendText(message.user + ": " + message.text);
+            if(!stateMgr.getGameName().equals(message.channel)) txtChat.appendText("(" + message.channel + ") ");
+            txtChat.appendText(message.user + ": " + message.text + "\n");
         });
         chatSystem.sendNAME(stateMgr.getUsername());
         chatSystem.sendJOIN(stateMgr.getGameName());
