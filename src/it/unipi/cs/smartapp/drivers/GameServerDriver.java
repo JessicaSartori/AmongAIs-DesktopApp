@@ -158,9 +158,22 @@ public class GameServerDriver extends SocketDriver {
         return res;
     }
 
-    // <game> ACCUSE <player> : CURRENTLY NOT IMPLEMENTED
-    public void sendACCUSE() {
-        // TODO Implement when made available from Game Server
+    // <game> ACCUSE <player> : accuse another player of being an impostor
+    public GameServerResponse sendACCUSE(String gameName, String playerName) {
+        String command = gameName + " ACCUSE " + playerName;
+        String[] rawResponse = sendCommand(command);
+        ResponseCode code = ResponseCode.fromString(rawResponse[0]);
+
+        return new GameServerResponse(code, null, rawResponse[1]);
+    }
+
+    // <game> JUDGE <player> <nature> : judge a player as Human or AI
+    public GameServerResponse sendJUDGE(String gameName, String playerName, String nature) {
+        String command = gameName + " JUDGE " + playerName + " " + nature;
+        String[] rawResponse = sendCommand(command);
+        ResponseCode code = ResponseCode.fromString(rawResponse[0]);
+
+        return new GameServerResponse(code, null, rawResponse[1]);
     }
 
     // <game> LEAVE <reason> : player leaves game

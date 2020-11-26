@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class MapStatus {
 
     // Constant - Size of canvas in gameScene
-    private static final int CANVAS_SIZE = 442;
+    private static final int CANVAS_SIZE = 650;
 
     private Character[][] gameMap = null;
     private Integer mapSize = null;
