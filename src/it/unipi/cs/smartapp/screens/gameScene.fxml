@@ -91,7 +91,8 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="txtPlayerVote" layoutX="26.0" layoutY="245.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="263.0" promptText="Write a player name..." />
+      <TextField fx:id="txtPlayerVote" layoutX="26.0" layoutY="245.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="126.0" promptText="Write a player name" />
+      <TextField fx:id="txtPlayerJudge" layoutX="161.0" layoutY="245.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="126.0" promptText="Nature (H/AI)" />
       <Button fx:id="btnAccuse" layoutX="26.0" layoutY="283.0" mnemonicParsing="false" onAction="#btnAccusePressed" prefHeight="40.0" prefWidth="126.0" text="Accuse" />
       <Button fx:id="btnJudge" layoutX="161.0" layoutY="283.0" mnemonicParsing="false" onAction="#btnJudgePressed" prefHeight="40.0" prefWidth="126.0" text="Judge" />
       <Label fx:id="txtEnergy2111" layoutX="190.0" layoutY="404.0" text="Score">
@@ -99,6 +100,7 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextFlow fx:id="txtTest" layoutX="115.0" layoutY="41.0" prefHeight="200.0" prefWidth="200.0" />
+      <Label fx:id="responseLabel" layoutX="26.0" layoutY="207.0" prefHeight="27.0" prefWidth="260.0" text="responseLabel" textFill="red" textAlignment="CENTER" />
+
    </children>
 </AnchorPane>

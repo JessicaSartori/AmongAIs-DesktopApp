@@ -12,9 +12,10 @@ import javafx.event.ActionEvent;
 
 import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.screens.Renderer;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.scene.paint.Color;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 
@@ -31,9 +32,15 @@ public class gameController implements Controller {
     @FXML
     private Label playerName, playerTeam, playerLoyalty, playerEnergy, playerScore;
     @FXML
-    private TextArea txtChat;
+    private Label responseLabel;
     @FXML
     private TextField txtMessage;
+    @FXML
+    private TextField txtPlayerVote;
+    @FXML
+    private TextField txtPlayerJudge;
+    @FXML
+    private TextArea txtChat;
     @FXML
     private ProgressBar playerEnergyBar;
     @FXML
@@ -46,8 +53,6 @@ public class gameController implements Controller {
     private Label lobbyName;
     @FXML
     private ListView<String> PlayersList = new ListView<>();
-    @FXML
-    private TextFlow txtTest;
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
@@ -57,6 +62,8 @@ public class gameController implements Controller {
 
         canvasContext = mapCanvas.getGraphicsContext2D();
 
+        responseLabel.setText("");
+
         System.out.println("Game Controller done");
     }
 
@@ -65,6 +72,7 @@ public class gameController implements Controller {
         // Prepare the interface
         btnStartMatch.setVisible(stateMgr.getCreator());
         lobbyName.setText(stateMgr.getGameName());
+        responseLabel.setText("");
 
         // Setup chat
         chatSystem.openConnection();
@@ -72,13 +80,7 @@ public class gameController implements Controller {
             ChatMessage message = stateMgr.newMessages.poll();
             if(message == null) return;
 
-            Text PlayerName = new Text(message.user);
-            String TeamColor = (stateMgr.playerList.get(message.user).team.equals(0)) ? "-fx-text-fill: red": "-fx-text-fill: blue" ;
-            PlayerName.setStyle(TeamColor);
-            Text PlayerMessage = new Text(": " + message.text + "\n");
-            txtTest.getChildren().add(PlayerName);
-            txtTest.getChildren().add(PlayerMessage);
-
+            if(!stateMgr.getGameName().equals(message.channel)) txtChat.appendText("(" + message.channel + ") ");
             txtChat.appendText(message.user + ": " + message.text + "\n");
         });
         chatSystem.sendNAME(stateMgr.getUsername());
@@ -303,7 +305,21 @@ public class gameController implements Controller {
 
     @FXML
     private void btnAccusePressed(ActionEvent event) {
-        // TODO
+        responseLabel.setTextFill(Color.RED);
+
+        if(txtPlayerVote.getText().trim().isEmpty()) {
+            responseLabel.setText("Player name empty");
+            return;
+        }
+
+        GameServerResponse response = gameServer.sendACCUSE(stateMgr.getGameName(), txtPlayerVote.getText());
+
+        if(response.code != ResponseCode.OK) {
+            responseLabel.setText(response.freeText);
+            return;
+        }
+        responseLabel.setTextFill(Color.GREEN);
+        responseLabel.setText(response.freeText);
     }
 
     @FXML
