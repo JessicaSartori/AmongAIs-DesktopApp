@@ -12,9 +12,9 @@ import javafx.event.ActionEvent;
 
 import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.screens.Renderer;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 
@@ -46,6 +46,8 @@ public class gameController implements Controller {
     private Label lobbyName;
     @FXML
     private ListView<String> PlayersList = new ListView<>();
+    @FXML
+    private TextFlow txtTest;
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
@@ -70,7 +72,13 @@ public class gameController implements Controller {
             ChatMessage message = stateMgr.newMessages.poll();
             if(message == null) return;
 
-            if(!stateMgr.getGameName().equals(message.channel)) txtChat.appendText("(" + message.channel + ") ");
+            Text PlayerName = new Text(message.user);
+            String TeamColor = (stateMgr.playerList.get(message.user).team.equals(0)) ? "-fx-text-fill: red": "-fx-text-fill: blue" ;
+            PlayerName.setStyle(TeamColor);
+            Text PlayerMessage = new Text(": " + message.text + "\n");
+            txtTest.getChildren().add(PlayerName);
+            txtTest.getChildren().add(PlayerMessage);
+
             txtChat.appendText(message.user + ": " + message.text + "\n");
         });
         chatSystem.sendNAME(stateMgr.getUsername());
@@ -237,9 +245,8 @@ public class gameController implements Controller {
         }
 
         ObservableList<String> finalList = FXCollections.observableArrayList();
-        HashMap<String, PlayerStatus> listPlayers = stateMgr.getListOfPlayer();
 
-        for (Map.Entry<String, PlayerStatus> set : listPlayers.entrySet()) {
+        for (Map.Entry<String, PlayerStatus> set : stateMgr.playerList.entrySet()) {
             PlayerStatus pl = set.getValue();
             String playerListName = pl.team + "\t\t\t" + set.getKey() + "\t\t\t\t" + pl.score + "\t" + pl.state;
             finalList.add(playerListName);

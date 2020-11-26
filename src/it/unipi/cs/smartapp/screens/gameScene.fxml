@@ -99,5 +99,6 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
+      <TextFlow fx:id="txtTest" layoutX="115.0" layoutY="41.0" prefHeight="200.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

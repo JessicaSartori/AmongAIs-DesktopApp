@@ -36,7 +36,6 @@ public class StateManager {
     public Boolean getCreator() { return gameStatus.isCreated(); }
     public Character getSymbol() { return player.symbol; }
     public GameState getGameState() { return gameStatus.getState(); }
-    public HashMap<String, PlayerStatus> getListOfPlayer() { return playerList; }
 
 
     public void setInGame(String gameName, Boolean created) {
