@@ -324,6 +324,27 @@ public class gameController implements Controller {
 
     @FXML
     private void btnJudgePressed(ActionEvent event) {
-        // TODO
+        responseLabel.setTextFill(Color.RED);
+
+        if(txtPlayerVote.getText().trim().isEmpty()) {
+            responseLabel.setText("Player name empty");
+            return;
+        }
+
+        System.out.println("Vote: " + txtPlayerVote.getText() + " Judge: " + txtPlayerJudge.getText());
+        if(!txtPlayerJudge.getText().equalsIgnoreCase("AI") && !txtPlayerJudge.getText().equalsIgnoreCase("H")) {
+            responseLabel.setText("Invalid nature");
+            return;
+        }
+
+        GameServerResponse response = gameServer.sendJUDGE(stateMgr.getGameName(), txtPlayerVote.getText(), txtPlayerJudge.getText().toUpperCase());
+        System.out.println("Response code: " + response.code + " free text: " + response.freeText);
+
+        if(response.code != ResponseCode.OK) {
+            responseLabel.setText(response.freeText);
+            return;
+        }
+        responseLabel.setTextFill(Color.GREEN);
+        responseLabel.setText(response.freeText);
     }
 }
