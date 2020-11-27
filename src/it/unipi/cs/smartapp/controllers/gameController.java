@@ -1,22 +1,17 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.statemanager.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
 
 import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.screens.Renderer;
-import javafx.scene.paint.Color;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import it.unipi.cs.smartapp.statemanager.*;
 
 
 public class gameController implements Controller {
@@ -26,21 +21,14 @@ public class gameController implements Controller {
     private ChatSystemDriver chatSystem;
 
     private GraphicsContext canvasContext;
+    private ChatManager chat;
 
     private Boolean firstTime = true;
 
     @FXML
-    private Label playerName, playerTeam, playerLoyalty, playerEnergy, playerScore;
+    private Label lobbyName, playerName, playerLoyalty, playerEnergy, playerScore, lblResponse;
     @FXML
-    private Label responseLabel;
-    @FXML
-    private TextField txtMessage;
-    @FXML
-    private TextField txtPlayerVote;
-    @FXML
-    private TextField txtPlayerJudge;
-    @FXML
-    private TextArea txtChat;
+    private TextField txtPlayerVote, txtPlayerJudge, txtMessage;
     @FXML
     private ProgressBar playerEnergyBar;
     @FXML
@@ -50,9 +38,9 @@ public class gameController implements Controller {
     @FXML
     private AnchorPane gamePanel;
     @FXML
-    private Label lobbyName;
+    private ScrollPane chatPane;
     @FXML
-    private ListView<String> PlayersList = new ListView<>();
+    private ListView<String> listPlayers;
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
@@ -61,8 +49,9 @@ public class gameController implements Controller {
         chatSystem = ChatSystemDriver.getInstance();
 
         canvasContext = mapCanvas.getGraphicsContext2D();
+        chat = new ChatManager(chatPane);
 
-        responseLabel.setText("");
+        lblResponse.setText("");
 
         System.out.println("Game Controller done");
     }
@@ -72,17 +61,17 @@ public class gameController implements Controller {
         // Prepare the interface
         btnStartMatch.setVisible(stateMgr.getCreator());
         lobbyName.setText(stateMgr.getGameName());
-        responseLabel.setText("");
-        txtChat.setText("");
+        lblResponse.setText("");
+
+        // Prepare player list
+        listPlayers.setItems(stateMgr.playerList);
 
         // Setup chat
+        chat.clearChat();
         chatSystem.openConnection();
         chatSystem.setMessageCallback(() -> {
-            ChatMessage message = stateMgr.newMessages.poll();
-            if(message == null) return;
-
-            if(!stateMgr.getGameName().equals(message.channel)) txtChat.appendText("(" + message.channel + ") ");
-            txtChat.appendText(message.user + ": " + message.text + "\n");
+            ChatMessage msg = stateMgr.newMessages.poll();
+            if(msg != null) chat.processMessage(msg);
         });
         chatSystem.sendNAME(stateMgr.getUsername());
         chatSystem.sendJOIN(stateMgr.getGameName());
@@ -95,16 +84,12 @@ public class gameController implements Controller {
 
         // Keyboard events
         gamePanel.setOnKeyPressed(keyEvent -> {
-            System.out.println(keyEvent.getCode());
             if (!(stateMgr.getGameState() == GameState.ACTIVE)) {
-                Alert message = new Alert(Alert.AlertType.INFORMATION);
-                message.setTitle("Information");
-                message.setContentText("You can move or shoot only with a started game.\n Game state: " + stateMgr.getGameState());
-                message.showAndWait();
+                lblResponse.setText("Can not move or shoot while in lobby");
                 return;
             }
 
-            char key = keyEvent.getCode().toString().charAt(0);
+            KeyCode key = keyEvent.getCode();
             if(key == playerSettings.getMoveUp()) movePlayer('N');
             else if (key == playerSettings.getMoveLeft()) movePlayer('W');
             else if (key == playerSettings.getMoveDown()) movePlayer('S');
@@ -138,7 +123,7 @@ public class gameController implements Controller {
 
     public void quit() {
         // Close connection with game server
-        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getGameName(), "Cause yes");
+        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getGameName(), "Done playing");
         if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
         else { System.out.println(response.freeText); }
         gameServer.closeConnection();
@@ -158,8 +143,8 @@ public class gameController implements Controller {
                 System.err.println(res.freeText);
                 return;
             case ERROR:
-                txtChat.appendText("\nSystem: " + res.freeText);
-                // return;
+                lblResponse.setText(res.freeText);
+                //return;
             case OK:
                 System.out.println(res.freeText);
         }
@@ -177,7 +162,7 @@ public class gameController implements Controller {
                 return;
             }
             case ERROR -> {
-                txtChat.appendText("\nSystem: " + res.freeText);
+                lblResponse.setText(res.freeText);
                 return;
             }
             case OK -> System.out.println(res.freeText);
@@ -247,20 +232,9 @@ public class gameController implements Controller {
             stateMgr.updatePlayerStatus(PL);
         }
 
-        ObservableList<String> finalList = FXCollections.observableArrayList();
-        HashMap<String, PlayerStatus> listPlayers = stateMgr.getListOfPlayer();
-
-        for (Map.Entry<String, PlayerStatus> set : listPlayers.entrySet()) {
-            PlayerStatus pl = set.getValue();
-            String playerListName = pl.team + "\t\t\t" + set.getKey() + "\t\t\t\t" + pl.score + "\t" + pl.state;
-            finalList.add(playerListName);
-        }
-
-        PlayersList.setItems(finalList);
-
         // Update Game View Values
         if (stateMgr.getGameState() == GameState.ACTIVE && firstTime) {
-            txtChat.appendText("\nGame state changed to: " + stateMgr.getGameState());
+            //txtChat.appendText("\nGame state changed to: " + stateMgr.getGameState());
             Alert message = new Alert(Alert.AlertType.INFORMATION);
             message.setTitle("Information");
             message.setContentText("Game started, now you can move and shoot!");
@@ -307,35 +281,35 @@ public class gameController implements Controller {
 
     @FXML
     private void btnAccusePressed(ActionEvent event) {
-        responseLabel.setTextFill(Color.RED);
+        lblResponse.setTextFill(Color.RED);
 
         if(txtPlayerVote.getText().trim().isEmpty()) {
-            responseLabel.setText("Player name empty");
+            lblResponse.setText("Player name empty");
             return;
         }
 
         GameServerResponse response = gameServer.sendACCUSE(stateMgr.getGameName(), txtPlayerVote.getText());
 
         if(response.code != ResponseCode.OK) {
-            responseLabel.setText(response.freeText);
+            lblResponse.setText(response.freeText);
             return;
         }
-        responseLabel.setTextFill(Color.GREEN);
-        responseLabel.setText(response.freeText);
+        lblResponse.setTextFill(Color.GREEN);
+        lblResponse.setText(response.freeText);
     }
 
     @FXML
     private void btnJudgePressed(ActionEvent event) {
-        responseLabel.setTextFill(Color.RED);
+        lblResponse.setTextFill(Color.RED);
 
         if(txtPlayerVote.getText().trim().isEmpty()) {
-            responseLabel.setText("Player name empty");
+            lblResponse.setText("Player name empty");
             return;
         }
 
         System.out.println("Vote: " + txtPlayerVote.getText() + " Judge: " + txtPlayerJudge.getText());
         if(!txtPlayerJudge.getText().equalsIgnoreCase("AI") && !txtPlayerJudge.getText().equalsIgnoreCase("H")) {
-            responseLabel.setText("Invalid nature");
+            lblResponse.setText("Invalid nature");
             return;
         }
 
@@ -343,11 +317,11 @@ public class gameController implements Controller {
         System.out.println("Response code: " + response.code + " free text: " + response.freeText);
 
         if(response.code != ResponseCode.OK) {
-            responseLabel.setText(response.freeText);
+            lblResponse.setText(response.freeText);
             return;
         }
-        responseLabel.setTextFill(Color.GREEN);
-        responseLabel.setText(response.freeText);
+        lblResponse.setTextFill(Color.GREEN);
+        lblResponse.setText(response.freeText);
 
     }
 }
