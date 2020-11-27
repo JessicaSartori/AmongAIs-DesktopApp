@@ -13,6 +13,7 @@ import java.text.DecimalFormat;
 
 import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.statemanager.PlayerSettings;
+import javafx.scene.input.KeyCode;
 
 
 public class settingsController implements Controller {
@@ -78,55 +79,50 @@ public class settingsController implements Controller {
     }
 
     @FXML
-    private void btnGoBackPressed(ActionEvent event) { Renderer.getInstance().show("mainMenu"); }
+    private void btnGoBackPressed() { Renderer.getInstance().show("mainMenu"); }
     @FXML
-    private void btnMoveUpPressed(ActionEvent event) { setKeyButton(btnMoveUp, btnMoveUp.getText()); }
+    private void btnMoveUpPressed() { setKeyButton(btnMoveUp, settings.getMoveUp()); }
     @FXML
-    private void btnMoveDownPressed(ActionEvent event) { setKeyButton(btnMoveDown, btnMoveDown.getText()); }
+    private void btnMoveDownPressed() { setKeyButton(btnMoveDown, settings.getMoveDown()); }
     @FXML
-    private void btnMoveLeftPressed(ActionEvent event) { setKeyButton(btnMoveLeft, btnMoveLeft.getText()); }
+    private void btnMoveLeftPressed() { setKeyButton(btnMoveLeft, settings.getMoveLeft()); }
     @FXML
-    private void btnMoveRightPressed(ActionEvent event) { setKeyButton(btnMoveRight, btnMoveRight.getText()); }
+    private void btnMoveRightPressed() { setKeyButton(btnMoveRight, settings.getMoveRight()); }
     @FXML
-    private void btnShootUpPressed(ActionEvent event) { setKeyButton(btnShootUp, btnShootUp.getText()); }
+    private void btnShootUpPressed() { setKeyButton(btnShootUp, settings.getShootUp()); }
     @FXML
-    private void btnShootDownPressed(ActionEvent event) { setKeyButton(btnShootDown, btnShootDown.getText()); }
+    private void btnShootDownPressed() { setKeyButton(btnShootDown, settings.getShootDown()); }
     @FXML
-    private void btnShootLeftPressed(ActionEvent event) { setKeyButton(btnShootLeft, btnShootLeft.getText()); }
+    private void btnShootLeftPressed() { setKeyButton(btnShootLeft, settings.getShootLeft()); }
     @FXML
-    private void btnShootRightPressed(ActionEvent event) { setKeyButton(btnShootRight, btnShootRight.getText()); }
+    private void btnShootRightPressed() { setKeyButton(btnShootRight, settings.getShootRight()); }
 
-    private void setKeyButton(Button btn, String oldValue) {
+    private void setKeyButton(Button btn, KeyCode oldValue) {
         btn.setText("...");
         btn.setOnKeyReleased(keyEvent -> {
-            String newValue = keyEvent.getCode().toString();
+            KeyCode newValue = keyEvent.getCode();
 
             // Check if a key is already set
-            if (!newValue.equals(oldValue)) {
-                if (!settings.isAlreadySet(newValue.charAt(0))) {
-                    btn.setText(newValue);
+            if (!settings.isAlreadySet(newValue)) {
+                btn.setText(newValue.toString());
 
-                    switch (btn.getId()){
-                        case "btnMoveUp" -> settings.setMoveUp(newValue.charAt(0));
-                        case "btnMoveDown" -> settings.setMoveDown(newValue.charAt(0));
-                        case "btnMoveLeft" -> settings.setMoveLeft(newValue.charAt(0));
-                        case "btnMoveRight" -> settings.setMoveRight(newValue.charAt(0));
-                        case "btnShootUp" -> settings.setShootUp(newValue.charAt(0));
-                        case "btnShootDown" -> settings.setShootDown(newValue.charAt(0));
-                        case "btnShootLeft" -> settings.setShootLeft(newValue.charAt(0));
-                        case "btnShootRight" -> settings.setShootRight(newValue.charAt(0));
-                    }
-                } else {
-                    btn.setText(oldValue);
-                    Alert message = new Alert(Alert.AlertType.ERROR);
-                    message.setTitle("Already used");
-                    message.setContentText("This key is already bound.");
-                    message.showAndWait();
-                    return;
+                switch (btn.getId()) {
+                    case "btnMoveUp" -> settings.setMoveUp(newValue);
+                    case "btnMoveDown" -> settings.setMoveDown(newValue);
+                    case "btnMoveLeft" -> settings.setMoveLeft(newValue);
+                    case "btnMoveRight" -> settings.setMoveRight(newValue);
+                    case "btnShootUp" -> settings.setShootUp(newValue);
+                    case "btnShootDown" -> settings.setShootDown(newValue);
+                    case "btnShootLeft" -> settings.setShootLeft(newValue);
+                    case "btnShootRight" -> settings.setShootRight(newValue);
                 }
+            } else {
+                btn.setText(oldValue.toString());
+                Alert message = new Alert(Alert.AlertType.ERROR);
+                message.setTitle("Already used");
+                message.setContentText("This key is already bound.");
+                message.showAndWait();
             }
-
-            btn.setText(oldValue);
         });
     }
 
