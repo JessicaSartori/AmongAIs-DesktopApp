@@ -1,7 +1,11 @@
 package it.unipi.cs.smartapp.statemanager;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
 
 public class StateManager {
 
@@ -21,10 +25,12 @@ public class StateManager {
     public ConcurrentLinkedQueue<ChatMessage> newMessages;
 
     public PlayerStatus player;
-    public HashMap<String, PlayerStatus> playerList;
+    public HashMap<String, PlayerStatus> players;
+    public ObservableList<String> playerList;
 
     // Setters
     public void setUsername(String s) { currentUsername = s; }
+    public void setGameState(GameState s) { gameStatus.setState(s); }
 
     // Getters
     public String getUsername() { return currentUsername; }
@@ -36,11 +42,13 @@ public class StateManager {
     public Boolean getCreator() { return gameStatus.isCreated(); }
     public Character getSymbol() { return player.symbol; }
     public GameState getGameState() { return gameStatus.getState(); }
+    public HashMap<String, PlayerStatus> getListOfPlayer() { return players; }
 
 
     public void setInGame(String gameName, Boolean created) {
         player = new PlayerStatus();
-        playerList = new HashMap<>();
+        players = new HashMap<>();
+        playerList = FXCollections.observableArrayList();
 
         gameStatus = new GameStatus(gameName, created);
         map = new MapStatus();
@@ -64,10 +72,19 @@ public class StateManager {
     public void updatePlayerStatus(String info) {
         PlayerStatus pl = new PlayerStatus();
         pl.updateWith(info);
-        playerList.put(pl.username, pl);
+        addPlayer(pl);
 
         // Added to guarantee current player coordinates are updated correctly
         if(pl.username.equals(player.username))
             player.updateWith(info);
+    }
+
+    public void addPlayer(PlayerStatus pl) {
+        PlayerStatus old = players.get(pl.username);
+        if (old != null) {
+            playerList.remove(old.team + "\t\t\t" + old.username + "\t\t\t\t" + old.score + "\t" + old.state);
+        }
+        players.put(pl.username, pl);
+        playerList.add(pl.team + "\t\t\t" + pl.username + "\t\t\t\t" + pl.score + "\t" + pl.state);
     }
 }

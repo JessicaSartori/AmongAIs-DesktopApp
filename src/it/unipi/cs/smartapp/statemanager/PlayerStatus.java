@@ -14,6 +14,10 @@ public class PlayerStatus {
 
     public PlayerStatus() {}
 
+    public PlayerStatus(String username) {
+        this.username = username;
+    }
+
     public void updateWith(String info) {
         String[] tokens = info.split("[ =]");
 
