@@ -1,16 +1,23 @@
 package it.unipi.cs.smartapp.controllers;
 
 import it.unipi.cs.smartapp.statemanager.ChatMessage;
+import it.unipi.cs.smartapp.statemanager.PlayerStatus;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 
 import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.statemanager.StateManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class spectateController implements Controller {
@@ -21,11 +28,13 @@ public class spectateController implements Controller {
     private GraphicsContext canvasContext;
 
     @FXML
-    private Label txtUsername, txtLobby;
+    private Label txtLobby;
     @FXML
     private TextArea txtChat;
     @FXML
     private Canvas gameCanvas;
+    @FXML
+    private ListView<String> PlayersList = new ListView<>();
 
 
     public void initialize() {
@@ -40,11 +49,9 @@ public class spectateController implements Controller {
 
     @Override
     public void updateContent() {
-        // Add lobby name in the chat
-        txtChat.setText("Lobby name: " + stateMgr.getGameName() + "\n");
-
-        txtUsername.setText(stateMgr.getUsername());
+        // Prepare the interface
         txtLobby.setText(stateMgr.getGameName());
+        txtChat.setText("");
 
         // Setup chat
         chatSystem.openConnection();
@@ -82,10 +89,21 @@ public class spectateController implements Controller {
         stateMgr.updateGameState(GA);
 
         // Update list of players
-        for (int i = 2; i < data.length; i++) {
+        for (int i = 1; i < data.length; i++) {
             String PL = data[i].substring(4); // Remove "PL: "
             stateMgr.updatePlayerStatus(PL);
         }
+
+        ObservableList<String> finalList = FXCollections.observableArrayList();
+        HashMap<String, PlayerStatus> listPlayers = stateMgr.getListOfPlayer();
+
+        for (Map.Entry<String, PlayerStatus> set : listPlayers.entrySet()) {
+            PlayerStatus pl = set.getValue();
+            String playerListName = pl.team + "\t\t\t" + set.getKey() + "\t\t\t" + pl.score + "\t" + pl.state;
+            finalList.add(playerListName);
+        }
+
+        PlayersList.setItems(finalList);
     }
 
     // Update gameMap
@@ -118,5 +136,8 @@ public class spectateController implements Controller {
     }
 
     @FXML
-    private void btnUpdateMapPressed(ActionEvent event) { updateMap(); }
+    private void btnUpdMapPressed(ActionEvent event) { updateMap(); }
+
+    @FXML
+    private void btnUpdStatusPressed(ActionEvent event) { updateStatus(); }
 }

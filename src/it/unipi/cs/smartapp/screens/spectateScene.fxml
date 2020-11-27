@@ -5,40 +5,54 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.spectateController">
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.spectateController">
    <children>
-      <Button fx:id="btnStopSpectate" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" text="Stop spectate" />
-      <Label fx:id="txtGameChat" layoutX="523.0" layoutY="30.0" text="Game Chat:">
+      <Button fx:id="btnStopSpectate" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefWidth="60.0" text="Quit" />
+      <Label fx:id="txtGameChat" layoutX="985.0" layoutY="30.0" text="Game chat:">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <TextArea fx:id="txtChat" editable="false" layoutX="523.0" layoutY="61.0" prefHeight="392.0" prefWidth="263.0" wrapText="true" />
-      <Label layoutX="20.0" layoutY="513.0" text="Game info:">
+      <TextArea fx:id="txtChat" editable="false" layoutX="985.0" layoutY="60.0" prefHeight="584.0" prefWidth="263.0" wrapText="true" />
+      <Canvas fx:id="gameCanvas" height="650.0" layoutX="315.0" layoutY="42.0" width="650.0" />
+      <Label layoutX="561.0" layoutY="17.0" text="Lobby name:">
          <font>
-            <Font size="18.0" />
+            <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Label layoutX="22.0" layoutY="550.0" text="Your name:">
+      <Label fx:id="txtLobby" layoutX="670.0" layoutY="17.0" text="lobby">
          <font>
-            <Font size="14.0" />
+            <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Canvas fx:id="gameCanvas" height="442.0" layoutX="41.0" layoutY="61.0" width="442.0" />
-      <Label fx:id="txtUsername" layoutX="110.0" layoutY="550.0" text="Label">
+      <ListView fx:id="PlayersList" layoutX="32.0" layoutY="60.0" prefHeight="632.0" prefWidth="263.0" />
+      <Label fx:id="txtPlayersList" layoutX="131.0" layoutY="17.0" text="Players:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="txtTeam" layoutX="37.0" layoutY="42.0" text="Team">
          <font>
             <Font name="System Bold" size="14.0" />
-         </font></Label>
-      <Label layoutX="200.0" layoutY="550.0" text="Lobby:">
+         </font>
+      </Label>
+      <Label fx:id="txtName" layoutX="97.0" layoutY="42.0" text="Name">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label fx:id="txtLobby" layoutX="260.0" layoutY="550.0" text="Label">
+      <Label fx:id="txtEnergy2111" layoutX="188.0" layoutY="42.0" text="Score">
          <font>
-            <Font size="14.0" />
+            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="btnUpdateMap" layoutX="612.0" layoutY="498.0" mnemonicParsing="false" onAction="#btnUpdateMapPressed" prefHeight="38.0" prefWidth="86.0" text="Update Map" />
+      <Label fx:id="txtStatus" layoutX="248.0" layoutY="42.0" text="Status">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+
+      <Button fx:id="btnUpdateMap" layoutX="985.0" layoutY="663.0" mnemonicParsing="false" onAction="#btnUpdMapPressed" prefHeight="40.0" prefWidth="126.0" text="Update Map" />
+      <Button fx:id="btnUpdStatus" layoutX="1122.0" layoutY="663.0" mnemonicParsing="false" onAction="#btnUpdStatusPressed" prefHeight="40.0" prefWidth="126.0" text="Update Status" />
    </children>
 </AnchorPane>

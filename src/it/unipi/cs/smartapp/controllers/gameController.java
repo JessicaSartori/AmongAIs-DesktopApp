@@ -73,6 +73,7 @@ public class gameController implements Controller {
         btnStartMatch.setVisible(stateMgr.getCreator());
         lobbyName.setText(stateMgr.getGameName());
         responseLabel.setText("");
+        txtChat.setText("");
 
         // Setup chat
         chatSystem.openConnection();

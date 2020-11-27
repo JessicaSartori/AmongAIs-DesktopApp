@@ -71,9 +71,10 @@
          </font>
       </Label>
       <ListView fx:id="PlayersList" layoutX="10.0" layoutY="424.0" prefHeight="286.0" prefWidth="294.0" />
-      <Label fx:id="txtEnergy1" layoutX="96.0" layoutY="376.0" text="LIST OF PLAYERS:">
+  
+      <Label fx:id="txtEnergy1" layoutX="120.0" layoutY="376.0" text="Players:">
          <font>
-            <Font name="System Bold" size="14.0" />
+            <Font name="System Bold" size="18.0" />
          </font>
       </Label>
       <Label fx:id="txtEnergy2" layoutX="15.0" layoutY="404.0" text="Team">
@@ -82,6 +83,11 @@
          </font>
       </Label>
       <Label fx:id="txtEnergy21" layoutX="75.0" layoutY="404.0" text="Name">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="txtEnergy2111" layoutX="190.0" layoutY="404.0" text="Score">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
@@ -95,12 +101,8 @@
       <TextField fx:id="txtPlayerJudge" layoutX="161.0" layoutY="245.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="126.0" promptText="Nature (H/AI)" />
       <Button fx:id="btnAccuse" layoutX="26.0" layoutY="283.0" mnemonicParsing="false" onAction="#btnAccusePressed" prefHeight="40.0" prefWidth="126.0" text="Accuse" />
       <Button fx:id="btnJudge" layoutX="161.0" layoutY="283.0" mnemonicParsing="false" onAction="#btnJudgePressed" prefHeight="40.0" prefWidth="126.0" text="Judge" />
-      <Label fx:id="txtEnergy2111" layoutX="190.0" layoutY="404.0" text="Score">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="responseLabel" layoutX="26.0" layoutY="207.0" prefHeight="27.0" prefWidth="260.0" text="responseLabel" textFill="red" textAlignment="CENTER" />
+
+      <Label fx:id="responseLabel" layoutX="26.0" layoutY="207.0" prefHeight="27.0" prefWidth="260.0" text="responseLabel" textAlignment="CENTER" textFill="red" />
 
    </children>
 </AnchorPane>
