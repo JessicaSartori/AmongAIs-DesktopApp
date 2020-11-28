@@ -7,10 +7,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.event.ActionEvent;
 
 import it.unipi.cs.smartapp.drivers.*;
-import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.statemanager.*;
 
 
@@ -61,6 +59,7 @@ public class gameController implements Controller {
         // Prepare the interface
         btnStartMatch.setVisible(stateMgr.getCreator());
         lobbyName.setText(stateMgr.getGameName());
+        playerName.setText(stateMgr.getUsername());
         lblResponse.setText("");
 
         // Prepare player list
@@ -77,10 +76,22 @@ public class gameController implements Controller {
         chatSystem.sendJOIN(stateMgr.getGameName());
 
         // Retrieve other player info from the Game Server
-        updateStatus();
+        Controllers.updateStatus(false);
+
+        // Update the interface with status information
+        if (stateMgr.getLoyalty() == 0) {
+            playerLoyalty.setText("Normal");
+            playerLoyalty.setStyle("-fx-text-fill: black;");
+        } else {
+            playerLoyalty.setText("Impostor");
+            playerLoyalty.setStyle("-fx-text-fill: red;");
+        }
+        playerScore.setText(stateMgr.getScore().toString());
+        updateEnergy();
 
         // Update the map
-        updateMap();
+        Controllers.updateMap();
+        stateMgr.map.drawMap(canvasContext, mapCanvas);
 
         // Keyboard events
         gamePanel.setOnKeyPressed(keyEvent -> {
@@ -102,13 +113,37 @@ public class gameController implements Controller {
     }
 
     @FXML
-    public void btnGoBackPressed() { quit(); }
+    private void btnUpdStatusPressed() {
+        Controllers.updateStatus(false);
+
+        // Update Game View Values
+        if (stateMgr.getGameState() == GameState.ACTIVE && firstTime) {
+            //txtChat.appendText("\nGame state changed to: " + stateMgr.getGameState());
+            Alert message = new Alert(Alert.AlertType.INFORMATION);
+            message.setTitle("Information");
+            message.setContentText("Game started, now you can move and shoot!");
+            message.showAndWait();
+            firstTime = false;
+        }
+
+        // Check finished game
+        if (stateMgr.getGameState() == GameState.FINISHED) {
+            Alert message = new Alert(Alert.AlertType.INFORMATION);
+            message.setTitle("Game finished!");
+            message.setHeaderText("Your final score is: " + stateMgr.getScore());
+            message.setContentText("Go back to main menu.");
+            message.showAndWait().ifPresent(response -> Controllers.quit());
+        }
+    }
 
     @FXML
-    private void btnUpdMapPressed() { updateMap(); }
+    private void btnUpdMapPressed() {
+        Controllers.updateMap();
+        stateMgr.map.drawMap(canvasContext, mapCanvas);
+    }
 
     @FXML
-    private void btnUpdStatusPressed() { updateStatus(); }
+    public void btnGoBackPressed() { Controllers.quit(); }
 
     @FXML
     public void txtSendMessage() {
@@ -119,20 +154,6 @@ public class gameController implements Controller {
             chatSystem.sendPOST(stateMgr.getGameName(), txtMessage.getText());
         }
         txtMessage.setText("");
-    }
-
-    public void quit() {
-        // Close connection with game server
-        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getGameName(), "Done playing");
-        if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
-        else { System.out.println(response.freeText); }
-        gameServer.closeConnection();
-
-        // Unsubscribe from all chat channels and close connection
-        chatSystem.sendLEAVE(stateMgr.getGameName());
-        chatSystem.closeConnection();
-
-        Renderer.getInstance().show("mainMenu");
     }
 
     public void movePlayer(Character position) {
@@ -150,7 +171,8 @@ public class gameController implements Controller {
         }
 
         // Should remove in future
-        updateMap();
+        Controllers.updateMap();
+        stateMgr.map.drawMap(canvasContext, mapCanvas);
     }
 
     public void tryToShoot(Character direction){
@@ -173,7 +195,7 @@ public class gameController implements Controller {
         System.out.println("Ok shot. Landed on: " + landed);
 
         // Should remove in future
-        updateStatus();
+        Controllers.updateStatus(false);
 
         stateMgr.map.drawShot(canvasContext, stateMgr.player.position, stateMgr.getTeam(), direction, landed, energy);
     }
@@ -197,7 +219,7 @@ public class gameController implements Controller {
         message.showAndWait();
 
         // Should remove in future
-        updateStatus();
+        Controllers.updateStatus(false);
     }
 
     // Update ProgressBar correctly
@@ -207,80 +229,8 @@ public class gameController implements Controller {
         playerEnergyBar.setProgress(((double) energyValue) / 256.0);
     }
 
-    // Update general Status
-    public void updateStatus() {
-        GameServerResponse res = gameServer.sendSTATUS(stateMgr.getGameName());
-
-        if (res.code != ResponseCode.OK) {
-            System.err.println(res.freeText);
-            return;
-        }
-        System.out.println(res.freeText);
-        String[] data = (String[]) res.data;
-
-        // Update game status
-        String GA = data[0].substring(4); // Remove "GA: "
-        stateMgr.updateGameState(GA);
-
-        // Update player status
-        String ME = data[1].substring(4); // Remove "ME: "
-        stateMgr.player.updateWith(ME);
-
-        // Update list of players
-        for (int i = 2; i < data.length; i++) {
-            String PL = data[i].substring(4); // Remove "PL: "
-            stateMgr.updatePlayerStatus(PL);
-        }
-
-        // Update Game View Values
-        if (stateMgr.getGameState() == GameState.ACTIVE && firstTime) {
-            //txtChat.appendText("\nGame state changed to: " + stateMgr.getGameState());
-            Alert message = new Alert(Alert.AlertType.INFORMATION);
-            message.setTitle("Information");
-            message.setContentText("Game started, now you can move and shoot!");
-            message.showAndWait();
-            firstTime = false;
-        }
-
-        // Check finished game
-        if (stateMgr.getGameState() == GameState.FINISHED) {
-            Alert message = new Alert(Alert.AlertType.INFORMATION);
-            message.setTitle("Game finished!");
-            message.setHeaderText("Your final score is: " + stateMgr.getScore());
-            message.setContentText("Go back to main menu.");
-            message.showAndWait().ifPresent(response -> quit());
-        }
-
-        playerName.setText(stateMgr.getUsername());
-
-        String loyalty = (stateMgr.getLoyalty() == 0) ? "Normal" : "Impostor";
-        playerLoyalty.setText(loyalty);
-        if (playerLoyalty.getText().equals("Impostor")) {
-            playerLoyalty.setStyle("-fx-text-fill: red;");
-        } else {
-            playerLoyalty.setStyle("-fx-text-fill: black;");
-        }
-
-        playerScore.setText(stateMgr.getScore().toString());
-        updateEnergy();
-    }
-
-    // Update gameMap
-    public void updateMap() {
-        GameServerResponse response = gameServer.sendLOOK(stateMgr.getGameName());
-
-        if (response.code != ResponseCode.OK) {
-            System.err.println(response.freeText);
-            return;
-        }
-        System.out.println(response.freeText);
-
-        stateMgr.map.setGameMap((String[]) response.data);
-        stateMgr.map.drawMap(canvasContext, mapCanvas);
-    }
-
     @FXML
-    private void btnAccusePressed(ActionEvent event) {
+    private void btnAccusePressed() {
         lblResponse.setTextFill(Color.RED);
 
         if(txtPlayerVote.getText().trim().isEmpty()) {
@@ -299,7 +249,7 @@ public class gameController implements Controller {
     }
 
     @FXML
-    private void btnJudgePressed(ActionEvent event) {
+    private void btnJudgePressed() {
         lblResponse.setTextFill(Color.RED);
 
         if(txtPlayerVote.getText().trim().isEmpty()) {
