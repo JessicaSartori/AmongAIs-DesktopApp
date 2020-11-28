@@ -100,7 +100,10 @@
    <Button fx:id="btnAccuse" layoutX="26.0" layoutY="283.0" mnemonicParsing="false" onAction="#btnAccusePressed" prefHeight="40.0" prefWidth="126.0" text="Accuse" />
    <Button fx:id="btnJudge" layoutX="161.0" layoutY="283.0" mnemonicParsing="false" onAction="#btnJudgePressed" prefHeight="40.0" prefWidth="126.0" text="Judge" />
 
-   <Label fx:id="lblResponse" layoutX="26.0" layoutY="207.0" prefHeight="27.0" prefWidth="260.0" text="responseLabel" textAlignment="CENTER" textFill="red" />
+   <Label fx:id="lblResponse" layoutX="26.0" layoutY="207.0" prefHeight="27.0" prefWidth="260.0" text="responseLabel" textAlignment="CENTER" textFill="red">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
    <ScrollPane fx:id="chatPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="986.0" layoutY="57.0" prefHeight="515.0" prefWidth="265.0" style="-fx-border-color: gray; -fx-background-color: white; -fx-border-radius: 5; -fx-padding: 5;" vvalue="1.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="57.0">
       <content>
          <TextFlow style="-fx-background-color: white;">

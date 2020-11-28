@@ -82,13 +82,13 @@ public class ChatManager {
         // Handle player connection
         else if(message.text.contains(" joined ")) {
             String username = message.text.split(" ")[0];
-            stateMgr.addPlayer(new PlayerStatus(username));
+            stateMgr.addNewPlayer(username);
         }
 
         // Handle player disconnection
         else if(message.text.contains(" left ")) {
             String username = message.text.split(" ")[0];
-            stateMgr.addPlayer(new PlayerStatus(username));
+            stateMgr.removePlayer(username);
         }
     }
 }

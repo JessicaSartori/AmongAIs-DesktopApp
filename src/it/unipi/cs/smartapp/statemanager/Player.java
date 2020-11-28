@@ -1,6 +1,6 @@
 package it.unipi.cs.smartapp.statemanager;
 
-public class PlayerStatus {
+public class Player {
     public String username = null;
     public Character symbol = null;
     public Integer[] position = {-1 , -1};
@@ -12,9 +12,9 @@ public class PlayerStatus {
     public String state = null;
 
 
-    public PlayerStatus() {}
+    public Player() {}
 
-    public PlayerStatus(String username) {
+    public Player(String username) {
         this.username = username;
     }
 

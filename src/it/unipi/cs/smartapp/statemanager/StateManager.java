@@ -24,8 +24,8 @@ public class StateManager {
     public MapStatus map;
     public ConcurrentLinkedQueue<ChatMessage> newMessages;
 
-    public PlayerStatus player;
-    public HashMap<String, PlayerStatus> players;
+    public Player player;
+    public HashMap<String, Player> players;
     public ObservableList<String> playerList;
 
     // Setters
@@ -42,12 +42,13 @@ public class StateManager {
     public Boolean getCreator() { return gameStatus.isCreated(); }
     public Character getSymbol() { return player.symbol; }
     public GameState getGameState() { return gameStatus.getState(); }
-    public HashMap<String, PlayerStatus> getListOfPlayer() { return players; }
 
 
     public void setInGame(String gameName, Boolean created) {
-        player = new PlayerStatus();
+        player = new Player();
         players = new HashMap<>();
+        players.put(currentUsername, player);
+
         playerList = FXCollections.observableArrayList();
 
         gameStatus = new GameStatus(gameName, created);
@@ -70,21 +71,31 @@ public class StateManager {
     }
 
     public void updatePlayerStatus(String info) {
-        PlayerStatus pl = new PlayerStatus();
+        Player pl = new Player();
         pl.updateWith(info);
-        addPlayer(pl);
 
-        // Added to guarantee current player coordinates are updated correctly
-        if(pl.username.equals(player.username))
+        if (pl.username.equals(currentUsername)) {
+            playerList.remove(player.team + "\t\t\t" + player.username + "\t\t\t\t" + player.score + "\t" + player.state);
             player.updateWith(info);
+            playerList.add(player.team + "\t\t\t" + player.username + "\t\t\t\t" + player.score + "\t" + player.state);
+
+        } else {
+            Player old = players.put(pl.username, pl);
+            if (old != null) {
+                playerList.remove(old.team + "\t\t\t" + old.username + "\t\t\t\t" + old.score + "\t" + old.state);
+            }
+            playerList.add(pl.team + "\t\t\t" + pl.username + "\t\t\t\t" + pl.score + "\t" + pl.state);
+        }
     }
 
-    public void addPlayer(PlayerStatus pl) {
-        PlayerStatus old = players.get(pl.username);
-        if (old != null) {
-            playerList.remove(old.team + "\t\t\t" + old.username + "\t\t\t\t" + old.score + "\t" + old.state);
-        }
+    public void addNewPlayer(String name) {
+        Player pl = new Player(name);
         players.put(pl.username, pl);
         playerList.add(pl.team + "\t\t\t" + pl.username + "\t\t\t\t" + pl.score + "\t" + pl.state);
+    }
+
+    public void removePlayer(String name) {
+        Player pl = players.remove(name);
+        playerList.remove(pl.team + "\t\t\t" + pl.username + "\t\t\t\t" + pl.score + "\t" + pl.state);
     }
 }
