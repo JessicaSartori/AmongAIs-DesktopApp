@@ -1,16 +1,24 @@
 package it.unipi.cs.smartapp.controllers;
 
 import it.unipi.cs.smartapp.statemanager.ChatMessage;
+import it.unipi.cs.smartapp.statemanager.PlayerStatus;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 
 import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.statemanager.StateManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class spectateController implements Controller {
@@ -19,13 +27,16 @@ public class spectateController implements Controller {
     private ChatSystemDriver chatSystem;
 
     private GraphicsContext canvasContext;
+    private ChatManager chat;
 
     @FXML
-    private Label txtUsername, txtLobby;
-    @FXML
-    private TextArea txtChat;
+    private Label lobbyName;
     @FXML
     private Canvas gameCanvas;
+    @FXML
+    private ScrollPane chatPane;
+    @FXML
+    private ListView<String> listPlayers;
 
 
     public void initialize() {
@@ -34,26 +45,25 @@ public class spectateController implements Controller {
         chatSystem = ChatSystemDriver.getInstance();
 
         canvasContext = gameCanvas.getGraphicsContext2D();
+        chat = new ChatManager(chatPane);
 
         System.out.println("Spectate Controller done");
     }
 
     @Override
     public void updateContent() {
-        // Add lobby name in the chat
-        txtChat.setText("Lobby name: " + stateMgr.getGameName() + "\n");
+        // Prepare the interface
+        lobbyName.setText(stateMgr.getGameName());
 
-        txtUsername.setText(stateMgr.getUsername());
-        txtLobby.setText(stateMgr.getGameName());
+        // Prepare player list
+        listPlayers.setItems(stateMgr.playerList);
 
         // Setup chat
+        chat.clearChat();
         chatSystem.openConnection();
         chatSystem.setMessageCallback(() -> {
-            ChatMessage message = stateMgr.newMessages.poll();
-            if(message == null) return;
-
-            if(!stateMgr.getGameName().equals(message.channel)) txtChat.appendText("(" + message.channel + ") ");
-            txtChat.appendText(message.user + ": " + message.text + "\n");
+            ChatMessage msg = stateMgr.newMessages.poll();
+            if(msg != null) chat.processMessage(msg);
         });
         chatSystem.sendNAME(stateMgr.getUsername());
         chatSystem.sendJOIN(stateMgr.getGameName());
@@ -62,7 +72,7 @@ public class spectateController implements Controller {
         // Update status
         updateStatus();
 
-        // Update the map
+        // Update map
         updateMap();
     }
 
@@ -82,7 +92,7 @@ public class spectateController implements Controller {
         stateMgr.updateGameState(GA);
 
         // Update list of players
-        for (int i = 2; i < data.length; i++) {
+        for (int i = 1; i < data.length; i++) {
             String PL = data[i].substring(4); // Remove "PL: "
             stateMgr.updatePlayerStatus(PL);
         }
@@ -118,5 +128,8 @@ public class spectateController implements Controller {
     }
 
     @FXML
-    private void btnUpdateMapPressed(ActionEvent event) { updateMap(); }
+    private void btnUpdMapPressed(ActionEvent event) { updateMap(); }
+
+    @FXML
+    private void btnUpdStatusPressed(ActionEvent event) { updateStatus(); }
 }

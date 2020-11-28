@@ -26,7 +26,7 @@ public class gameController implements Controller {
     private Boolean firstTime = true;
 
     @FXML
-    private Label lobbyName, playerName, playerLoyalty, playerEnergy, playerScore, responseLabel;
+    private Label lobbyName, playerName, playerLoyalty, playerEnergy, playerScore, lblResponse;
     @FXML
     private TextField txtPlayerVote, txtPlayerJudge, txtMessage;
     @FXML
@@ -51,7 +51,7 @@ public class gameController implements Controller {
         canvasContext = mapCanvas.getGraphicsContext2D();
         chat = new ChatManager(chatPane);
 
-        responseLabel.setText("");
+        lblResponse.setText("");
 
         System.out.println("Game Controller done");
     }
@@ -61,7 +61,7 @@ public class gameController implements Controller {
         // Prepare the interface
         btnStartMatch.setVisible(stateMgr.getCreator());
         lobbyName.setText(stateMgr.getGameName());
-        responseLabel.setText("");
+        lblResponse.setText("");
 
         // Prepare player list
         listPlayers.setItems(stateMgr.playerList);
@@ -85,7 +85,7 @@ public class gameController implements Controller {
         // Keyboard events
         gamePanel.setOnKeyPressed(keyEvent -> {
             if (!(stateMgr.getGameState() == GameState.ACTIVE)) {
-                responseLabel.setText("Cannot move or shot while in lobby");
+                lblResponse.setText("Can not move or shoot while in lobby");
                 return;
             }
 
@@ -123,7 +123,7 @@ public class gameController implements Controller {
 
     public void quit() {
         // Close connection with game server
-        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getGameName(), "Cause yes");
+        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getGameName(), "Done playing");
         if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
         else { System.out.println(response.freeText); }
         gameServer.closeConnection();
@@ -143,7 +143,7 @@ public class gameController implements Controller {
                 System.err.println(res.freeText);
                 return;
             case ERROR:
-                responseLabel.setText(res.freeText);
+                lblResponse.setText(res.freeText);
                 //return;
             case OK:
                 System.out.println(res.freeText);
@@ -162,7 +162,7 @@ public class gameController implements Controller {
                 return;
             }
             case ERROR -> {
-                responseLabel.setText(res.freeText);
+                lblResponse.setText(res.freeText);
                 return;
             }
             case OK -> System.out.println(res.freeText);
@@ -281,35 +281,35 @@ public class gameController implements Controller {
 
     @FXML
     private void btnAccusePressed(ActionEvent event) {
-        responseLabel.setTextFill(Color.RED);
+        lblResponse.setTextFill(Color.RED);
 
         if(txtPlayerVote.getText().trim().isEmpty()) {
-            responseLabel.setText("Player name empty");
+            lblResponse.setText("Player name empty");
             return;
         }
 
         GameServerResponse response = gameServer.sendACCUSE(stateMgr.getGameName(), txtPlayerVote.getText());
 
         if(response.code != ResponseCode.OK) {
-            responseLabel.setText(response.freeText);
+            lblResponse.setText(response.freeText);
             return;
         }
-        responseLabel.setTextFill(Color.GREEN);
-        responseLabel.setText(response.freeText);
+        lblResponse.setTextFill(Color.GREEN);
+        lblResponse.setText(response.freeText);
     }
 
     @FXML
     private void btnJudgePressed(ActionEvent event) {
-        responseLabel.setTextFill(Color.RED);
+        lblResponse.setTextFill(Color.RED);
 
         if(txtPlayerVote.getText().trim().isEmpty()) {
-            responseLabel.setText("Player name empty");
+            lblResponse.setText("Player name empty");
             return;
         }
 
         System.out.println("Vote: " + txtPlayerVote.getText() + " Judge: " + txtPlayerJudge.getText());
         if(!txtPlayerJudge.getText().equalsIgnoreCase("AI") && !txtPlayerJudge.getText().equalsIgnoreCase("H")) {
-            responseLabel.setText("Invalid nature");
+            lblResponse.setText("Invalid nature");
             return;
         }
 
@@ -317,11 +317,11 @@ public class gameController implements Controller {
         System.out.println("Response code: " + response.code + " free text: " + response.freeText);
 
         if(response.code != ResponseCode.OK) {
-            responseLabel.setText(response.freeText);
+            lblResponse.setText(response.freeText);
             return;
         }
-        responseLabel.setTextFill(Color.GREEN);
-        responseLabel.setText(response.freeText);
+        lblResponse.setTextFill(Color.GREEN);
+        lblResponse.setText(response.freeText);
 
     }
 }

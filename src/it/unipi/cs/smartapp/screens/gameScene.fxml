@@ -70,22 +70,27 @@
       </font>
    </Label>
    <ListView fx:id="listPlayers" layoutX="10.0" layoutY="424.0" prefHeight="286.0" prefWidth="294.0" />
-   <Label fx:id="txtEnergy1" layoutX="96.0" layoutY="376.0" text="LIST OF PLAYERS:">
+   <Label fx:id="lblListPlayers" layoutX="120.0" layoutY="376.0" text="Players">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+   <Label fx:id="lblTeam" layoutX="15.0" layoutY="404.0" text="Team">
       <font>
          <Font name="System Bold" size="14.0" />
       </font>
    </Label>
-   <Label fx:id="txtEnergy2" layoutX="15.0" layoutY="404.0" text="Team">
+   <Label fx:id="lblName" layoutX="75.0" layoutY="404.0" text="Name">
       <font>
          <Font name="System Bold" size="14.0" />
       </font>
    </Label>
-   <Label fx:id="txtEnergy21" layoutX="75.0" layoutY="404.0" text="Name">
+   <Label fx:id="lblScore" layoutX="190.0" layoutY="404.0" text="Score">
       <font>
          <Font name="System Bold" size="14.0" />
       </font>
    </Label>
-   <Label fx:id="txtEnergy211" layoutX="251.0" layoutY="404.0" text="Status">
+   <Label fx:id="lblStatus" layoutX="251.0" layoutY="404.0" text="Status">
       <font>
          <Font name="System Bold" size="14.0" />
       </font>
@@ -94,12 +99,8 @@
    <TextField fx:id="txtPlayerJudge" layoutX="161.0" layoutY="245.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="126.0" promptText="Nature (H/AI)" />
    <Button fx:id="btnAccuse" layoutX="26.0" layoutY="283.0" mnemonicParsing="false" onAction="#btnAccusePressed" prefHeight="40.0" prefWidth="126.0" text="Accuse" />
    <Button fx:id="btnJudge" layoutX="161.0" layoutY="283.0" mnemonicParsing="false" onAction="#btnJudgePressed" prefHeight="40.0" prefWidth="126.0" text="Judge" />
-   <Label fx:id="txtEnergy2111" layoutX="190.0" layoutY="404.0" text="Score">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Label>
-   <Label fx:id="responseLabel" layoutX="26.0" layoutY="207.0" prefHeight="27.0" prefWidth="260.0" text="responseLabel" textAlignment="CENTER" textFill="red" />
+
+   <Label fx:id="lblResponse" layoutX="26.0" layoutY="207.0" prefHeight="27.0" prefWidth="260.0" text="responseLabel" textAlignment="CENTER" textFill="red" />
    <ScrollPane fx:id="chatPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="986.0" layoutY="57.0" prefHeight="515.0" prefWidth="265.0" style="-fx-border-color: gray; -fx-background-color: white; -fx-border-radius: 5; -fx-padding: 5;" vvalue="1.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="57.0">
       <content>
          <TextFlow style="-fx-background-color: white;">

@@ -56,6 +56,7 @@ public class MapStatus {
         // Clear canvas
         canvasContext.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
 
+        // Draw map
         int xCanvas = cellSize, yCanvas = cellSize;
         for(int r = 0; r < mapSize; r++) {
             for (int c = 0; c < mapSize; c++) {
