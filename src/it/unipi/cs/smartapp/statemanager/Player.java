@@ -6,10 +6,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Player {
-    public Character symbol = null;
-    public Integer[] position = {-1 , -1};
-    public Integer loyalty = null;
-    public Integer energy = null;
+    private Character symbol = null;
+    private Integer[] position = {-1 , -1};
+    private Integer loyalty = null;
+    private Integer energy = null;
 
     private StringProperty username = null;
     private IntegerProperty team = null;
@@ -25,6 +25,11 @@ public class Player {
     /*
      * Setters
      */
+    public void setSymbol(Character s) { symbol = s; }
+    public void setPosition(Integer[] p) { position = p; }
+    public void setLoyalty(Integer l) { loyalty = l; }
+    public void setEnergy(Integer e) { energy = e; }
+
     public void setUsername(String username) { usernameProperty().set(username); }
     public void setTeam(Integer team) { teamProperty().set(team); }
     public void setScore(Integer score) { scoreProperty().set(score); }
@@ -33,6 +38,11 @@ public class Player {
     /*
      * Getters
      */
+    public Character getSymbol() { return symbol; }
+    public Integer[] getPosition() { return position; }
+    public Integer getLoyalty() { return loyalty; }
+    public Integer getEnergy() { return energy; }
+
     public String getUsername() { return usernameProperty().get(); }
     public Integer getTeam() { return teamProperty().get(); }
     public Integer getScore() { return scoreProperty().get(); }

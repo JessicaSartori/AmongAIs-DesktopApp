@@ -34,12 +34,7 @@ public class StateManager {
     // Getters
     public String getUsername() { return currentUsername; }
     public String getGameName() { return currentGameName; }
-    public Integer getTeam() { return player.getTeam(); }
-    public Integer getLoyalty() { return player.loyalty; }
-    public Integer getEnergy() { return player.energy; }
-    public Integer getScore() { return player.getScore(); }
     public Boolean getCreator() { return gameStatus.isCreated(); }
-    public Character getSymbol() { return player.symbol; }
     public GameState getGameState() { return gameStatus.getState(); }
 
 
