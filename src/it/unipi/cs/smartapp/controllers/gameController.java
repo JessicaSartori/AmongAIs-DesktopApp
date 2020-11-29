@@ -66,7 +66,7 @@ public class gameController implements Controller {
         listPlayers.setItems(stateMgr.playerList);
 
         // Setup chat
-        chat.clearChat();
+        chat.resetChat();
         chatSystem.openConnection();
         chatSystem.setMessageCallback(() -> {
             ChatMessage msg = stateMgr.newMessages.poll();
