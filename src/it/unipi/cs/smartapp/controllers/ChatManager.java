@@ -63,20 +63,23 @@ public class ChatManager {
         chatPane.setVvalue(1.0);
     }
 
-    public void clearChat() {
-        chatArea.getChildren().remove(0, chatArea.getChildren().size());
-    }
+    public void resetChat() { chatArea.getChildren().remove(0, chatArea.getChildren().size()); }
 
     private void handleSystemMessage(ChatMessage message) {
         // Handle succeeding shots
         if(message.text.contains(" hit ")) {
             String[] tokens = message.text.split(" ");
-            System.out.println(tokens[0] + " killed " + tokens[2]);
+            stateMgr.players.get(tokens[2]).state = "killed";
         }
 
         // Handle game starting
         else if(message.text.equals("Now starting!")) {
             stateMgr.setGameState(GameState.ACTIVE);
+        }
+
+        // Handle game ending
+        else if(message.text.contains("Game finished!")) {
+            stateMgr.setGameState(GameState.FINISHED);
         }
 
         // Handle player connection
@@ -89,6 +92,22 @@ public class ChatManager {
         else if(message.text.contains(" left ")) {
             String username = message.text.split(" ")[0];
             stateMgr.removePlayer(username);
+        }
+
+        // Handle Emergency Meeting events
+        else if(message.text.contains("EMERGENCY MEETING")) {
+            String[] tokens = message.text.split(" ");
+            if(tokens[2].equals("condamned")) {
+                stateMgr.players.get(tokens[3]).state = "killed";
+            }
+        }
+
+        // Handle final scores
+        else if(message.text.matches("\\(.:.\\) \\w+\\s+\\w+\\s+\\d+")) {
+            String[] tokens = message.text.split("\s+");
+            Player user = stateMgr.players.get(tokens[1]);
+            user.state = tokens[2];
+            user.score = Integer.parseInt(tokens[3]);
         }
     }
 }
