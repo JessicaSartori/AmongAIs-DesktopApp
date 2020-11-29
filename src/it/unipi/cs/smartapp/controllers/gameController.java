@@ -65,7 +65,7 @@ public class gameController implements Controller {
         lblResponse.setText("");
 
         // Setup chat
-        chat.clearChat();
+        chat.resetChat();
         chatSystem.openConnection();
         chatSystem.setMessageCallback(() -> {
             ChatMessage msg = stateMgr.newMessages.poll();
