@@ -50,7 +50,7 @@ public class ChatManager {
             Text usernameTxt = new Text(message.user);
             usernameTxt.setFont(Font.font(fontFamily, fontSize));
             try {
-                int userTeam = stateMgr.players.get(message.user).team;
+                int userTeam = stateMgr.players.get(message.user).getTeam();
                 usernameTxt.setFill(teamColors[userTeam]);
             } catch (NullPointerException ignored) { }
             chatArea.getChildren().add(usernameTxt);

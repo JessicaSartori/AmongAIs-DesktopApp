@@ -1,5 +1,6 @@
 package it.unipi.cs.smartapp.controllers;
 
+import it.unipi.cs.smartapp.statemanager.Player;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -10,6 +11,7 @@ import javafx.scene.control.ScrollPane;
 import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.statemanager.StateManager;
 import it.unipi.cs.smartapp.statemanager.ChatMessage;
+import javafx.scene.control.TableView;
 
 
 public class spectateController implements Controller {
@@ -18,6 +20,7 @@ public class spectateController implements Controller {
 
     private GraphicsContext canvasContext;
     private ChatManager chat;
+    private TableManager table;
 
     @FXML
     private Label lobbyName;
@@ -26,7 +29,7 @@ public class spectateController implements Controller {
     @FXML
     private ScrollPane chatPane;
     @FXML
-    private ListView<String> listPlayers;
+    private TableView<Player> tblPlayers;
 
 
     public void initialize() {
@@ -35,6 +38,7 @@ public class spectateController implements Controller {
 
         canvasContext = gameCanvas.getGraphicsContext2D();
         chat = new ChatManager(chatPane);
+        table = new TableManager(tblPlayers);
 
         System.out.println("Spectate Controller done");
     }
@@ -43,9 +47,6 @@ public class spectateController implements Controller {
     public void updateContent() {
         // Prepare the interface
         lobbyName.setText(stateMgr.getGameName());
-
-        // Prepare player list
-        listPlayers.setItems(stateMgr.playerList);
 
         // Setup chat
         chat.clearChat();
@@ -59,6 +60,9 @@ public class spectateController implements Controller {
 
         // Update status
         Controllers.updateStatus(true);
+
+        // Setup table with players info
+        table.createTable();
 
         // Update map
         Controllers.updateMap();

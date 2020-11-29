@@ -20,6 +20,7 @@ public class gameController implements Controller {
 
     private GraphicsContext canvasContext;
     private ChatManager chat;
+    private TableManager table;
 
     private Boolean firstTime = true;
 
@@ -38,7 +39,7 @@ public class gameController implements Controller {
     @FXML
     private ScrollPane chatPane;
     @FXML
-    private ListView<String> listPlayers;
+    private TableView<Player> tblPlayers;
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
@@ -48,6 +49,7 @@ public class gameController implements Controller {
 
         canvasContext = mapCanvas.getGraphicsContext2D();
         chat = new ChatManager(chatPane);
+        table = new TableManager(tblPlayers);
 
         lblResponse.setText("");
 
@@ -62,9 +64,6 @@ public class gameController implements Controller {
         playerName.setText(stateMgr.getUsername());
         lblResponse.setText("");
 
-        // Prepare player list
-        listPlayers.setItems(stateMgr.playerList);
-
         // Setup chat
         chat.clearChat();
         chatSystem.openConnection();
@@ -77,6 +76,9 @@ public class gameController implements Controller {
 
         // Retrieve other player info from the Game Server
         Controllers.updateStatus(false);
+
+        // Setup table with players info
+        table.createTable();
 
         // Update the interface with status information
         if (stateMgr.getLoyalty() == 0) {

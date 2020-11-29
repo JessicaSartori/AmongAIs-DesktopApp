@@ -13,7 +13,7 @@ public class MapStatus {
 
     private Character[][] gameMap = null;
     private Integer mapSize = null;
-    private HashMap<Character, Image> sprites = null;
+    private HashMap<Character, Image> sprites;
 
     public MapStatus(){
         sprites = new HashMap<>();
