@@ -69,7 +69,7 @@ public class ChatManager {
         // Handle succeeding shots
         if(message.text.contains(" hit ")) {
             String[] tokens = message.text.split(" ");
-            stateMgr.players.get(tokens[2]).state = "killed";
+            stateMgr.players.get(tokens[2]).setState("killed");
         }
 
         // Handle game starting
@@ -98,7 +98,7 @@ public class ChatManager {
         else if(message.text.contains("EMERGENCY MEETING")) {
             String[] tokens = message.text.split(" ");
             if(tokens[2].equals("condamned")) {
-                stateMgr.players.get(tokens[3]).state = "killed";
+                stateMgr.players.get(tokens[3]).setState("killed");
             }
         }
 
@@ -106,8 +106,8 @@ public class ChatManager {
         else if(message.text.matches("\\(.:.\\) \\w+\\s+\\w+\\s+\\d+")) {
             String[] tokens = message.text.split("\s+");
             Player user = stateMgr.players.get(tokens[1]);
-            user.state = tokens[2];
-            user.score = Integer.parseInt(tokens[3]);
+            user.setState(tokens[2]);
+            user.setScore(Integer.parseInt(tokens[3]));
         }
     }
 }

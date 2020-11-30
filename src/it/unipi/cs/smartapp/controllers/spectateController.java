@@ -66,7 +66,7 @@ public class spectateController implements Controller {
 
         // Update map
         Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, gameCanvas);
+        stateMgr.map.drawMap(canvasContext, gameCanvas, stateMgr.playersList, null);
     }
 
     @FXML
@@ -75,7 +75,7 @@ public class spectateController implements Controller {
     @FXML
     private void btnUpdMapPressed() {
         Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, gameCanvas);
+        stateMgr.map.drawMap(canvasContext, gameCanvas, stateMgr.playersList, null);
     }
 
     @FXML

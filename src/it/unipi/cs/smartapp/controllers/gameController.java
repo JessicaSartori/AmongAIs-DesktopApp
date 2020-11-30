@@ -93,7 +93,7 @@ public class gameController implements Controller {
 
         // Update the map
         Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, mapCanvas);
+        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
 
         // Keyboard events
         gamePanel.setOnKeyPressed(keyEvent -> {
@@ -141,7 +141,7 @@ public class gameController implements Controller {
     @FXML
     private void btnUpdMapPressed() {
         Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, mapCanvas);
+        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
     }
 
     @FXML
@@ -174,7 +174,7 @@ public class gameController implements Controller {
 
         // Should remove in future
         Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, mapCanvas);
+        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
     }
 
     public void tryToShoot(Character direction){
