@@ -115,7 +115,7 @@ public class joinController implements Controller {
     // Send a JOIN request and process the response
     // Return true if the request succeeded, false otherwise
     private boolean join(String gameName) {
-        GameServerResponse res = gameServer.sendJOIN(gameName, stateMgr.getUsername(), 'H', "DesktopApp User");
+        GameServerResponse res = gameServer.sendJOIN(gameName, stateMgr.getUsername(), 'H', stateMgr.getPrivateUsername());
         switch (res.code) {
             case ERROR -> errorLabel.setText(res.freeText);
             case FAIL -> {

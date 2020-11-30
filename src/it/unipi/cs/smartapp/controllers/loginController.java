@@ -1,7 +1,6 @@
 package it.unipi.cs.smartapp.controllers;
 
 import javafx.fxml.FXML;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -14,7 +13,7 @@ public class loginController implements Controller {
     private StateManager stateMgr;
 
     @FXML
-    private TextField usernameField;
+    private TextField usernameField, publicUsernameField;
     @FXML
     private Label errorLabel;
 
@@ -35,17 +34,26 @@ public class loginController implements Controller {
     }
 
     @FXML
-    private void btnPlayAsGuestPressed(ActionEvent event) {
-        String username = usernameField.getText();
+    private void btnPlayAsGuestPressed() {
+        String privateUsername = usernameField.getText();
+        String publicUsername = publicUsernameField.getText();
 
-        if(username.isBlank() || username.contains(" ")) {
+        if(privateUsername.isBlank() || privateUsername.contains(" ")) {
             errorLabel.setText("Username not valid");
+            return;
+        }
+
+        if(publicUsername.isBlank()) publicUsername = privateUsername;
+        else if(publicUsername.contains(" ")) {
+            errorLabel.setText("Public username not valid");
             return;
         }
 
         errorLabel.setText("");
 
-        stateMgr.setUsername(username);
+        stateMgr.setPrivateUsername(privateUsername);
+        stateMgr.setUsername(publicUsername);
         Renderer.getInstance().show("mainMenu");
     }
+
 }
