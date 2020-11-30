@@ -16,12 +16,12 @@
          <Font size="13.0" />
       </font>
    </Button>
-   <Button fx:id="btnTournaments" layoutX="500.0" layoutY="344.0" mnemonicParsing="false" text="Tournaments" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" AnchorPane.topAnchor="340.0">
+   <Button layoutX="500.0" layoutY="344.0" mnemonicParsing="false" onAction="#btnTournamentsPressed" text="Tournaments" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" AnchorPane.topAnchor="340.0">
       <font>
          <Font size="13.0" />
       </font>
    </Button>
-   <Button fx:id="btnGameHistory" layoutX="500.0" layoutY="384.0" mnemonicParsing="false" text="Game History" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" AnchorPane.topAnchor="380.0">
+   <Button layoutX="500.0" layoutY="384.0" mnemonicParsing="false" text="Game History" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" AnchorPane.topAnchor="380.0">
       <font>
          <Font size="13.0" />
       </font>
@@ -36,12 +36,12 @@
          <Font size="14.0" />
       </font>
    </Button>
-   <Button fx:id="btnHowToPlay" layoutX="500.0" layoutY="304.0" mnemonicParsing="false" text="How to Play" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" AnchorPane.topAnchor="300.0">
+   <Button layoutX="500.0" layoutY="304.0" mnemonicParsing="false" text="How to Play" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="500.0" AnchorPane.topAnchor="300.0">
       <font>
          <Font size="13.0" />
       </font>
    </Button>
-   <Button fx:id="btnSettings" layoutX="1134.0" layoutY="31.0" mnemonicParsing="false" onAction="#btnGameSettings" prefHeight="29.0" prefWidth="100.0" text="Settings" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="30.0">
+   <Button layoutX="1134.0" layoutY="31.0" mnemonicParsing="false" onAction="#btnGameSettings" prefHeight="29.0" prefWidth="100.0" text="Settings" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="30.0">
       <font>
          <Font size="13.0" />
       </font>

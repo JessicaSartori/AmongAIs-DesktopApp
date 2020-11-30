@@ -41,4 +41,7 @@ public class menuController implements Controller {
 
     @FXML
     private void btnGameSettings() { Renderer.getInstance().show("settings");}
+
+    @FXML
+    private void btnTournamentsPressed() { Renderer.getInstance().show("tournaments");}
 }
