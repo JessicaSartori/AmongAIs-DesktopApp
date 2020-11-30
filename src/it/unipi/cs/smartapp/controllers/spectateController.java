@@ -1,10 +1,12 @@
 package it.unipi.cs.smartapp.controllers;
 
+import it.unipi.cs.smartapp.statemanager.Player;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableView;
 import javafx.scene.control.ScrollPane;
 
 import it.unipi.cs.smartapp.screens.Renderer;
@@ -21,6 +23,7 @@ public class spectateController implements Controller {
 
     private GraphicsContext canvasContext;
     private ChatManager chat;
+    private TableManager table;
 
     private ScheduledThreadPoolExecutor lookExecutor;
 
@@ -31,7 +34,7 @@ public class spectateController implements Controller {
     @FXML
     private ScrollPane chatPane;
     @FXML
-    private ListView<String> listPlayers;
+    private TableView<Player> tblPlayers;
 
 
     public void initialize() {
@@ -39,6 +42,7 @@ public class spectateController implements Controller {
 
         canvasContext = gameCanvas.getGraphicsContext2D();
         chat = new ChatManager(chatPane);
+        table = new TableManager(tblPlayers);
 
         System.out.println("Spectate Controller done");
     }
@@ -47,9 +51,6 @@ public class spectateController implements Controller {
     public void updateContent() {
         // Prepare the interface
         lobbyName.setText(stateMgr.getGameName());
-
-        // Prepare player list
-        listPlayers.setItems(stateMgr.playerList);
 
         // Setup chat
         chat.setupChat();
@@ -61,9 +62,12 @@ public class spectateController implements Controller {
         lookExecutor.setRemoveOnCancelPolicy(true);
         lookExecutor.scheduleWithFixedDelay(this::btnUpdMapPressed, 0, PlayerSettings.getInstance().getMapFreq(), TimeUnit.MILLISECONDS);
 
+        // Setup table with players info
+        table.createTable();
+
         // Update map
         Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, gameCanvas);
+        stateMgr.map.drawMap(canvasContext, gameCanvas, stateMgr.playersList, null);
     }
 
     @FXML
@@ -72,7 +76,7 @@ public class spectateController implements Controller {
     @FXML
     private void btnUpdMapPressed() {
         Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, gameCanvas);
+        stateMgr.map.drawMap(canvasContext, gameCanvas, stateMgr.playersList, null);
     }
 
     @FXML

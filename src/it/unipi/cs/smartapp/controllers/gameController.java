@@ -21,6 +21,7 @@ public class gameController implements Controller {
 
     private GraphicsContext canvasContext;
     private ChatManager chat;
+    private TableManager table;
 
     private Boolean firstTime = true;
 
@@ -39,7 +40,7 @@ public class gameController implements Controller {
     @FXML
     private ScrollPane chatPane;
     @FXML
-    private ListView<String> listPlayers;
+    private TableView<Player> tblPlayers;
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
@@ -49,6 +50,7 @@ public class gameController implements Controller {
 
         canvasContext = mapCanvas.getGraphicsContext2D();
         chat = new ChatManager(chatPane);
+        table = new TableManager(tblPlayers);
 
         lblResponse.setText("");
 
@@ -63,29 +65,29 @@ public class gameController implements Controller {
         playerName.setText(stateMgr.getUsername());
         lblResponse.setText("");
 
-        // Prepare player list
-        listPlayers.setItems(stateMgr.playerList);
-
         // Setup chat
         chat.setupChat();
 
         // Retrieve other player info from the Game Server
         Controllers.updateStatus(false);
 
+        // Setup table with players info
+        table.createTable();
+
         // Update the interface with status information
-        if (stateMgr.getLoyalty() == 0) {
+        if (stateMgr.player.getLoyalty() == 0) {
             playerLoyalty.setText("Normal");
             playerLoyalty.setStyle("-fx-text-fill: black;");
         } else {
             playerLoyalty.setText("Impostor");
             playerLoyalty.setStyle("-fx-text-fill: red;");
         }
-        playerScore.setText(stateMgr.getScore().toString());
+        playerScore.setText(stateMgr.player.getScore().toString());
         updateEnergy();
 
         // Update the map
         Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, mapCanvas);
+        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
 
         // Keyboard events
         gamePanel.setOnKeyPressed(keyEvent -> {
@@ -124,7 +126,7 @@ public class gameController implements Controller {
         if (stateMgr.getGameState() == GameState.FINISHED) {
             Alert message = new Alert(Alert.AlertType.INFORMATION);
             message.setTitle("Game finished!");
-            message.setHeaderText("Your final score is: " + stateMgr.getScore());
+            message.setHeaderText("Your final score is: " + stateMgr.player.getScore());
             message.setContentText("Go back to main menu.");
             message.showAndWait().ifPresent(response -> btnGoBackPressed());
         }
@@ -133,7 +135,7 @@ public class gameController implements Controller {
     @FXML
     private void btnUpdMapPressed() {
         Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, mapCanvas);
+        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
     }
 
     @FXML
@@ -174,7 +176,7 @@ public class gameController implements Controller {
 
         // Should remove in future
         Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, mapCanvas);
+        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
     }
 
     public void tryToShoot(Character direction){
@@ -192,14 +194,14 @@ public class gameController implements Controller {
             case OK -> System.out.println(res.freeText);
         }
 
-        Integer energy = stateMgr.getEnergy();
+        Integer energy = stateMgr.player.getEnergy();
         Character landed = (Character) res.data;
         System.out.println("Ok shot. Landed on: " + landed);
 
         // Should remove in future
         Controllers.updateStatus(false);
 
-        stateMgr.map.drawShot(canvasContext, stateMgr.player.position, stateMgr.getTeam(), direction, landed, energy);
+        stateMgr.map.drawShot(canvasContext, stateMgr.player.getPosition(), stateMgr.player.getTeam(), direction, landed, energy);
     }
 
     @FXML
@@ -226,7 +228,7 @@ public class gameController implements Controller {
 
     // Update ProgressBar correctly
     public void updateEnergy() {
-        Integer energyValue = stateMgr.player.energy;
+        Integer energyValue = stateMgr.player.getEnergy();
         playerEnergy.setText(energyValue.toString());
         playerEnergyBar.setProgress(((double) energyValue) / 256.0);
     }
