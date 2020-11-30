@@ -35,7 +35,7 @@ public class PlayerSettings {
         shootUp = KeyCode.I; shootDown = KeyCode.K;
         shootLeft = KeyCode.J; shootRight = KeyCode.L;
 
-        mapFreq = 200; statusFreq = 200;
+        mapFreq = 1000; statusFreq = 1000;
     }
 
     public boolean isAlreadySet(KeyCode key) {
