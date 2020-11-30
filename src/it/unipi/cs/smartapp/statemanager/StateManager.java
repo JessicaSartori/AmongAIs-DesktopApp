@@ -16,7 +16,6 @@ public class StateManager {
         return instance;
     }
 
-
     private String currentUsername = null;
     private String currentGameName = null;
 
@@ -24,9 +23,9 @@ public class StateManager {
     public MapStatus map;
     public ConcurrentLinkedQueue<ChatMessage> newMessages;
 
-    public PlayerStatus player;
-    public HashMap<String, PlayerStatus> players;
-    public ObservableList<String> playerList;
+    public Player player;
+    public HashMap<String, Player> players;
+    public ObservableList<Player> playersList;
 
     // Setters
     public void setUsername(String s) { currentUsername = s; }
@@ -35,20 +34,16 @@ public class StateManager {
     // Getters
     public String getUsername() { return currentUsername; }
     public String getGameName() { return currentGameName; }
-    public Integer getTeam() { return player.team; }
-    public Integer getLoyalty() { return player.loyalty; }
-    public Integer getEnergy() { return player.energy; }
-    public Integer getScore() { return player.score; }
     public Boolean getCreator() { return gameStatus.isCreated(); }
-    public Character getSymbol() { return player.symbol; }
     public GameState getGameState() { return gameStatus.getState(); }
-    public HashMap<String, PlayerStatus> getListOfPlayer() { return players; }
 
 
     public void setInGame(String gameName, Boolean created) {
-        player = new PlayerStatus();
+        player = new Player();
         players = new HashMap<>();
-        playerList = FXCollections.observableArrayList();
+        players.put(currentUsername, player);
+
+        playersList = FXCollections.observableArrayList();
 
         gameStatus = new GameStatus(gameName, created);
         map = new MapStatus();
@@ -70,21 +65,30 @@ public class StateManager {
     }
 
     public void updatePlayerStatus(String info) {
-        PlayerStatus pl = new PlayerStatus();
+        Player pl = new Player();
         pl.updateWith(info);
-        addPlayer(pl);
 
-        // Added to guarantee current player coordinates are updated correctly
-        if(pl.username.equals(player.username))
+        if (pl.getUsername().equals(currentUsername)) {
+            playersList.remove(player);
             player.updateWith(info);
+            playersList.add(player);
+        } else {
+            Player old = players.put(pl.getUsername(), pl);
+            if (old != null) {
+                playersList.remove(old);
+            }
+            playersList.add(pl);
+        }
     }
 
-    public void addPlayer(PlayerStatus pl) {
-        PlayerStatus old = players.get(pl.username);
-        if (old != null) {
-            playerList.remove(old.team + "\t\t\t" + old.username + "\t\t\t\t" + old.score + "\t" + old.state);
-        }
-        players.put(pl.username, pl);
-        playerList.add(pl.team + "\t\t\t" + pl.username + "\t\t\t\t" + pl.score + "\t" + pl.state);
+    public void addNewPlayer(String name) {
+        Player pl = new Player(name);
+        players.put(pl.getUsername(), pl);
+        playersList.add(pl);
+    }
+
+    public void removePlayer(String name) {
+        Player pl = players.remove(name);
+        playersList.remove(pl);
     }
 }

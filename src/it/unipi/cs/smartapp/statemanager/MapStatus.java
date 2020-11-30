@@ -1,8 +1,10 @@
 package it.unipi.cs.smartapp.statemanager;
 
+import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 
@@ -13,7 +15,7 @@ public class MapStatus {
 
     private Character[][] gameMap = null;
     private Integer mapSize = null;
-    private HashMap<Character, Image> sprites = null;
+    private HashMap<Character, Image> sprites;
 
     public MapStatus(){
         sprites = new HashMap<>();
@@ -50,7 +52,7 @@ public class MapStatus {
     /*
      * Methods to draw the map on canvas
      */
-    public void drawMap(GraphicsContext canvasContext, Canvas mapCanvas) {
+    public void drawMap(GraphicsContext canvasContext, Canvas mapCanvas, ObservableList<Player> players, String currentUser) {
         Integer cellSize = getCellSize();
 
         // Clear canvas
@@ -63,11 +65,31 @@ public class MapStatus {
                 Image sprite = setSprite(gameMap[r][c]);
                 canvasContext.drawImage(sprite, xCanvas, yCanvas, cellSize, cellSize);
 
+                // Write names on players
+                String username = findName(players, gameMap[r][c]);
+                if(username != null) {
+                    if(Character.isUpperCase(gameMap[r][c])) { canvasContext.setFill(Color.RED); canvasContext.setStroke(Color.RED);}
+                    else { canvasContext.setFill(Color.BLUE); canvasContext.setStroke(Color.BLUE); }
+
+                    canvasContext.fillText(username, xCanvas - Math.round(username.length()/2), yCanvas - Math.round(username.length()/2));
+                }
+                if(currentUser != null && currentUser.equals(username))
+                    canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
+
                 xCanvas += cellSize;
             }
             yCanvas += cellSize;
             xCanvas = cellSize;
         }
+
+
+    }
+
+    public String findName(ObservableList<Player> players, Character symbol){
+        for(Player p: players)
+            if(p.getSymbol() == symbol)
+                return p.getUsername();
+        return null;
     }
 
     public void drawCell(GraphicsContext canvasContext, Integer x, Integer y, Image image) {

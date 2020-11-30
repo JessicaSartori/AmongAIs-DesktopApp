@@ -50,7 +50,7 @@ public class ChatManager {
             Text usernameTxt = new Text(message.user);
             usernameTxt.setFont(Font.font(fontFamily, fontSize));
             try {
-                int userTeam = stateMgr.players.get(message.user).team;
+                int userTeam = stateMgr.players.get(message.user).getTeam();
                 usernameTxt.setFill(teamColors[userTeam]);
             } catch (NullPointerException ignored) { }
             chatArea.getChildren().add(usernameTxt);
@@ -63,15 +63,13 @@ public class ChatManager {
         chatPane.setVvalue(1.0);
     }
 
-    public void clearChat() {
-        chatArea.getChildren().remove(0, chatArea.getChildren().size());
-    }
+    public void resetChat() { chatArea.getChildren().remove(0, chatArea.getChildren().size()); }
 
     private void handleSystemMessage(ChatMessage message) {
         // Handle succeeding shots
         if(message.text.contains(" hit ")) {
             String[] tokens = message.text.split(" ");
-            System.out.println(tokens[0] + " killed " + tokens[2]);
+            stateMgr.players.get(tokens[2]).setState("killed");
         }
 
         // Handle game starting
@@ -79,16 +77,37 @@ public class ChatManager {
             stateMgr.setGameState(GameState.ACTIVE);
         }
 
+        // Handle game ending
+        else if(message.text.contains("Game finished!")) {
+            stateMgr.setGameState(GameState.FINISHED);
+        }
+
         // Handle player connection
         else if(message.text.contains(" joined ")) {
             String username = message.text.split(" ")[0];
-            stateMgr.addPlayer(new PlayerStatus(username));
+            stateMgr.addNewPlayer(username);
         }
 
         // Handle player disconnection
         else if(message.text.contains(" left ")) {
             String username = message.text.split(" ")[0];
-            stateMgr.addPlayer(new PlayerStatus(username));
+            stateMgr.removePlayer(username);
+        }
+
+        // Handle Emergency Meeting events
+        else if(message.text.contains("EMERGENCY MEETING")) {
+            String[] tokens = message.text.split(" ");
+            if(tokens[2].equals("condamned")) {
+                stateMgr.players.get(tokens[3]).setState("killed");
+            }
+        }
+
+        // Handle final scores
+        else if(message.text.matches("\\(.:.\\) \\w+\\s+\\w+\\s+\\d+")) {
+            String[] tokens = message.text.split("\s+");
+            Player user = stateMgr.players.get(tokens[1]);
+            user.setState(tokens[2]);
+            user.setScore(Integer.parseInt(tokens[3]));
         }
     }
 }
