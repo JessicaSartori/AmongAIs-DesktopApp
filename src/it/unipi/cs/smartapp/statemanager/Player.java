@@ -16,6 +16,11 @@ public class Player {
     private IntegerProperty score = null;
     private StringProperty state = null;
 
+    public static String usernamePropertyName = "username";
+    public static String teamPropertyName = "team";
+    public static String scorePropertyName = "score";
+    public static String statePropertyName = "state";
+
     /*
      * Constructors
      */
@@ -52,19 +57,19 @@ public class Player {
      * Property methods
      */
     public StringProperty usernameProperty() {
-        if(username == null) username = new SimpleStringProperty(this, "username");
+        if(username == null) username = new SimpleStringProperty(this, usernamePropertyName);
         return username;
     }
     public IntegerProperty teamProperty() {
-        if(team == null) team = new SimpleIntegerProperty(this, "team");
+        if(team == null) team = new SimpleIntegerProperty(this, teamPropertyName);
         return team;
     }
     public IntegerProperty scoreProperty() {
-        if(score == null) score = new SimpleIntegerProperty(this, "score");
+        if(score == null) score = new SimpleIntegerProperty(this, scorePropertyName);
         return score;
     }
     public StringProperty stateProperty() {
-        if(state == null) state = new SimpleStringProperty(this, "state");
+        if(state == null) state = new SimpleStringProperty(this, statePropertyName);
         return state;
     }
 

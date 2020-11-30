@@ -1,11 +1,9 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.statemanager.Player;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ScrollPane;
 
@@ -13,6 +11,7 @@ import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.drivers.GameServerDriver;
 import it.unipi.cs.smartapp.statemanager.StateManager;
 import it.unipi.cs.smartapp.statemanager.PlayerSettings;
+import it.unipi.cs.smartapp.statemanager.Player;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -58,6 +57,7 @@ public class spectateController implements Controller {
         // Update status
         Controllers.updateStatus(true);
 
+        // Setup automatic LOOK
         lookExecutor = new ScheduledThreadPoolExecutor(1);
         lookExecutor.setRemoveOnCancelPolicy(true);
         lookExecutor.scheduleWithFixedDelay(this::btnUpdMapPressed, 0, PlayerSettings.getInstance().getMapFreq(), TimeUnit.MILLISECONDS);
@@ -66,8 +66,8 @@ public class spectateController implements Controller {
         table.createTable();
 
         // Update map
-        Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, gameCanvas, stateMgr.playersList, null);
+        //Controllers.updateMap();
+        //stateMgr.map.drawMap(canvasContext, gameCanvas, stateMgr.playersList, null);
     }
 
     @FXML
