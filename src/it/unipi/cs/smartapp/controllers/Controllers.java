@@ -1,10 +1,8 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.drivers.ChatSystemDriver;
 import it.unipi.cs.smartapp.drivers.GameServerDriver;
 import it.unipi.cs.smartapp.drivers.GameServerResponse;
 import it.unipi.cs.smartapp.drivers.ResponseCode;
-import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.statemanager.StateManager;
 
 
@@ -53,23 +51,5 @@ public class Controllers {
         System.out.println(response.freeText);
 
         stateMgr.map.setGameMap((String[]) response.data);
-    }
-
-    static void quit() {
-        GameServerDriver gameServer = GameServerDriver.getInstance();
-        StateManager stateMgr = StateManager.getInstance();
-        ChatSystemDriver chatSystem = ChatSystemDriver.getInstance();
-
-        // Close connection with game server
-        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getGameName(), "Done playing");
-        if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
-        else { System.out.println(response.freeText); }
-        gameServer.closeConnection();
-
-        // Unsubscribe from all chat channels and close connection
-        chatSystem.sendLEAVE(stateMgr.getGameName());
-        chatSystem.closeConnection();
-
-        Renderer.getInstance().show("mainMenu");
     }
 }

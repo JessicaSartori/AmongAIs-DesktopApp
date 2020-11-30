@@ -41,18 +41,18 @@
          </columns>
       </TableView>
 
-      <ScrollPane fx:id="chatPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="986.0" layoutY="57.0" prefHeight="588.0" prefWidth="265.0" style="-fx-border-color: gray; -fx-background-color: white; -fx-border-radius: 5; -fx-padding: 5;" vvalue="1.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="57.0">
-         <content>
-            <TextFlow prefHeight="455.0" prefWidth="253.0" style="-fx-background-color: white;">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </TextFlow>
-         </content>
-      </ScrollPane>
+   <ScrollPane fx:id="chatPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="986.0" layoutY="57.0" prefHeight="588.0" prefWidth="265.0" style="-fx-border-color: gray; -fx-background-color: white; -fx-border-radius: 5; -fx-padding: 5;" vvalue="1.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="57.0">
+      <content>
+         <TextFlow prefHeight="455.0" prefWidth="253.0" style="-fx-background-color: white;">
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+         </TextFlow>
+      </content>
+   </ScrollPane>
 
-      <Button fx:id="btnUpdateMap" layoutX="985.0" layoutY="652.0" mnemonicParsing="false" onAction="#btnUpdMapPressed" prefHeight="40.0" prefWidth="126.0" text="Update Map" />
-      <Button fx:id="btnUpdStatus" layoutX="1124.0" layoutY="652.0" mnemonicParsing="false" onAction="#btnUpdStatusPressed" prefHeight="40.0" prefWidth="126.0" text="Update Status" />
+   <Button fx:id="btnUpdateMap" layoutX="985.0" layoutY="652.0" mnemonicParsing="false" onAction="#btnUpdMapPressed" prefHeight="40.0" prefWidth="126.0" text="Update Map" />
+   <Button fx:id="btnUpdStatus" layoutX="1124.0" layoutY="652.0" mnemonicParsing="false" onAction="#btnUpdStatusPressed" prefHeight="40.0" prefWidth="126.0" text="Update Status" />
 
    </children>
 </AnchorPane>

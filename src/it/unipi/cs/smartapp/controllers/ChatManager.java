@@ -1,5 +1,6 @@
 package it.unipi.cs.smartapp.controllers;
 
+import it.unipi.cs.smartapp.drivers.ChatSystemDriver;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -13,6 +14,7 @@ import it.unipi.cs.smartapp.statemanager.*;
 public class ChatManager {
 
     private final StateManager stateMgr;
+    private final ChatSystemDriver chatSystem;
 
     private final ScrollPane chatPane;
     private final TextFlow chatArea;
@@ -25,13 +27,18 @@ public class ChatManager {
     public ChatManager(ScrollPane pane) {
         chatPane = pane;
         chatArea = (TextFlow) pane.getContent();
+
+        chatSystem = ChatSystemDriver.getInstance();
         stateMgr = StateManager.getInstance();
     }
 
     public void setFontFamily(String f) { fontFamily = f; }
     public void setFontSize(double s) { fontSize = s; }
 
-    public void processMessage(ChatMessage message) {
+    public void processMessage() {
+        ChatMessage message = stateMgr.newMessages.poll();
+        if(message == null) return;
+
         if(!stateMgr.getGameName().equals(message.channel)) {
             Text channelTxt =  new Text("(" + message.channel + ") ");
             channelTxt.setFill(Color.YELLOW);
@@ -63,7 +70,22 @@ public class ChatManager {
         chatPane.setVvalue(1.0);
     }
 
-    public void resetChat() { chatArea.getChildren().remove(0, chatArea.getChildren().size()); }
+    public void setupChat() {
+        // Clean old chat
+        chatArea.getChildren().remove(0, chatArea.getChildren().size());
+
+        // Open connection, setup callback and subscribe to channels
+        chatSystem.openConnection();
+        chatSystem.setMessageCallback(this::processMessage);
+        chatSystem.sendNAME(stateMgr.getUsername());
+        chatSystem.sendJOIN(stateMgr.getGameName());
+    }
+
+    public void closeChat() {
+        // Unsubscribe from all chat channels and close connection
+        chatSystem.sendLEAVE(stateMgr.getGameName());
+        chatSystem.closeConnection();
+    }
 
     private void handleSystemMessage(ChatMessage message) {
         // Handle succeeding shots

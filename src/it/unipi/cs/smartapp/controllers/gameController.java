@@ -1,5 +1,6 @@
 package it.unipi.cs.smartapp.controllers;
 
+import it.unipi.cs.smartapp.screens.Renderer;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -65,14 +66,7 @@ public class gameController implements Controller {
         lblResponse.setText("");
 
         // Setup chat
-        chat.resetChat();
-        chatSystem.openConnection();
-        chatSystem.setMessageCallback(() -> {
-            ChatMessage msg = stateMgr.newMessages.poll();
-            if(msg != null) chat.processMessage(msg);
-        });
-        chatSystem.sendNAME(stateMgr.getUsername());
-        chatSystem.sendJOIN(stateMgr.getGameName());
+        chat.setupChat();
 
         // Retrieve other player info from the Game Server
         Controllers.updateStatus(false);
@@ -134,7 +128,7 @@ public class gameController implements Controller {
             message.setTitle("Game finished!");
             message.setHeaderText("Your final score is: " + stateMgr.player.getScore());
             message.setContentText("Go back to main menu.");
-            message.showAndWait().ifPresent(response -> Controllers.quit());
+            message.showAndWait().ifPresent(response -> btnGoBackPressed());
         }
     }
 
@@ -145,7 +139,15 @@ public class gameController implements Controller {
     }
 
     @FXML
-    public void btnGoBackPressed() { Controllers.quit(); }
+    public void btnGoBackPressed() {
+        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getGameName(), "Done playing");
+        if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
+        gameServer.closeConnection();
+
+        chat.closeChat();
+
+        Renderer.getInstance().show("mainMenu");
+    }
 
     @FXML
     public void txtSendMessage() {

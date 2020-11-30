@@ -6,6 +6,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+
 public class TableManager {
 
     private final StateManager stateMgr;
@@ -23,19 +24,19 @@ public class TableManager {
 
         // Setup table columns
         TableColumn<Player, Integer> teamCol = new TableColumn<>("Team");
-        teamCol.setCellValueFactory(new PropertyValueFactory<>(stateMgr.playersList.get(0).teamProperty().getName()));
+        teamCol.setCellValueFactory(new PropertyValueFactory<>(Player.teamPropertyName));
         teamCol.setStyle("-fx-alignment: CENTER;");
 
         TableColumn<Player, String> usernameCol = new TableColumn<>("Name");
-        usernameCol.setCellValueFactory(new PropertyValueFactory<>(stateMgr.playersList.get(0).usernameProperty().getName()));
+        usernameCol.setCellValueFactory(new PropertyValueFactory<>(Player.usernamePropertyName));
         usernameCol.setStyle("-fx-alignment: CENTER;");
 
         TableColumn<Player, Integer> scoreCol = new TableColumn<>("Score");
-        scoreCol.setCellValueFactory(new PropertyValueFactory<>(stateMgr.playersList.get(0).scoreProperty().getName()));
+        scoreCol.setCellValueFactory(new PropertyValueFactory<>(Player.scorePropertyName));
         scoreCol.setStyle("-fx-alignment: CENTER;");
 
         TableColumn<Player, String> stateCol = new TableColumn<>("Status");
-        stateCol.setCellValueFactory(new PropertyValueFactory<>(stateMgr.playersList.get(0).stateProperty().getName()));
+        stateCol.setCellValueFactory(new PropertyValueFactory<>(Player.statePropertyName));
         stateCol.setStyle("-fx-alignment: CENTER;");
 
         tblPlayers.getColumns().setAll(teamCol, usernameCol, scoreCol, stateCol);
