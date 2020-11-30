@@ -7,17 +7,22 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 
-import it.unipi.cs.smartapp.drivers.*;
+import it.unipi.cs.smartapp.screens.Renderer;
+import it.unipi.cs.smartapp.drivers.GameServerDriver;
 import it.unipi.cs.smartapp.statemanager.StateManager;
-import it.unipi.cs.smartapp.statemanager.ChatMessage;
+import it.unipi.cs.smartapp.statemanager.PlayerSettings;
+
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 
 public class spectateController implements Controller {
     private StateManager stateMgr;
-    private ChatSystemDriver chatSystem;
 
     private GraphicsContext canvasContext;
     private ChatManager chat;
+
+    private ScheduledThreadPoolExecutor lookExecutor;
 
     @FXML
     private Label lobbyName;
@@ -31,7 +36,6 @@ public class spectateController implements Controller {
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
-        chatSystem = ChatSystemDriver.getInstance();
 
         canvasContext = gameCanvas.getGraphicsContext2D();
         chat = new ChatManager(chatPane);
@@ -48,17 +52,14 @@ public class spectateController implements Controller {
         listPlayers.setItems(stateMgr.playerList);
 
         // Setup chat
-        chat.resetChat();
-        chatSystem.openConnection();
-        chatSystem.setMessageCallback(() -> {
-            ChatMessage msg = stateMgr.newMessages.poll();
-            if(msg != null) chat.processMessage(msg);
-        });
-        chatSystem.sendNAME(stateMgr.getUsername());
-        chatSystem.sendJOIN(stateMgr.getGameName());
+        chat.setupChat();
 
         // Update status
         Controllers.updateStatus(true);
+
+        lookExecutor = new ScheduledThreadPoolExecutor(1);
+        lookExecutor.setRemoveOnCancelPolicy(true);
+        lookExecutor.scheduleWithFixedDelay(this::btnUpdMapPressed, 0, PlayerSettings.getInstance().getMapFreq(), TimeUnit.MILLISECONDS);
 
         // Update map
         Controllers.updateMap();
@@ -75,5 +76,12 @@ public class spectateController implements Controller {
     }
 
     @FXML
-    public void btnGoBackPressed() { Controllers.quit(); }
+    public void btnGoBackPressed() {
+        lookExecutor.shutdownNow();
+        GameServerDriver.getInstance().closeConnection();
+
+        chat.closeChat();
+
+        Renderer.getInstance().show("mainMenu");
+    }
 }
