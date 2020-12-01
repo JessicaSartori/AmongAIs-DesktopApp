@@ -11,36 +11,36 @@
             <Font name="Segoe UI Bold Italic" size="36.0" />
         </font>
     </Label>
+    <Label fx:id="errorLabel" layoutX="400.0" layoutY="210.0" prefHeight="30.0" prefWidth="480.0" text="errorLabel" textFill="RED" AnchorPane.topAnchor="210.0">
+        <font>
+        <Font size="14.0" />
+        </font>
+    </Label>
 
-    <TextField fx:id="gameNameField" layoutX="275.0" layoutY="238.0" promptText="Gamename" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="238.0">
+    <TextField fx:id="gameNameField" layoutX="400.0" layoutY="240.0" prefHeight="30.0" prefWidth="480.0" promptText="Gamename" AnchorPane.topAnchor="240.0">
         <font>
         <Font size="14.0" />
         </font>
     </TextField>
 
-    <Button layoutX="439.0" layoutY="286.0" mnemonicParsing="false" onAction="#btnCreatePressed" prefHeight="29.0" prefWidth="200.0" text="Create" AnchorPane.leftAnchor="420.0" AnchorPane.rightAnchor="670.0" AnchorPane.topAnchor="288.0">
+    <Button layoutX="420.0" layoutY="288.0" mnemonicParsing="false" onAction="#btnCreatePressed" prefHeight="30.0" prefWidth="200.0" text="Create" AnchorPane.topAnchor="290.0">
         <font>
         <Font size="13.0" />
         </font>
     </Button>
-    <Label fx:id="errorLabel" layoutX="275.0" layoutY="213.0" prefHeight="25.0" text="errorLabel" textFill="RED" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="213.0">
+    <Button layoutX="660.0" layoutY="288.0" mnemonicParsing="false" onAction="#btnJoinPressed" prefHeight="30.0" prefWidth="200.0" text="Join" AnchorPane.topAnchor="290.0">
         <font>
-        <Font size="14.0" />
+          <Font size="13.0" />
         </font>
-    </Label>
+    </Button>
+    <Button layoutX="540.0" layoutY="330.0" mnemonicParsing="false" onAction="#btnSpectatePressed" prefHeight="30.0" prefWidth="200.0" text="Spectate" AnchorPane.topAnchor="330.0">
+        <font>
+          <Font size="13.0" />
+        </font>
+    </Button>
     <Button layoutX="37.0" layoutY="38.0" mnemonicParsing="false" onAction="#backBtnPressed" prefWidth="80.0" text="Back" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
         <font>
         <Font size="13.0" />
-        </font>
-    </Button>
-    <Button layoutX="633.0" layoutY="286.0" mnemonicParsing="false" onAction="#btnJoinPressed" prefHeight="29.0" prefWidth="197.0" text="Join" AnchorPane.leftAnchor="670.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="288.0">
-        <font>
-          <Font size="13.0" />
-        </font>
-    </Button>
-    <Button layoutX="545.0" layoutY="323.0" mnemonicParsing="false" onAction="#btnSpectatePressed" prefHeight="29.0" prefWidth="190.0" text="Spectate" AnchorPane.leftAnchor="545.0" AnchorPane.rightAnchor="545.0" AnchorPane.topAnchor="328.0">
-        <font>
-          <Font size="13.0" />
         </font>
     </Button>
 </AnchorPane>

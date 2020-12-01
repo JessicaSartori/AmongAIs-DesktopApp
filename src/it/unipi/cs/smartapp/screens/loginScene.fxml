@@ -11,36 +11,36 @@
          <Font name="Segoe UI Bold Italic" size="36.0" />
       </font>
    </Label>
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="367.0" layoutY="187.0" prefHeight="17.0" prefWidth="66.0" text="Login" AnchorPane.leftAnchor="367.0" AnchorPane.rightAnchor="367.0" AnchorPane.topAnchor="190.0">
+      <font>
+         <Font name="Segoe UI Bold" size="18.0" />
+      </font>
+   </Label>
+   <Label fx:id="errorLabel" layoutX="415.0" layoutY="245.0" prefHeight="25.0" prefWidth="450.0" text="errorrLabel" textFill="RED" AnchorPane.topAnchor="245.0">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </Label>
 
    <TextField fx:id="usernameField" layoutX="415.0" layoutY="270.0" prefHeight="30.0" prefWidth="450.0" promptText="Username" AnchorPane.topAnchor="270.0">
       <font>
          <Font size="14.0" />
       </font>
    </TextField>
-
-   <Button layoutX="550.0" layoutY="375.0" mnemonicParsing="false" onAction="#btnPlayAsGuestPressed" prefHeight="30.0" prefWidth="280.0" text="Play as Guest" AnchorPane.leftAnchor="550.0" AnchorPane.rightAnchor="550.0" AnchorPane.topAnchor="375.0">
-      <font>
-         <Font size="13.0" />
-      </font>
-   </Button>
-   <Label fx:id="errorLabel" layoutX="415.0" layoutY="245.0" prefHeight="25.0" prefWidth="450.0" text="errorrLabel" textFill="RED" AnchorPane.topAnchor="245.0">
-      <font>
-         <Font size="14.0" />
-      </font>
-   </Label>
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="367.0" layoutY="187.0" prefHeight="17.0" prefWidth="66.0" text="Login" AnchorPane.leftAnchor="367.0" AnchorPane.rightAnchor="367.0" AnchorPane.topAnchor="190.0">
-      <font>
-         <Font name="Segoe UI Bold" size="18.0" />
-      </font>
-   </Label>
-   <Label alignment="CENTER" layoutX="327.0" layoutY="668.0" prefHeight="19.0" prefWidth="627.0" text="PC App - SmartApp 2020" textFill="#757575" AnchorPane.bottomAnchor="33.0" AnchorPane.leftAnchor="327.0" AnchorPane.rightAnchor="327.0">
-      <font>
-         <Font name="System Italic" size="13.0" />
-      </font>
-   </Label>
    <TextField fx:id="publicUsernameField" layoutX="415.0" layoutY="311.0" prefHeight="30.0" prefWidth="450.0" promptText="Public username" AnchorPane.topAnchor="320.0">
       <font>
          <Font size="14.0" />
       </font>
    </TextField>
+
+   <Button layoutX="540.0" layoutY="374.0" mnemonicParsing="false" onAction="#btnPlayAsGuestPressed" prefHeight="30.0" prefWidth="200.0" text="Play as Guest" AnchorPane.topAnchor="375.0">
+      <font>
+         <Font size="13.0" />
+      </font>
+   </Button>
+   <Label alignment="CENTER" layoutX="327.0" layoutY="668.0" prefHeight="19.0" prefWidth="627.0" text="PC App - SmartApp 2020" textFill="#757575" AnchorPane.bottomAnchor="33.0" AnchorPane.leftAnchor="327.0" AnchorPane.rightAnchor="327.0">
+      <font>
+         <Font name="System Italic" size="13.0" />
+      </font>
+   </Label>
 </AnchorPane>
