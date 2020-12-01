@@ -16,6 +16,8 @@ public class StateManager {
         return instance;
     }
 
+    private String privateUsername = null;
+
     private String currentUsername = null;
     private String currentGameName = null;
 
@@ -28,10 +30,12 @@ public class StateManager {
     public ObservableList<Player> playersList;
 
     // Setters
+    public void setPrivateUsername(String s) { privateUsername = s; }
     public void setUsername(String s) { currentUsername = s; }
     public void setGameState(GameState s) { gameStatus.setState(s); }
 
     // Getters
+    public String getPrivateUsername() { return privateUsername; }
     public String getUsername() { return currentUsername; }
     public String getGameName() { return currentGameName; }
     public Boolean getCreator() { return gameStatus.isCreated(); }

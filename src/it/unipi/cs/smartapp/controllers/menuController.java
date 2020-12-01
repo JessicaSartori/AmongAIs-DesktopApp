@@ -24,23 +24,18 @@ public class menuController implements Controller {
 
     @Override
     public void updateContent() {
-        String username = stateMgr.getUsername();
+        String username = stateMgr.getPrivateUsername();
         welcomeLabel.setText("Welcome back " + username + "!");
     }
 
     @FXML
-    private void btnPLAYPressed() {
-        Renderer.getInstance().show("joinMatch");
-    }
-
+    private void btnPLAYPressed() { Renderer.getInstance().show("joinMatch"); }
 
     @FXML
-    private void btnBackPressed() {
-        Renderer.getInstance().show("login");
-    }
+    private void btnBackPressed() { Renderer.getInstance().show("login"); }
 
     @FXML
-    private void btnGameSettings() { Renderer.getInstance().show("settings");}
+    private void btnGameSettings() { Renderer.getInstance().show("settings"); }
 
     @FXML
     private void btnTournamentsPressed() { Renderer.getInstance().show("tournaments");}

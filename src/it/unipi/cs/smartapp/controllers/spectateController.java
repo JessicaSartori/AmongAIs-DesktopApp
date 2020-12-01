@@ -18,13 +18,14 @@ import java.util.concurrent.TimeUnit;
 
 
 public class spectateController implements Controller {
+
     private StateManager stateMgr;
 
     private GraphicsContext canvasContext;
     private ChatManager chat;
     private TableManager table;
 
-    private ScheduledThreadPoolExecutor lookExecutor;
+    private ScheduledThreadPoolExecutor automaticActions;
 
     @FXML
     private Label lobbyName;
@@ -54,34 +55,40 @@ public class spectateController implements Controller {
         // Setup chat
         chat.setupChat();
 
-        // Update status
+        // Initialize status
         Controllers.updateStatus(true);
-
-        // Setup automatic LOOK
-        lookExecutor = new ScheduledThreadPoolExecutor(1);
-        lookExecutor.setRemoveOnCancelPolicy(true);
-        lookExecutor.scheduleWithFixedDelay(this::btnUpdMapPressed, 0, PlayerSettings.getInstance().getMapFreq(), TimeUnit.MILLISECONDS);
 
         // Setup table with players info
         table.createTable();
 
-        // Update map
-        //Controllers.updateMap();
-        //stateMgr.map.drawMap(canvasContext, gameCanvas, stateMgr.playersList, null);
+        // Initialize map
+        updateMap();
+
+        // Setup automatic LOOK and STATUS
+        automaticActions = new ScheduledThreadPoolExecutor(2);
+        automaticActions.setRemoveOnCancelPolicy(true);
+        automaticActions.scheduleWithFixedDelay(this::updateStatus,
+                500, PlayerSettings.getInstance().getStatusFreq(),
+                TimeUnit.MILLISECONDS
+        );
+        automaticActions.scheduleWithFixedDelay(this::updateMap,
+                500, PlayerSettings.getInstance().getMapFreq(),
+                TimeUnit.MILLISECONDS
+        );
     }
 
-    @FXML
-    private void btnUpdStatusPressed() { Controllers.updateStatus(true); }
+    private void updateStatus() {
+        Controllers.updateStatus(true);
+    }
 
-    @FXML
-    private void btnUpdMapPressed() {
+    private void updateMap() {
         Controllers.updateMap();
         stateMgr.map.drawMap(canvasContext, gameCanvas, stateMgr.playersList, null);
     }
 
     @FXML
     public void btnGoBackPressed() {
-        lookExecutor.shutdownNow();
+        automaticActions.shutdownNow();
         GameServerDriver.getInstance().closeConnection();
 
         chat.closeChat();
