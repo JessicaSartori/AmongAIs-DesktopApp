@@ -6,53 +6,57 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.spectateController">
-   <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefWidth="60.0"
-           text="Quit"/>
-   <Label layoutX="985.0" layoutY="30.0" text="Game chat:">
-      <font>
-         <Font name="System Bold" size="18.0"/>
-      </font>
-   </Label>
-   <Canvas fx:id="gameCanvas" height="650.0" layoutX="315.0" layoutY="42.0" width="650.0"/>
-   <Label layoutX="561.0" layoutY="17.0" text="Lobby name:">
-      <font>
-         <Font name="System Bold" size="18.0"/>
-      </font>
-   </Label>
-   <Label fx:id="lobbyName" layoutX="670.0" layoutY="17.0" text="lobby">
-      <font>
-         <Font name="System Bold" size="18.0"/>
-      </font>
-   </Label>
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.spectateController">
+   <Pane fx:id="leftSubPanel" focusTraversable="true" prefHeight="720.0" prefWidth="315.0" AnchorPane.leftAnchor="0.0">
+      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefWidth="60.0" text="Quit" />
 
-   <Label layoutX="131.0" layoutY="17.0" text="Players:">
-      <font>
-         <Font name="System Bold" size="18.0"/>
-      </font>
-   </Label>
-   <TableView fx:id="tblPlayers" layoutX="14.0" layoutY="43.0" prefHeight="650.0" prefWidth="294.0">
-      <columnResizePolicy>
-         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-      </columnResizePolicy>
-      <columns>
-         <TableColumn prefWidth="75.0" text="Team"/>
-         <TableColumn prefWidth="75.0" text="Name"/>
-         <TableColumn prefWidth="75.0" text="Score"/>
-         <TableColumn prefWidth="75.0" text="Status"/>
-      </columns>
-   </TableView>
+      <Label layoutX="82.0" layoutY="26.0" text="Lobby name:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="lobbyName" layoutX="191.0" layoutY="26.0" text="lobby">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
 
-   <ScrollPane fx:id="chatPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="986.0" layoutY="57.0"
-               prefHeight="635.0" prefWidth="265.0"
-               style="-fx-border-color: gray; -fx-background-color: white; -fx-border-radius: 5; -fx-padding: 5;"
-               vvalue="1.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="57.0">
-      <TextFlow prefHeight="455.0" prefWidth="253.0" style="-fx-background-color: white;">
-         <opaqueInsets>
-            <Insets/>
-         </opaqueInsets>
-      </TextFlow>
-   </ScrollPane>
+      <Label layoutX="128.0" layoutY="59.0" text="Players:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
 
+      <TableView fx:id="tblPlayers" layoutX="14.0" layoutY="86.0" prefHeight="607.0" prefWidth="294.0">
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+         <columns>
+            <TableColumn prefWidth="75.0" text="Team" />
+            <TableColumn prefWidth="75.0" text="Name" />
+            <TableColumn prefWidth="75.0" text="Score" />
+            <TableColumn prefWidth="75.0" text="Status" />
+         </columns>
+      </TableView>
+   </Pane>
+
+
+   <Canvas fx:id="gameCanvas" height="674.0" layoutX="315.0" layoutY="18.0" width="650.0" />
+
+
+   <Pane fx:id="rightSubPanel" focusTraversable="true" layoutX="965" prefHeight="720.0" prefWidth="315.0" AnchorPane.rightAnchor="0.0">
+      <Label layoutX="25.0" layoutY="29.0" text="Game chat:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+
+      <ScrollPane fx:id="chatPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="26.0" layoutY="56.0" prefHeight="635.0" prefWidth="265.0" style="-fx-border-color: gray; -fx-background-color: white; -fx-border-radius: 5; -fx-padding: 5;" vvalue="1.0" AnchorPane.rightAnchor="24.333333333333314" AnchorPane.topAnchor="56.0">
+         <TextFlow prefHeight="455.0" prefWidth="253.0" style="-fx-background-color: white;">
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+         </TextFlow>
+      </ScrollPane>
+   </Pane>
 </AnchorPane>

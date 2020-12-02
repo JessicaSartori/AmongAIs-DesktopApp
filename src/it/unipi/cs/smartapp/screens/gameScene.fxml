@@ -7,49 +7,48 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="gamePanel" focusTraversable="true" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.gameController">
-   <Label layoutX="347.0" layoutY="21.0" text="Player name:">
-      <font>
-         <Font name="System Bold" size="18.0" />
-      </font>
-   </Label>
-   <Label fx:id="playerName" layoutX="456.0" layoutY="21.0" text="Guest_1234">
-      <font>
-         <Font name="System Bold" size="18.0" />
-      </font>
-   </Label>
-
-   <Label layoutX="586.0" layoutY="21.0" text="Lobby name:">
-      <font>
-         <Font name="System Bold" size="18.0" />
-      </font>
-   </Label>
-   <Label fx:id="lobbyName" layoutX="695.0" layoutY="21.0" text="lobby">
-      <font>
-         <Font name="System Bold" size="18.0" />
-      </font>
-   </Label>
-   <Pane fx:id="leftSubPanel" prefHeight="720.0" prefWidth="315.0" AnchorPane.leftAnchor="0.0">
+   <Pane fx:id="leftSubPanel" focusTraversable="true" prefHeight="720.0" prefWidth="315.0" AnchorPane.leftAnchor="0.0">
       <Button focusTraversable="false" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" text="Quit match" />
 
+      <Label layoutX="18.0" layoutY="52.0" text="Player name:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="playerName" layoutX="126.0" layoutY="52.0" text="Guest_1234">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
 
+      <Label layoutX="18.0" layoutY="86.0" text="Lobby name:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="lobbyName" layoutX="129.0" layoutY="86.0" text="lobby">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
 
-      <Label fx:id="txtLoyalty" layoutX="20.0" layoutY="107.0" text="Loyalty: ">
+      <Label fx:id="txtLoyalty" layoutX="18.0" layoutY="128.0" text="Loyalty: ">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label fx:id="playerLoyalty" layoutX="71.0" layoutY="107.0" prefHeight="18.0" prefWidth="76.0" text="Normal">
+      <Label fx:id="playerLoyalty" layoutX="69.0" layoutY="128.0" prefHeight="18.0" prefWidth="76.0" text="Normal">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
 
-      <Label fx:id="txtScore" layoutX="183.0" layoutY="107.0" text="Score: ">
+      <Label fx:id="txtScore" layoutX="181.0" layoutY="128.0" text="Score: ">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label fx:id="playerScore" layoutX="253.0" layoutY="107.0" text="0">
+      <Label fx:id="playerScore" layoutX="251.0" layoutY="128.0" text="0">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
@@ -97,10 +96,10 @@
    </Pane>
 
 
-   <Canvas fx:id="mapCanvas" focusTraversable="true" height="650.0" layoutX="315.0" layoutY="60.0" width="650.0" />
+   <Canvas fx:id="mapCanvas" focusTraversable="true" height="702.0" layoutX="315.0" layoutY="8.0" width="650.0" />
 
 
-   <Pane fx:id="rightSubPanel" layoutX="965" prefHeight="720.0" prefWidth="315.0" AnchorPane.rightAnchor="0.0">
+   <Pane fx:id="rightSubPanel" focusTraversable="true" layoutX="965" prefHeight="720.0" prefWidth="315.0" AnchorPane.rightAnchor="0.0">
       <Label layoutX="25.0" layoutY="14.0" text="Game chat:">
          <font>
             <Font name="System Bold" size="18.0" />

@@ -102,6 +102,7 @@ public class gameController implements Controller {
             }
 
             KeyCode key = keyEvent.getCode();
+            System.out.println("Key: " + key);
             if(key == playerSettings.getMoveUp()) movePlayer('N');
             else if (key == playerSettings.getMoveLeft()) movePlayer('W');
             else if (key == playerSettings.getMoveDown()) movePlayer('S');
@@ -110,6 +111,8 @@ public class gameController implements Controller {
             else if (key == playerSettings.getShootLeft()) tryToShoot('W');
             else if (key == playerSettings.getShootDown()) tryToShoot('S');
             else if (key == playerSettings.getShootRight()) tryToShoot('E');
+            else if (key == KeyCode.P) flipVisiblePane(leftSubPanel);
+            else if (key == KeyCode.ENTER) flipVisiblePane(rightSubPanel);
         });
     }
 
@@ -157,6 +160,11 @@ public class gameController implements Controller {
             chatSystem.sendPOST(stateMgr.getGameName(), txtMessage.getText());
         }
         txtMessage.setText("");
+    }
+
+    public void flipVisiblePane(Pane panel){
+        if(panel.isVisible()) panel.setVisible(false);
+        else panel.setVisible(true);
     }
 
     public void movePlayer(Character position) {
