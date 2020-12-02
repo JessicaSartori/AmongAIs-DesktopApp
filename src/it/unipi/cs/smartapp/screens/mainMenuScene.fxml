@@ -26,7 +26,7 @@
          <Font size="13.0" />
       </font>
    </Button>
-   <Button layoutX="500.0" layoutY="344.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="280.0" text="Tournaments" AnchorPane.topAnchor="340.0">
+   <Button layoutX="500.0" layoutY="344.0" mnemonicParsing="false" onAction="#btnTournamentsPressed" prefHeight="30.0" prefWidth="280.0" text="Tournaments" AnchorPane.topAnchor="340.0">
       <font>
          <Font size="13.0" />
       </font>

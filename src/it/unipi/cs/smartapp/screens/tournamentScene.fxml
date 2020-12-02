@@ -5,14 +5,23 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.tournamentController">
-      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefHeight="27.0" prefWidth="73.0" text="Go back" />
-      <Label layoutX="558.0" layoutY="58.0" text="Among AIs">
+      <Label alignment="CENTER" layoutX="543.0" layoutY="63.0" prefHeight="173.0" prefWidth="206.0" text="Among AIs" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="50.0">
          <font>
-            <Font size="36.0" />
+            <Font name="Segoe UI Bold Italic" size="36.0" />
          </font>
       </Label>
-      <Label fx:id="lblMessage" layoutX="601.0" layoutY="176.0" text="message label" textFill="RED" />
-      <Button layoutX="522.0" layoutY="276.0" mnemonicParsing="false" onAction="#btnJoinPressed" prefHeight="37.0" prefWidth="113.0" text="Join" />
-      <Button layoutX="645.0" layoutY="276.0" mnemonicParsing="false" onAction="#btnWithdrawPressed" prefHeight="37.0" prefWidth="113.0" text="Withdraw" />
-      <TextField fx:id="txtTournamentName" layoutX="522.0" layoutY="235.0" prefHeight="27.0" prefWidth="236.0" promptText="Tournament name..." />
+      <Label fx:id="lblMessage" layoutX="601.0" layoutY="223.0" text="message label" textFill="RED" />
+      <TextField fx:id="txtTournamentName" layoutX="515.0" layoutY="277.0" prefHeight="30.0" prefWidth="250.0" promptText="Tournament name..." AnchorPane.topAnchor="280.0">
+      <font>
+         <Font size="13.0" />
+      </font></TextField>
+      <Button layoutX="515.0" layoutY="323.0" mnemonicParsing="false" onAction="#btnJoinPressed" prefHeight="37.0" prefWidth="113.0" text="Join" AnchorPane.topAnchor="330.0">
+      <font>
+         <Font size="13.0" />
+      </font></Button>
+      <Button layoutX="652.0" layoutY="323.0" mnemonicParsing="false" onAction="#btnWithdrawPressed" prefHeight="37.0" prefWidth="113.0" text="Withdraw" AnchorPane.topAnchor="330.0">
+      <font>
+         <Font size="13.0" />
+      </font></Button>
+      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefHeight="27.0" prefWidth="73.0" text="Go back" />
 </AnchorPane>
