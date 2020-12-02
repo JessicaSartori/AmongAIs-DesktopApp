@@ -36,7 +36,7 @@ public class gameController implements Controller {
     @FXML
     private Canvas mapCanvas;
     @FXML
-    private AnchorPane gamePanel;
+    private AnchorPane gamePanel, leftSubPanel, rightSubPanel;
     @FXML
     private ScrollPane chatPane;
     @FXML
@@ -47,6 +47,9 @@ public class gameController implements Controller {
         playerSettings = PlayerSettings.getInstance();
         gameServer = GameServerDriver.getInstance();
         chatSystem = ChatSystemDriver.getInstance();
+
+        leftSubPanel.setVisible(false);
+        rightSubPanel.setVisible(true);
 
         canvasContext = mapCanvas.getGraphicsContext2D();
         chat = new ChatManager(chatPane);
