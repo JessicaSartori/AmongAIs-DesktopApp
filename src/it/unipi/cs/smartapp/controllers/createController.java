@@ -1,15 +1,17 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.drivers.GameServerDriver;
-import it.unipi.cs.smartapp.drivers.GameServerResponse;
-import it.unipi.cs.smartapp.drivers.ResponseCode;
-import it.unipi.cs.smartapp.screens.Renderer;
-import it.unipi.cs.smartapp.statemanager.StateManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+
+import it.unipi.cs.smartapp.drivers.GameServerDriver;
+import it.unipi.cs.smartapp.drivers.GameServerResponse;
+import it.unipi.cs.smartapp.drivers.ResponseCode;
+import it.unipi.cs.smartapp.screens.Renderer;
+import it.unipi.cs.smartapp.statemanager.StateManager;
+
 
 public class createController implements Controller {
     private StateManager stateManager;
@@ -42,7 +44,7 @@ public class createController implements Controller {
         lblMessage.setText("");
 
         // Get options for graphical elements
-        String options = "";
+        String options;
         RadioButton TeamRadioButton = (RadioButton) radioTeam.getSelectedToggle();
         String teamB = TeamRadioButton.getText();
         RadioButton MapShapeRadioButton = (RadioButton) radioShape.getSelectedToggle();
@@ -60,8 +62,6 @@ public class createController implements Controller {
         } else {
             options += "3";
         }
-
-        System.out.println("options: " + options);
 
         if(isValid(gameName) && tryConnect() &&
                 create(gameName, options) && join(gameName)) {
