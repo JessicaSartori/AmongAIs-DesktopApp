@@ -126,7 +126,7 @@ public class ChatManager {
 
         // Handle final scores
         else if(message.text.matches("\\(.:.\\) \\w+\\s+\\w+\\s+\\d+")) {
-            String[] tokens = message.text.split("\s+");
+            String[] tokens = message.text.split("\\s+");
             Player user = stateMgr.players.get(tokens[1]);
             user.setState(tokens[2]);
             user.setScore(Integer.parseInt(tokens[3]));

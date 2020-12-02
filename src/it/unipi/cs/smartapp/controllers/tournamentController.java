@@ -43,20 +43,24 @@ public class tournamentController implements Controller {
     @FXML
     private void btnJoinPressed(ActionEvent event) {
         if (txtTournamentName.getText().isBlank()) {
+            lblMessage.setStyle("-fx-text-fill: red");
             lblMessage.setText("The tournament name must be valid.");
         } else {
-            lblMessage.setText("");
             lmDriver.joinTournament(txtTournamentName.getText());
+            lblMessage.setStyle("-fx-text-fill: green");
+            lblMessage.setText("Ok, joined!");
         }
     }
 
     @FXML
     private void btnWithdrawPressed(ActionEvent event) {
         if (txtTournamentName.getText().isBlank()) {
+            lblMessage.setStyle("-fx-text-fill: red");
             lblMessage.setText("The tournament name must be valid.");
         } else {
-            lblMessage.setText("");
             lmDriver.withdrawTournament(txtTournamentName.getText());
+            lblMessage.setStyle("-fx-text-fill: green");
+            lblMessage.setText("Ok, withdrawn!");
         }
     }
 }

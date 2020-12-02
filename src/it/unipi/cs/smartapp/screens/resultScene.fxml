@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.resultController">
+   <children>
+      <Button layoutX="579.0" layoutY="627.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefHeight="34.0" prefWidth="123.0" text="Back to menu" />
+      <Label fx:id="lblTitle" layoutX="569.0" layoutY="49.0" text="Lobby results!">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblWinner" layoutX="589.0" layoutY="100.0" text="The winner is " textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <TableView fx:id="tblPlayers" layoutX="480.0" layoutY="148.0" prefHeight="448.0" prefWidth="320.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="C1" />
+          <TableColumn prefWidth="75.0" text="C2" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

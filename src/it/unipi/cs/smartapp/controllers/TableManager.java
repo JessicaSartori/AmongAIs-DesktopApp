@@ -18,7 +18,7 @@ public class TableManager {
         stateMgr = StateManager.getInstance();
     }
 
-    public void createTable(){
+    public void createTable() {
         // Link Table View with list of players
         tblPlayers.setItems(stateMgr.playersList);
 
@@ -40,5 +40,31 @@ public class TableManager {
         stateCol.setStyle("-fx-alignment: CENTER;");
 
         tblPlayers.getColumns().setAll(teamCol, usernameCol, scoreCol, stateCol);
+    }
+
+    public void createResult() {
+        // Link Table View with list of players
+        tblPlayers.setItems(stateMgr.playersList);
+
+        // Setup table columns
+        TableColumn<Player, Integer> teamCol = new TableColumn<>("Team");
+        teamCol.setCellValueFactory(new PropertyValueFactory<>(Player.teamPropertyName));
+        teamCol.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<Player, String> usernameCol = new TableColumn<>("Name");
+        usernameCol.setCellValueFactory(new PropertyValueFactory<>(Player.usernamePropertyName));
+        usernameCol.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<Player, Integer> scoreCol = new TableColumn<>("Score");
+        scoreCol.setCellValueFactory(new PropertyValueFactory<>(Player.scorePropertyName));
+        scoreCol.setStyle("-fx-alignment: CENTER;");
+        scoreCol.setComparator(scoreCol.getComparator().reversed());
+
+        TableColumn<Player, String> stateCol = new TableColumn<>("Status");
+        stateCol.setCellValueFactory(new PropertyValueFactory<>(Player.statePropertyName));
+        stateCol.setStyle("-fx-alignment: CENTER;");
+
+        tblPlayers.getColumns().setAll(teamCol, usernameCol, scoreCol, stateCol);
+        tblPlayers.getSortOrder().add(scoreCol);
     }
 }

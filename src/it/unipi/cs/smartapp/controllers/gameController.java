@@ -114,21 +114,13 @@ public class gameController implements Controller {
 
         // Update Game View Values
         if (stateMgr.getGameState() == GameState.ACTIVE && firstTime) {
-            //txtChat.appendText("\nGame state changed to: " + stateMgr.getGameState());
-            Alert message = new Alert(Alert.AlertType.INFORMATION);
-            message.setTitle("Information");
-            message.setContentText("Game started, now you can move and shoot!");
-            message.showAndWait();
+            lblResponse.setText("Game started, now you can move and shoot!");
             firstTime = false;
         }
 
         // Check finished game
         if (stateMgr.getGameState() == GameState.FINISHED) {
-            Alert message = new Alert(Alert.AlertType.INFORMATION);
-            message.setTitle("Game finished!");
-            message.setHeaderText("Your final score is: " + stateMgr.player.getScore());
-            message.setContentText("Go back to main menu.");
-            message.showAndWait().ifPresent(response -> btnGoBackPressed());
+            Renderer.getInstance().show("resultScene");
         }
     }
 
