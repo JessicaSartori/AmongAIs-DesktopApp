@@ -1,19 +1,16 @@
 package it.unipi.cs.smartapp.controllers;
 
 import javafx.fxml.FXML;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.input.KeyCode;
 
 import java.text.DecimalFormat;
 
 import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.statemanager.PlayerSettings;
-import javafx.scene.input.KeyCode;
 
 
 public class settingsController implements Controller {
@@ -56,25 +53,19 @@ public class settingsController implements Controller {
         btnShootRight.setText(settings.getShootRight().toString());
 
         // Event handler status slider change
-        StatusSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
-                setSliderLabel(lblStatusFrequency, newValue);
+        StatusSlider.valueProperty().addListener((observableValue, oldValue, newValue) -> {
+            setSliderLabel(lblStatusFrequency, newValue);
 
-                // Update settings
-                settings.setStatusFreq(newValue.intValue());
-            }
+            // Update settings
+            settings.setStatusFreq(newValue.intValue());
         });
 
         // Event handler map slider change
-        MapSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
-                setSliderLabel(lblMapFrequency, newValue);
+        MapSlider.valueProperty().addListener((observableValue, oldValue, newValue) -> {
+            setSliderLabel(lblMapFrequency, newValue);
 
-                // Update settings
-                settings.setMapFreq(newValue.intValue());
-            }
+            // Update settings
+            settings.setMapFreq(newValue.intValue());
         });
     }
 

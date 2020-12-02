@@ -6,6 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
+
 import java.util.HashMap;
 
 public class MapStatus {
@@ -15,7 +16,7 @@ public class MapStatus {
 
     private Character[][] gameMap = null;
     private Integer mapSize = null;
-    private HashMap<Character, Image> sprites;
+    private final HashMap<Character, Image> sprites;
 
     public MapStatus(){
         sprites = new HashMap<>();
@@ -33,7 +34,7 @@ public class MapStatus {
      */
     public Character[][] getGameMap(){ return gameMap; }
     public Integer getMapSize(){ return mapSize; }
-    public Integer getCellSize(){ return Math.round(CANVAS_SIZE / (mapSize + 2)); }
+    public Integer getCellSize(){ return CANVAS_SIZE / (mapSize + 2); }
 
     /*
      * Method to parse map
@@ -71,7 +72,7 @@ public class MapStatus {
                     if(Character.isUpperCase(gameMap[r][c])) { canvasContext.setFill(Color.RED); canvasContext.setStroke(Color.RED);}
                     else { canvasContext.setFill(Color.BLUE); canvasContext.setStroke(Color.BLUE); }
 
-                    canvasContext.fillText(username, xCanvas - Math.round(username.length()/2), yCanvas - Math.round(username.length()/2));
+                    canvasContext.fillText(username, xCanvas - username.length()/2, yCanvas - username.length()/2);
                 }
                 if(currentUser != null && currentUser.equals(username))
                     canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
@@ -81,8 +82,6 @@ public class MapStatus {
             yCanvas += cellSize;
             xCanvas = cellSize;
         }
-
-
     }
 
     public String findName(ObservableList<Player> players, Character symbol){
@@ -94,7 +93,7 @@ public class MapStatus {
 
     public void drawCell(GraphicsContext canvasContext, Integer x, Integer y, Image image) {
         Integer cellSize = getCellSize();
-        Integer xCanvas = x*cellSize, yCanvas = y*cellSize;
+        int xCanvas = x*cellSize, yCanvas = y*cellSize;
 
         canvasContext.drawImage(image, xCanvas, yCanvas, cellSize, cellSize);
     }
@@ -107,7 +106,7 @@ public class MapStatus {
 
     public void drawShot(GraphicsContext canvasContext, Integer[] playerPos, Integer team, Character shotDirection, Character landed, Integer prevEnergy) {
         Integer c = playerPos[0], r = playerPos[1];
-        Character playerKey = ' ';
+        char playerKey = ' ';
 
         switch (shotDirection) {
             case 'N' -> {
@@ -183,5 +182,16 @@ public class MapStatus {
         sprites.put('7', icon);
         icon = new Image("it/unipi/cs/smartapp/sprites/playerTopRed.png");
         sprites.put('8', icon);
+    }
+
+    public void updatePosition(Integer x, Integer y, Character direction) {
+        char old = gameMap[y][x];
+        gameMap[y][x] = '.';
+        switch (direction) {
+            case 'N' -> gameMap[y - 1][x] = old;
+            case 'S' -> gameMap[y + 1][x] = old;
+            case 'W' -> gameMap[y][x - 1] = old;
+            case 'E' -> gameMap[y][x + 1] = old;
+        }
     }
 }

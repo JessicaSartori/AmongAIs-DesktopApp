@@ -102,7 +102,6 @@ public class gameController implements Controller {
             }
 
             KeyCode key = keyEvent.getCode();
-            System.out.println("Key: " + key);
             if(key == playerSettings.getMoveUp()) movePlayer('N');
             else if (key == playerSettings.getMoveLeft()) movePlayer('W');
             else if (key == playerSettings.getMoveDown()) movePlayer('S');
@@ -169,20 +168,34 @@ public class gameController implements Controller {
 
     public void movePlayer(Character position) {
         GameServerResponse res = gameServer.sendMOVE(stateMgr.getGameName(), position);
+    public void movePlayer(Character direction) {
+        GameServerResponse res = gameServer.sendMOVE(stateMgr.getGameName(), direction);
 
         switch (res.code) {
-            case FAIL:
+            case FAIL -> {
                 System.err.println(res.freeText);
                 return;
-            case ERROR:
+            }
+            case ERROR -> {
                 lblResponse.setText(res.freeText);
-                //return;
-            case OK:
-                System.out.println(res.freeText);
+                return;
+            }
+            case OK -> System.out.println(res.freeText);
         }
 
         // Should remove in future
-        Controllers.updateMap();
+        //Controllers.updateMap();
+        Integer[] old_position = stateMgr.player.getPosition();
+        stateMgr.map.updatePosition(old_position[0], old_position[1], direction);
+
+        switch (direction) {
+            case 'N' -> old_position[1] -= 1;
+            case 'S' -> old_position[1] += 1;
+            case 'W' -> old_position[0] -= 1;
+            case 'E' -> old_position[0] += 1;
+        }
+        stateMgr.player.setPosition(old_position);
+
         stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
     }
 
