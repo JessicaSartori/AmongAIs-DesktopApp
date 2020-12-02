@@ -59,6 +59,8 @@ public class gameController implements Controller {
 
     @Override
     public void updateContent() {
+        gameServer.setMinDelay(150);
+
         // Prepare the interface
         btnStartMatch.setVisible(stateMgr.getCreator());
         lobbyName.setText(stateMgr.getGameName());
@@ -136,6 +138,7 @@ public class gameController implements Controller {
         GameServerResponse response = gameServer.sendLEAVE(stateMgr.getGameName(), "Done playing");
         if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
         gameServer.closeConnection();
+        gameServer.setMinDelay(500);
 
         chat.closeChat();
 

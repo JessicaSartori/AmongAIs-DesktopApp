@@ -18,19 +18,25 @@ public class GameServerDriver extends SocketDriver {
 
 
     // Last command timestamp (milliseconds)
-    private long lastCommandSent = 0;
+    private long lastCommandSent;
     // Thread to send NOP in case of inactivity
     private Thread connectionSaver = null;
+    // Milliseconds before next command can be sent to Game Server
+    private long MIN_DELAY;
 
-    // Constant - Milliseconds before next command can be sent to Game Server
-    private static final long MIN_DELAY = 500;
     // Constant - Milliseconds of inactivity before NOP is sent
-    private static final long NOP_DELAY = 30*1000;
+    private static final long NOP_DELAY = 40*1000;
 
     // Constructor
     private GameServerDriver() {
         HOSTNAME = "margot.di.unipi.it";
         PORT = 8421;
+        MIN_DELAY = 500;
+        lastCommandSent = 0;
+    }
+
+    public void setMinDelay(long delay) {
+        MIN_DELAY = delay;
     }
 
 
@@ -253,15 +259,6 @@ public class GameServerDriver extends SocketDriver {
         }
     }
 
-    // Send a NOP request in case the last sent request happened more than 30 seconds ago
-    public GameServerResponse sendConditionalNOP(String gameName) {
-        GameServerResponse res = null;
-        if(System.currentTimeMillis() - lastCommandSent > NOP_DELAY) {
-            res = sendNOP(gameName);
-        }
-        return res;
-    }
-
 
     @Override
     public synchronized void openConnection()  {
@@ -271,7 +268,30 @@ public class GameServerDriver extends SocketDriver {
         if(isConnected()) {
             lastCommandSent = 0;
 
-            connectionSaver = new Thread(new NOPSender(10));
+            connectionSaver = new Thread(() -> {
+                System.out.println("NOP Thread: Started");
+
+                long timeToWait = NOP_DELAY;
+
+                try {
+                    while(!Thread.currentThread().isInterrupted()) {
+                        Thread.sleep(timeToWait);
+
+                        long timeSinceLastCommand = System.currentTimeMillis() - lastCommandSent;
+
+                        if(timeSinceLastCommand > NOP_DELAY) {
+                            GameServerResponse res = sendNOP(StateManager.getInstance().getGameName());
+                            if(res.code != ResponseCode.OK) {
+                                System.err.println("Nop Thread: " + res.freeText);
+                                return;
+                            }
+                        } else {
+                            timeToWait = NOP_DELAY - timeSinceLastCommand;
+                        }
+                    }
+                } catch (InterruptedException ignored) { }
+                System.out.println("NOP Thread: Interrupted");
+            });
             connectionSaver.setDaemon(true);
             connectionSaver.start();
             System.out.println("Game Server connection open");
@@ -287,33 +307,5 @@ public class GameServerDriver extends SocketDriver {
         connectionSaver = null;
 
         System.out.println("Game Server connection closed");
-    }
-}
-
-
-// Runnable to maintain the connection to the game server open in case of inactivity
-class NOPSender implements Runnable {
-
-    private final long secondsToWait;
-
-    public NOPSender(long nSeconds) { secondsToWait = nSeconds; }
-
-    @Override
-    public void run() {
-        System.out.println("NOP Thread: Started");
-        try {
-            while(!Thread.currentThread().isInterrupted()) {
-                Thread.sleep(secondsToWait*1000);
-
-                GameServerResponse res = GameServerDriver.getInstance().sendConditionalNOP(StateManager.getInstance().getGameName());
-                if(res == null) continue;
-                if(res.code == ResponseCode.FAIL) {
-                    System.err.println("Nop Thread: " + res.freeText);
-                    return;
-                }
-                System.out.println("Nop Thread: " + res.freeText);
-            }
-        } catch (InterruptedException ignored) { }
-        System.out.println("NOP Thread: Interrupted");
     }
 }
