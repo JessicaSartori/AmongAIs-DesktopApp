@@ -6,6 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 import it.unipi.cs.smartapp.drivers.*;
@@ -36,7 +37,9 @@ public class gameController implements Controller {
     @FXML
     private Canvas mapCanvas;
     @FXML
-    private AnchorPane gamePanel, leftSubPanel, rightSubPanel;
+    private Pane leftSubPanel, rightSubPanel;
+    @FXML
+    private AnchorPane gamePanel;
     @FXML
     private ScrollPane chatPane;
     @FXML
@@ -47,9 +50,6 @@ public class gameController implements Controller {
         playerSettings = PlayerSettings.getInstance();
         gameServer = GameServerDriver.getInstance();
         chatSystem = ChatSystemDriver.getInstance();
-
-        leftSubPanel.setVisible(false);
-        rightSubPanel.setVisible(true);
 
         canvasContext = mapCanvas.getGraphicsContext2D();
         chat = new ChatManager(chatPane);
