@@ -24,6 +24,7 @@ public class Main extends Application {
         r.addScene("settings", "/it/unipi/cs/smartapp/screens/settingsScene.fxml");
         r.addScene("tournaments", "/it/unipi/cs/smartapp/screens/tournamentScene.fxml");
         r.addScene("resultScene", "/it/unipi/cs/smartapp/screens/resultScene.fxml");
+        r.addScene("createScene", "/it/unipi/cs/smartapp/screens/createScene.fxml");
 
         r.show("login");
         r.showStage();

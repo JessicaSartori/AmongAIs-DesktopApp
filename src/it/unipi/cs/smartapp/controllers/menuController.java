@@ -32,6 +32,9 @@ public class menuController implements Controller {
     private void btnPLAYPressed() { Renderer.getInstance().show("joinMatch"); }
 
     @FXML
+    private void btnCreatePressed() { Renderer.getInstance().show("createScene"); }
+
+    @FXML
     private void btnBackPressed() { Renderer.getInstance().show("login"); }
 
     @FXML

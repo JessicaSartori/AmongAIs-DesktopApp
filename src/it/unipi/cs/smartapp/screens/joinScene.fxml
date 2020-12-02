@@ -22,18 +22,12 @@
         <Font size="14.0" />
         </font>
     </TextField>
-
-    <Button layoutX="420.0" layoutY="288.0" mnemonicParsing="false" onAction="#btnCreatePressed" prefHeight="30.0" prefWidth="200.0" text="Create" AnchorPane.topAnchor="290.0">
-        <font>
-        <Font size="13.0" />
-        </font>
-    </Button>
-    <Button layoutX="660.0" layoutY="288.0" mnemonicParsing="false" onAction="#btnJoinPressed" prefHeight="30.0" prefWidth="200.0" text="Join" AnchorPane.topAnchor="290.0">
+    <Button layoutX="417.0" layoutY="287.0" mnemonicParsing="false" onAction="#btnJoinPressed" prefHeight="30.0" prefWidth="200.0" text="Join" AnchorPane.topAnchor="287.0">
         <font>
           <Font size="13.0" />
         </font>
     </Button>
-    <Button layoutX="540.0" layoutY="330.0" mnemonicParsing="false" onAction="#btnSpectatePressed" prefHeight="30.0" prefWidth="200.0" text="Spectate" AnchorPane.topAnchor="330.0">
+    <Button layoutX="664.0" layoutY="287.0" mnemonicParsing="false" onAction="#btnSpectatePressed" prefHeight="30.0" prefWidth="200.0" text="Spectate" AnchorPane.topAnchor="287.0">
         <font>
           <Font size="13.0" />
         </font>

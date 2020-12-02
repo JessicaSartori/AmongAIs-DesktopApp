@@ -37,19 +37,6 @@ public class joinController implements Controller {
     public void backBtnPressed() { Renderer.getInstance().show("mainMenu"); }
 
     @FXML
-    private void btnCreatePressed() {
-        String gameName = gameNameField.getText();
-        errorLabel.setText("");
-
-        if(isValid(gameName) && tryConnect() &&
-                create(gameName) && join(gameName)) {
-
-            stateMgr.setInGame(gameName, true);
-            Renderer.getInstance().show("gameScene");
-        }
-    }
-
-    @FXML
     private void btnJoinPressed() {
         String gameName = gameNameField.getText();
         errorLabel.setText("");
@@ -96,20 +83,6 @@ public class joinController implements Controller {
         gameServer.openConnection();
         if (!gameServer.isConnected()) errorLabel.setText("Cannot connect to game server");
         return gameServer.isConnected();
-    }
-
-    // Send a NEW request and process the response
-    // Return true if the lobby is created, false otherwise
-    private boolean create(String gameName) {
-        GameServerResponse res = gameServer.sendNEW(gameName);
-        switch (res.code) {
-            case ERROR -> errorLabel.setText(res.freeText);
-            case FAIL -> {
-                System.err.println(res.freeText);
-                errorLabel.setText("Cannot create the lobby");
-            }
-        }
-        return (res.code == ResponseCode.OK);
     }
 
     // Send a JOIN request and process the response

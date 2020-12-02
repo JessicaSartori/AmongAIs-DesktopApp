@@ -59,8 +59,8 @@ public class GameServerDriver extends SocketDriver {
     }
 
     // <game> NEW : creates new game
-    public GameServerResponse sendNEW(String gameName) {
-        String command = "NEW " + gameName;
+    public GameServerResponse sendNEW(String gameName, String options) {
+        String command = "NEW " + gameName + " " + options;
         String[] rawResponse = sendCommand(command);
         ResponseCode code = ResponseCode.fromString(rawResponse[0]);
 
