@@ -1,6 +1,5 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.screens.Renderer;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -11,6 +10,7 @@ import javafx.scene.paint.Color;
 
 import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.statemanager.*;
+import it.unipi.cs.smartapp.screens.Renderer;
 
 
 public class gameController implements Controller {
@@ -111,6 +111,7 @@ public class gameController implements Controller {
     @FXML
     private void btnUpdStatusPressed() {
         Controllers.updateStatus(false);
+        updateEnergy();
 
         // Update Game View Values
         if (stateMgr.getGameState() == GameState.ACTIVE && firstTime) {
