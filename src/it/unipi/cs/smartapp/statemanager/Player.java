@@ -5,7 +5,17 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.HashMap;
+import java.util.Map;
+
+
 public class Player {
+
+    public static String usernamePropertyName = "username";
+    public static String teamPropertyName = "team";
+    public static String scorePropertyName = "score";
+    public static String statePropertyName = "state";
+
     private Character symbol = null;
     private Integer[] position = {-1 , -1};
     private Integer loyalty = null;
@@ -16,10 +26,6 @@ public class Player {
     private IntegerProperty score = null;
     private StringProperty state = null;
 
-    public static String usernamePropertyName = "username";
-    public static String teamPropertyName = "team";
-    public static String scorePropertyName = "score";
-    public static String statePropertyName = "state";
 
     /*
      * Constructors
@@ -73,22 +79,38 @@ public class Player {
         return state;
     }
 
-    public void updateWith(String info) {
-        String[] tokens = info.split("[ =]");
+    public void updateWith(Map<String, String> info) {
+        String newSymbol = info.get("symbol");
+        if(newSymbol != null) setSymbol(newSymbol.charAt(0));
 
-        for(int i=0; i < tokens.length; i += 2) {
-            String keyword = tokens[i], value = tokens[i+1];
-            switch (keyword) {
-                case "symbol" -> symbol = value.toCharArray()[0];
-                case "name" -> setUsername(value);
-                case "team" -> setTeam(Integer.parseInt(value));
-                case "loyalty" -> loyalty = Integer.parseInt(value);
-                case "energy" -> energy = Integer.parseInt(value);
-                case "score" -> setScore(Integer.parseInt(value));
-                case "x" -> position[0] = Integer.parseInt(value);
-                case "y" -> position[1] = Integer.parseInt(value);
-                case "state" -> setState(value.toLowerCase());
-            }
-        }
+        String newName = info.get("name");
+        if(newName != null) setUsername(newName);
+
+        String newTeam = info.get("team");
+        if(newTeam != null) setTeam(Integer.parseInt(newTeam));
+
+        String newLoyalty = info.get("loyalty");
+        if(newLoyalty != null) setLoyalty(Integer.parseInt(newLoyalty));
+
+        String newEnergy = info.get("energy");
+        if(newEnergy != null) setEnergy(Integer.parseInt(newEnergy));
+
+        String newScore = info.get("score");
+        if(newScore != null) setScore(Integer.parseInt(newScore));
+
+        String newX = info.get("x");
+        String newY = info.get("y");
+        if(newX != null && newY != null)
+            setPosition(new Integer[]{Integer.parseInt(newX), Integer.parseInt(newY)});
+
+        String newState = info.get("state");
+        if(newState != null) setState(newState.toLowerCase());
+    }
+
+    public static Map<String, String> stringToMap(String info) {
+        HashMap<String, String> map = new HashMap<>();
+        String[] tokens = info.split("[ =]");
+        for(int i=0; i < tokens.length; i += 2) map.put(tokens[i], tokens[i+1]);
+        return map;
     }
 }
