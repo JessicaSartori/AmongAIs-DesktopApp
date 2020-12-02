@@ -44,7 +44,7 @@ public class createController implements Controller {
         lblMessage.setText("");
 
         // Get options for graphical elements
-        String options;
+        String options = "";
         RadioButton TeamRadioButton = (RadioButton) radioTeam.getSelectedToggle();
         String teamB = TeamRadioButton.getText();
         RadioButton MapShapeRadioButton = (RadioButton) radioShape.getSelectedToggle();

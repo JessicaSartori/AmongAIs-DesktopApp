@@ -4,5 +4,5 @@ public interface Controller {
     /*
      * Update the scene content
      */
-     default void updateContent() {};
+     default void updateContent() {}
 }

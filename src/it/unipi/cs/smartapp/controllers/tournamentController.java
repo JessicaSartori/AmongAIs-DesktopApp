@@ -1,14 +1,13 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.drivers.ChatSystemDriver;
-import it.unipi.cs.smartapp.drivers.LeagueManagerDriver;
-import it.unipi.cs.smartapp.screens.Renderer;
-import it.unipi.cs.smartapp.statemanager.ChatMessage;
-import it.unipi.cs.smartapp.statemanager.StateManager;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+
+import it.unipi.cs.smartapp.drivers.ChatSystemDriver;
+import it.unipi.cs.smartapp.drivers.LeagueManagerDriver;
+import it.unipi.cs.smartapp.screens.Renderer;
+
 
 public class tournamentController implements Controller {
 
@@ -36,12 +35,12 @@ public class tournamentController implements Controller {
     }
 
     @FXML
-    private void btnGoBackPressed(ActionEvent event) {
+    private void btnGoBackPressed() {
         Renderer.getInstance().show("mainMenu");
     }
 
     @FXML
-    private void btnJoinPressed(ActionEvent event) {
+    private void btnJoinPressed() {
         if (txtTournamentName.getText().isBlank()) {
             lblMessage.setStyle("-fx-text-fill: red");
             lblMessage.setText("The tournament name must be valid.");
@@ -53,7 +52,7 @@ public class tournamentController implements Controller {
     }
 
     @FXML
-    private void btnWithdrawPressed(ActionEvent event) {
+    private void btnWithdrawPressed() {
         if (txtTournamentName.getText().isBlank()) {
             lblMessage.setStyle("-fx-text-fill: red");
             lblMessage.setText("The tournament name must be valid.");

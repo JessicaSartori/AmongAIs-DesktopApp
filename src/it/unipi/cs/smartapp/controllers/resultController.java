@@ -1,15 +1,16 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.screens.Renderer;
-import it.unipi.cs.smartapp.statemanager.Player;
-import it.unipi.cs.smartapp.statemanager.StateManager;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 
+import it.unipi.cs.smartapp.screens.Renderer;
+import it.unipi.cs.smartapp.statemanager.Player;
+import it.unipi.cs.smartapp.statemanager.StateManager;
+
+
 public class resultController implements Controller {
+
     private StateManager stateManager;
     private TableManager table;
 
@@ -34,7 +35,7 @@ public class resultController implements Controller {
     }
 
     @FXML
-    private void btnGoBackPressed(ActionEvent event) {
+    private void btnGoBackPressed() {
         Renderer.getInstance().show("mainMenu");
     }
 }
