@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 
@@ -48,6 +49,7 @@ public class StateManager {
         players.put(currentUsername, player);
 
         playersList = FXCollections.observableArrayList();
+        playersList.add(player);
 
         gameStatus = new GameStatus(gameName, created);
         map = new MapStatus();
@@ -68,30 +70,39 @@ public class StateManager {
         }
     }
 
-    public void updatePlayerStatus(String info) {
-        Player pl = new Player();
-        pl.updateWith(info);
+    public synchronized void updatePlayerStatus(String info) {
+        Map<String, String> playerInfo = Player.stringToMap(info);
 
-        if (pl.getUsername().equals(currentUsername)) {
-            playersList.remove(player);
-            player.updateWith(info);
-            playersList.add(player);
+        String username = playerInfo.get("name");
+        if (username.equals(currentUsername)) {
+            // Current player status
+            player.updateWith(playerInfo);
         } else {
-            Player old = players.put(pl.getUsername(), pl);
-            if (old != null) {
-                playersList.remove(old);
+            // Other player status
+            Player pl = players.get(username);
+
+            if(pl != null) {
+                // Player already in the list
+                pl.updateWith(playerInfo);
+            } else {
+                // New player
+                pl = new Player();
+                pl.updateWith(playerInfo);
+                players.put(pl.getUsername(), pl);
+                playersList.add(pl);
             }
-            playersList.add(pl);
         }
     }
 
-    public void addNewPlayer(String name) {
+    public synchronized void addNewPlayer(String name) {
+        if(players.get(name) != null) return;
+
         Player pl = new Player(name);
         players.put(pl.getUsername(), pl);
         playersList.add(pl);
     }
 
-    public void removePlayer(String name) {
+    public synchronized void removePlayer(String name) {
         Player pl = players.remove(name);
         playersList.remove(pl);
     }
