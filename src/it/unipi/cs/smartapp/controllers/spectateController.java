@@ -49,6 +49,8 @@ public class spectateController implements Controller {
 
     @Override
     public void updateContent() {
+        GameServerDriver.getInstance().setMinDelay(50);
+
         // Prepare the interface
         lobbyName.setText(stateMgr.getGameName());
 
@@ -90,6 +92,7 @@ public class spectateController implements Controller {
     public void btnGoBackPressed() {
         automaticActions.shutdownNow();
         GameServerDriver.getInstance().closeConnection();
+        GameServerDriver.getInstance().setMinDelay(500);
 
         chat.closeChat();
 

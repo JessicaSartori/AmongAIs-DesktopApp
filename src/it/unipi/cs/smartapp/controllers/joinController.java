@@ -42,7 +42,7 @@ public class joinController implements Controller {
         errorLabel.setText("");
 
         if(isValid(gameName) && tryConnect() &&
-                join(gameName)) {
+                join(gameName, 'H')) {
 
             stateMgr.setInGame(gameName, false);
             Renderer.getInstance().show("gameScene");
@@ -53,20 +53,12 @@ public class joinController implements Controller {
     private void btnSpectatePressed() {
         String gameName = gameNameField.getText();
         errorLabel.setText("");
-        if(!isValid(gameName) || !tryConnect()) return;
 
-        // Check lobby existence
-        GameServerResponse res = gameServer.sendSTATUS(gameName);
-        switch (res.code) {
-            case ERROR -> errorLabel.setText(res.freeText);
-            case FAIL -> {
-                System.err.println(res.freeText);
-                errorLabel.setText("Cannot spectate the lobby");
-            }
-            case OK -> {
-                stateMgr.setInGame(gameName, false);
-                Renderer.getInstance().show("spectateScene");
-            }
+        if(isValid(gameName) && tryConnect() &&
+                join(gameName, 'O')) {
+
+            stateMgr.setInGame(gameName, false);
+            Renderer.getInstance().show("spectateScene");
         }
     }
 
@@ -87,13 +79,14 @@ public class joinController implements Controller {
 
     // Send a JOIN request and process the response
     // Return true if the request succeeded, false otherwise
-    private boolean join(String gameName) {
-        GameServerResponse res = gameServer.sendJOIN(gameName, stateMgr.getUsername(), 'H', stateMgr.getPrivateUsername());
+    private boolean join(String gameName, Character nature) {
+        GameServerResponse res = gameServer.sendJOIN(gameName, stateMgr.getUsername(), nature, stateMgr.getPrivateUsername());
         switch (res.code) {
             case ERROR -> errorLabel.setText(res.freeText);
             case FAIL -> {
                 System.err.println(res.freeText);
-                errorLabel.setText("Cannot join the lobby");
+                if(nature == 'H') errorLabel.setText("Cannot join the lobby");
+                else errorLabel.setText("Cannot spectate the lobby");
             }
         }
         return (res.code == ResponseCode.OK);

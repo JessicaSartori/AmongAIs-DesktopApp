@@ -16,6 +16,11 @@
          <Font size="18.0" />
       </font>
    </Label>
+   <Button layoutX="500.0" layoutY="257.0" mnemonicParsing="false" onAction="#btnCreatePressed" prefHeight="30.0" prefWidth="280.0" text="Create a new game">
+      <font>
+         <Font size="13.0" />
+      </font>
+   </Button>
    <Button layoutX="500.0" layoutY="300.0" mnemonicParsing="false" onAction="#btnPLAYPressed" prefHeight="30.0" prefWidth="280.0" text="Join or spectate" AnchorPane.topAnchor="300.0">
       <font>
          <Font size="13.0" />
@@ -42,11 +47,6 @@
       </font>
    </Button>
    <Button layoutX="1134.0" layoutY="31.0" mnemonicParsing="false" onAction="#btnGameSettings" prefHeight="29.0" prefWidth="100.0" text="Settings" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="30.0">
-      <font>
-         <Font size="13.0" />
-      </font>
-   </Button>
-   <Button layoutX="500.0" layoutY="257.0" mnemonicParsing="false" onAction="#btnCreatePressed" prefHeight="30.0" prefWidth="280.0" text="Create a new game">
       <font>
          <Font size="13.0" />
       </font>
