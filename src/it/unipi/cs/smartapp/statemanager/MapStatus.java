@@ -13,14 +13,17 @@ import java.util.HashMap;
 
 public class MapStatus {
 
-    // Constant - Size of canvas in gameScene
-    private static final int CANVAS_SIZE = 650;
+    // Sizes of canvas in gameScene
+    private Integer canvasHeight = null, canvasWidth = null;
 
     private Character[][] gameMap = null;
     private Integer mapSize = null;
     private final HashMap<Character, Image> sprites;
     private boolean loaded;
 
+    /*
+     * Constructors
+     */
     public MapStatus(){
         sprites = new HashMap<>();
         loaded = false;
@@ -31,13 +34,18 @@ public class MapStatus {
      */
     public void setGameMap(String[] rows) { gameMap = stringToCharMap(rows); }
     public void setMapSize(Integer s) { mapSize = s; }
+    public void setCanvasHeight(Integer h) { canvasHeight = h; }
+    public void setCanvasWidth(Integer w) { canvasWidth = w; }
 
     /*
      * Getters
      */
     public Character[][] getGameMap(){ return gameMap; }
     public Integer getMapSize(){ return mapSize; }
-    public Integer getCellSize(){ return CANVAS_SIZE / (mapSize + 2); }
+    public Integer getCellSize(){
+        // Currently square
+        return canvasHeight / (mapSize + 2);
+    }
 
     /*
      * Method to parse map
@@ -57,8 +65,10 @@ public class MapStatus {
      * Methods to draw the map on canvas
      */
     public void drawMap(GraphicsContext canvasContext, Canvas mapCanvas, ObservableList<Player> players, String currentUser) {
-        // First time, load sprites
+        // First time, adjust map size and load sprites
         if(!loaded){
+            setCanvasHeight((int) mapCanvas.getHeight());
+            setCanvasWidth((int) mapCanvas.getWidth());
             loadSprites();
             loaded = true;
         }
@@ -118,7 +128,7 @@ public class MapStatus {
 
     public void drawShot(GraphicsContext canvasContext, Integer[] playerPos, Integer team, Character shotDirection, Character landed, Integer prevEnergy) {
         Integer c = playerPos[0], r = playerPos[1];
-        char playerKey = ' ';
+        Character playerKey = ' ', explosionKey = ' ';
 
         if(Character.isUpperCase(gameMap[r][c])) canvasContext.setStroke(Color.web("#B30000"));
         else canvasContext.setStroke(Color.BLUE);
@@ -126,33 +136,41 @@ public class MapStatus {
         switch (shotDirection) {
             case 'N' -> {
                 if(landed == '?') r = -1;
-                else if(landed == '.') r -= prevEnergy;
+                else if(landed == '.' || landed == '~' || landed == '@') r -= prevEnergy;
                 else while(gameMap[r][c] != landed) r--;
                 playerKey = (team == 0) ? '8' : '7';
             }
             case 'S' -> {
                 if(landed == '?') r = mapSize;
-                else if(landed == '.') r += prevEnergy;
+                else if(landed == '.' || landed == '~' || landed == '@') r += prevEnergy;
                 else while(gameMap[r][c] != landed) r++;
                 playerKey = (team == 0) ? '2' : '1';
             }
             case 'W' -> {
                 if(landed == '?') c = -1;
-                else if(landed == '.') c -= prevEnergy;
+                else if(landed == '.' || landed == '~' || landed == '@') c -= prevEnergy;
                 else while(gameMap[r][c] != landed) c--;
                 playerKey = (team == 0) ? '4' : '3';
             }
             case 'E' -> {
                 if(landed == '?') c = mapSize;
-                else if(landed == '.') c += prevEnergy;
+                else if(landed == '.' || landed == '~' || landed == '@') c += prevEnergy;
                 else while(gameMap[r][c] != landed) c++;
                 playerKey = (team == 0) ? '6' : '5';
             }
         }
 
+        // Turn the player correctly
         Image player = sprites.get(playerKey);
         drawCell(canvasContext, playerPos[0] + 1, playerPos[1] + 1, player);
-        Image explosion = sprites.get('*');
+        // Draw explosion according to terrain
+        switch (landed) {
+            case '~' -> explosionKey = '-';
+            case '@' -> explosionKey = '+';
+            case '?' -> explosionKey = '/';
+            default -> explosionKey = '*';
+        }
+        Image explosion = sprites.get(explosionKey);
         drawCell(canvasContext, c + 1, r + 1, explosion);
 
         // Redraw square around current player
@@ -184,9 +202,17 @@ public class MapStatus {
         icon = new Image("it/unipi/cs/smartapp/sprites/flagBlue.png", cellSize, cellSize, true, true); // Flag team 1
         sprites.put('x', icon);
 
+        // Explosions
         icon = new Image("it/unipi/cs/smartapp/sprites/explosion.png", cellSize, cellSize, true, true);
         sprites.put('*', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/explosionOcean.png", cellSize, cellSize, true, true);
+        sprites.put('+', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/explosionRiver.png", cellSize, cellSize, true, true);
+        sprites.put('-', icon);
+        icon = new Image("it/unipi/cs/smartapp/sprites/explosionTransparent.png", cellSize, cellSize, true, true);
+        sprites.put('/', icon);
 
+        // Players
         icon = new Image("it/unipi/cs/smartapp/sprites/playerDownBlue.png", cellSize, cellSize, true, true);
         sprites.put('1', icon);
         icon = new Image("it/unipi/cs/smartapp/sprites/playerDownRed.png", cellSize, cellSize, true, true);
