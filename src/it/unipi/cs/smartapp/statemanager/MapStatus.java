@@ -5,6 +5,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 
 import java.util.HashMap;
@@ -59,6 +61,9 @@ public class MapStatus {
         // Clear canvas
         canvasContext.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
 
+        // Increase font size and make it bold
+        canvasContext.setFont(Font.font(canvasContext.getFont().getFamily(), FontWeight.BOLD, 15));
+
         // Draw map
         int xCanvas = cellSize, yCanvas = cellSize;
         for(int r = 0; r < mapSize; r++) {
@@ -69,7 +74,7 @@ public class MapStatus {
                 // Write names on players
                 String username = findName(players, gameMap[r][c]);
                 if(username != null) {
-                    if(Character.isUpperCase(gameMap[r][c])) { canvasContext.setFill(Color.RED); canvasContext.setStroke(Color.RED);}
+                    if(Character.isUpperCase(gameMap[r][c])) { canvasContext.setFill(Color.web("#B30000")); canvasContext.setStroke(Color.web("#B30000"));}
                     else { canvasContext.setFill(Color.BLUE); canvasContext.setStroke(Color.BLUE); }
 
                     canvasContext.fillText(username, xCanvas - username.length()/2, yCanvas - username.length()/2);
@@ -108,6 +113,9 @@ public class MapStatus {
         Integer c = playerPos[0], r = playerPos[1];
         char playerKey = ' ';
 
+        if(Character.isUpperCase(gameMap[r][c])) canvasContext.setStroke(Color.web("#B30000"));
+        else canvasContext.setStroke(Color.BLUE);
+
         switch (shotDirection) {
             case 'N' -> {
                 if(landed == '?') r = -1;
@@ -139,6 +147,11 @@ public class MapStatus {
         drawCell(canvasContext, playerPos[0] + 1, playerPos[1] + 1, player);
         Image explosion = sprites.get('*');
         drawCell(canvasContext, c + 1, r + 1, explosion);
+
+        // Redraw square around current player
+        Integer cellSize = getCellSize();
+        int xCanvas = (playerPos[0] + 1)*cellSize, yCanvas = (playerPos[1] + 1)*cellSize;
+        canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
     }
 
     public void loadSprites(){

@@ -166,8 +166,6 @@ public class gameController implements Controller {
         else panel.setVisible(true);
     }
 
-    public void movePlayer(Character position) {
-        GameServerResponse res = gameServer.sendMOVE(stateMgr.getGameName(), position);
     public void movePlayer(Character direction) {
         GameServerResponse res = gameServer.sendMOVE(stateMgr.getGameName(), direction);
 
