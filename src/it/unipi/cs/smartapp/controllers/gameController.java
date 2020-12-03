@@ -13,6 +13,9 @@ import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.statemanager.*;
 import it.unipi.cs.smartapp.screens.Renderer;
 
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 
 public class gameController implements Controller {
     private StateManager stateMgr;
@@ -25,6 +28,7 @@ public class gameController implements Controller {
     private TableManager table;
 
     private Boolean firstTime = true;
+    private ScheduledThreadPoolExecutor automaticActions;
 
     @FXML
     private Label lobbyName, playerName, playerLoyalty, playerEnergy, playerScore, lblResponse;
@@ -113,33 +117,30 @@ public class gameController implements Controller {
             else if (key == KeyCode.P) flipVisiblePane(leftSubPanel);
             else if (key == KeyCode.ENTER) flipVisiblePane(rightSubPanel);
         });
+
+        // Setup automatic LOOK and STATUS
+        automaticActions = new ScheduledThreadPoolExecutor(2);
+        automaticActions.setRemoveOnCancelPolicy(true);
+        automaticActions.scheduleWithFixedDelay(this::updateStatus,
+                500, PlayerSettings.getInstance().getStatusFreq(),
+                TimeUnit.MILLISECONDS
+        );
+        automaticActions.scheduleWithFixedDelay(this::updateMap,
+                500, PlayerSettings.getInstance().getMapFreq(),
+                TimeUnit.MILLISECONDS
+        );
     }
 
     @FXML
-    private void btnUpdStatusPressed() {
-        Controllers.updateStatus(false);
-        updateEnergy();
-
-        // Update Game View Values
-        if (stateMgr.getGameState() == GameState.ACTIVE && firstTime) {
-            lblResponse.setText("Game started, now you can move and shoot!");
-            firstTime = false;
-        }
-
-        // Check finished game
-        if (stateMgr.getGameState() == GameState.FINISHED) {
-            Renderer.getInstance().show("resultScene");
-        }
-    }
+    private void btnUpdStatusPressed() { updateStatus(); }
 
     @FXML
-    private void btnUpdMapPressed() {
-        Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
-    }
+    private void btnUpdMapPressed() { updateMap(); }
 
     @FXML
     public void btnGoBackPressed() {
+        automaticActions.shutdownNow();
+
         GameServerResponse response = gameServer.sendLEAVE(stateMgr.getGameName(), "Done playing");
         if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
         gameServer.closeConnection();
@@ -161,6 +162,28 @@ public class gameController implements Controller {
         txtMessage.setText("");
     }
 
+    public void updateStatus() {
+        Controllers.updateStatus(false);
+        updateEnergy();
+
+        // Update Game View Values
+        if (stateMgr.getGameState() == GameState.ACTIVE && firstTime) {
+            lblResponse.setTextFill(Color.GREEN);
+            lblResponse.setText("GAME STARTED");
+            firstTime = false;
+        }
+
+        // Check finished game
+        if (stateMgr.getGameState() == GameState.FINISHED) {
+            Renderer.getInstance().show("resultScene");
+        }
+    }
+
+    public void updateMap() {
+        Controllers.updateMap();
+        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
+    }
+
     public void flipVisiblePane(Pane panel){
         if(panel.isVisible()) panel.setVisible(false);
         else panel.setVisible(true);
@@ -178,11 +201,8 @@ public class gameController implements Controller {
                 lblResponse.setText(res.freeText);
                 return;
             }
-            case OK -> System.out.println(res.freeText);
         }
 
-        // Should remove in future
-        //Controllers.updateMap();
         Integer[] old_position = stateMgr.player.getPosition();
         stateMgr.map.updatePosition(old_position[0], old_position[1], direction);
 
@@ -209,15 +229,11 @@ public class gameController implements Controller {
                 lblResponse.setText(res.freeText);
                 return;
             }
-            case OK -> System.out.println(res.freeText);
         }
 
         Integer energy = stateMgr.player.getEnergy();
         Character landed = (Character) res.data;
         System.out.println("Ok shot. Landed on: " + landed);
-
-        // Should remove in future
-        Controllers.updateStatus(false);
 
         stateMgr.map.drawShot(canvasContext, stateMgr.player.getPosition(), stateMgr.player.getTeam(), direction, landed, energy);
     }
@@ -239,9 +255,6 @@ public class gameController implements Controller {
         message.setTitle("Game started!");
         message.setContentText("The minimum number of player is reached, the game has started!");
         message.showAndWait();
-
-        // Should remove in future
-        Controllers.updateStatus(false);
     }
 
     // Update ProgressBar correctly
@@ -294,6 +307,5 @@ public class gameController implements Controller {
         }
         lblResponse.setTextFill(Color.GREEN);
         lblResponse.setText(response.freeText);
-
     }
 }
