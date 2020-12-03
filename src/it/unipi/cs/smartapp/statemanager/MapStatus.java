@@ -19,10 +19,11 @@ public class MapStatus {
     private Character[][] gameMap = null;
     private Integer mapSize = null;
     private final HashMap<Character, Image> sprites;
+    private boolean loaded;
 
     public MapStatus(){
         sprites = new HashMap<>();
-        loadSprites();
+        loaded = false;
     }
 
     /*
@@ -56,6 +57,12 @@ public class MapStatus {
      * Methods to draw the map on canvas
      */
     public void drawMap(GraphicsContext canvasContext, Canvas mapCanvas, ObservableList<Player> players, String currentUser) {
+        // First time, load sprites
+        if(!loaded){
+            loadSprites();
+            loaded = true;
+        }
+
         Integer cellSize = getCellSize();
 
         // Clear canvas
@@ -155,45 +162,46 @@ public class MapStatus {
     }
 
     public void loadSprites(){
-        Image icon = new Image("it/unipi/cs/smartapp/sprites/transparent.png");
+        Integer cellSize = getCellSize();
+        Image icon = new Image("it/unipi/cs/smartapp/sprites/transparent.png", cellSize, cellSize, true, true);
         sprites.put(' ', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/grass.png"); // Grass
+        icon = new Image("it/unipi/cs/smartapp/sprites/grass.png", cellSize, cellSize, true, true); // Grass
         sprites.put('.', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/wall.png"); // Wall
+        icon = new Image("it/unipi/cs/smartapp/sprites/wall.png", cellSize, cellSize, true, true); // Wall
         sprites.put('#', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/river.png"); // River
+        icon = new Image("it/unipi/cs/smartapp/sprites/river.png", cellSize, cellSize, true, true); // River
         sprites.put('~', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/ocean.png"); // Ocean
+        icon = new Image("it/unipi/cs/smartapp/sprites/ocean.png", cellSize, cellSize, true, true); // Ocean
         sprites.put('@', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/trap.png"); // Trap
+        icon = new Image("it/unipi/cs/smartapp/sprites/trap.png", cellSize, cellSize, true, true); // Trap
         sprites.put('!', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/energy.png"); // Energy recharge
+        icon = new Image("it/unipi/cs/smartapp/sprites/energy.png", cellSize, cellSize, true, true); // Energy recharge
         sprites.put('$', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/barrier.png"); // Barrier
+        icon = new Image("it/unipi/cs/smartapp/sprites/barrier.png", cellSize, cellSize, true, true); // Barrier
         sprites.put('&', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/flagRed.png"); // Flag team 0
+        icon = new Image("it/unipi/cs/smartapp/sprites/flagRed.png", cellSize, cellSize, true, true); // Flag team 0
         sprites.put('X', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/flagBlue.png"); // Flag team 1
+        icon = new Image("it/unipi/cs/smartapp/sprites/flagBlue.png", cellSize, cellSize, true, true); // Flag team 1
         sprites.put('x', icon);
 
-        icon = new Image("it/unipi/cs/smartapp/sprites/explosion.png");
+        icon = new Image("it/unipi/cs/smartapp/sprites/explosion.png", cellSize, cellSize, true, true);
         sprites.put('*', icon);
 
-        icon = new Image("it/unipi/cs/smartapp/sprites/playerDownBlue.png");
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerDownBlue.png", cellSize, cellSize, true, true);
         sprites.put('1', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/playerDownRed.png");
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerDownRed.png", cellSize, cellSize, true, true);
         sprites.put('2', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/playerLeftBlue.png");
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerLeftBlue.png", cellSize, cellSize, true, true);
         sprites.put('3', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/playerLeftRed.png");
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerLeftRed.png", cellSize, cellSize, true, true);
         sprites.put('4', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/playerRightBlue.png");
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerRightBlue.png", cellSize, cellSize, true, true);
         sprites.put('5', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/playerRightRed.png");
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerRightRed.png", cellSize, cellSize, true, true);
         sprites.put('6', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/playerTopBlue.png");
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerTopBlue.png", cellSize, cellSize, true, true);
         sprites.put('7', icon);
-        icon = new Image("it/unipi/cs/smartapp/sprites/playerTopRed.png");
+        icon = new Image("it/unipi/cs/smartapp/sprites/playerTopRed.png", cellSize, cellSize, true, true);
         sprites.put('8', icon);
     }
 
