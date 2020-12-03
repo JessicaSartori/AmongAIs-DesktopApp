@@ -4,6 +4,7 @@ import it.unipi.cs.smartapp.drivers.GameServerDriver;
 import it.unipi.cs.smartapp.drivers.GameServerResponse;
 import it.unipi.cs.smartapp.drivers.ResponseCode;
 import it.unipi.cs.smartapp.statemanager.StateManager;
+import javafx.scene.layout.Pane;
 
 
 public class Controllers {
@@ -51,5 +52,11 @@ public class Controllers {
         System.out.println(response.freeText);
 
         stateMgr.map.setGameMap((String[]) response.data);
+    }
+
+    static void flipVisiblePane(Pane panel){
+        if(panel.isVisible()) panel.setVisible(false);
+        else panel.setVisible(true);
+        panel.toFront();
     }
 }

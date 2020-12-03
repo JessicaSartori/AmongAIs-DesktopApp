@@ -18,6 +18,10 @@ public class PlayerSettings {
     private KeyCode shootLeft = null;
     private KeyCode shootRight = null;
 
+    // Side panels Key Bindings
+    private KeyCode flipLeft = null;
+    private KeyCode flipRight = null;
+
     // Map & Status Frequencies
     private Integer mapFreq = null;
     private Integer statusFreq = null;
@@ -35,12 +39,15 @@ public class PlayerSettings {
         shootUp = KeyCode.I; shootDown = KeyCode.K;
         shootLeft = KeyCode.J; shootRight = KeyCode.L;
 
+        flipLeft = KeyCode.P; flipRight = KeyCode.ENTER;
+
         mapFreq = 1000; statusFreq = 1000;
     }
 
     public boolean isAlreadySet(KeyCode key) {
         return key == moveUp || key == moveDown || key == moveLeft || key == moveRight ||
-                key == shootUp || key == shootDown || key == shootLeft || key == shootRight;
+                key == shootUp || key == shootDown || key == shootLeft || key == shootRight ||
+                key == flipLeft || key == flipRight;
     }
 
     /*
@@ -54,6 +61,8 @@ public class PlayerSettings {
     public void setShootDown(KeyCode down) { shootDown = down; }
     public void setShootLeft(KeyCode left) { shootLeft = left; }
     public void setShootRight(KeyCode right) { shootRight = right; }
+    public void setFlipLeft(KeyCode left) { flipLeft = left; }
+    public void setFlipRight(KeyCode right) { flipRight = right; }
     public void setMapFreq(Integer freq) { mapFreq = freq; }
     public void setStatusFreq(Integer freq) { statusFreq = freq; }
 
@@ -68,6 +77,8 @@ public class PlayerSettings {
     public KeyCode getShootDown() { return shootDown; }
     public KeyCode getShootLeft() { return shootLeft; }
     public KeyCode getShootRight() { return shootRight; }
+    public KeyCode getFlipLeft() { return flipLeft; }
+    public KeyCode getFlipRight() { return flipRight; }
     public Integer getMapFreq() { return mapFreq; }
     public Integer getStatusFreq() { return statusFreq; }
 }

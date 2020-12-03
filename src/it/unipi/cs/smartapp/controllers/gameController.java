@@ -59,6 +59,9 @@ public class gameController implements Controller {
         chat = new ChatManager(chatPane);
         table = new TableManager(tblPlayers);
 
+        leftSubPanel.toFront();
+        rightSubPanel.toFront();
+
         lblResponse.setText("");
 
         System.out.println("Game Controller done");
@@ -95,8 +98,7 @@ public class gameController implements Controller {
         updateEnergy();
 
         // Update the map
-        Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
+        updateMap();
 
         // Keyboard events
         gamePanel.setOnKeyPressed(keyEvent -> {
@@ -114,8 +116,8 @@ public class gameController implements Controller {
             else if (key == playerSettings.getShootLeft()) tryToShoot('W');
             else if (key == playerSettings.getShootDown()) tryToShoot('S');
             else if (key == playerSettings.getShootRight()) tryToShoot('E');
-            else if (key == KeyCode.P) flipVisiblePane(leftSubPanel);
-            else if (key == KeyCode.ENTER) flipVisiblePane(rightSubPanel);
+            else if (key == playerSettings.getFlipLeft()) Controllers.flipVisiblePane(leftSubPanel);
+            else if (key == playerSettings.getFlipRight()) Controllers.flipVisiblePane(rightSubPanel);
         });
 
         // Setup automatic LOOK and STATUS
@@ -182,11 +184,6 @@ public class gameController implements Controller {
     public void updateMap() {
         Controllers.updateMap();
         stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
-    }
-
-    public void flipVisiblePane(Pane panel){
-        if(panel.isVisible()) panel.setVisible(false);
-        else panel.setVisible(true);
     }
 
     public void movePlayer(Character direction) {

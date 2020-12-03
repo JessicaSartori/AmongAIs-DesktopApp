@@ -1,5 +1,6 @@
 package it.unipi.cs.smartapp.controllers;
 
+import it.unipi.cs.smartapp.statemanager.GameState;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,6 +13,9 @@ import it.unipi.cs.smartapp.drivers.GameServerDriver;
 import it.unipi.cs.smartapp.statemanager.StateManager;
 import it.unipi.cs.smartapp.statemanager.PlayerSettings;
 import it.unipi.cs.smartapp.statemanager.Player;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class spectateController implements Controller {
 
     private StateManager stateMgr;
+    private PlayerSettings playerSettings;
 
     private GraphicsContext canvasContext;
     private ChatManager chat;
@@ -30,7 +35,11 @@ public class spectateController implements Controller {
     @FXML
     private Label lobbyName;
     @FXML
-    private Canvas gameCanvas;
+    private Canvas mapCanvas;
+    @FXML
+    private Pane leftSubPanel, rightSubPanel;
+    @FXML
+    private AnchorPane spectatePanel;
     @FXML
     private ScrollPane chatPane;
     @FXML
@@ -39,10 +48,14 @@ public class spectateController implements Controller {
 
     public void initialize() {
         stateMgr = StateManager.getInstance();
+        playerSettings = PlayerSettings.getInstance();
 
-        canvasContext = gameCanvas.getGraphicsContext2D();
+        canvasContext = mapCanvas.getGraphicsContext2D();
         chat = new ChatManager(chatPane);
         table = new TableManager(tblPlayers);
+
+        leftSubPanel.toFront();
+        rightSubPanel.toFront();
 
         System.out.println("Spectate Controller done");
     }
@@ -66,6 +79,13 @@ public class spectateController implements Controller {
         // Initialize map
         updateMap();
 
+        // Keyboard events
+        spectatePanel.setOnKeyPressed(keyEvent -> {
+            KeyCode key = keyEvent.getCode();
+            if (key == playerSettings.getFlipLeft()) Controllers.flipVisiblePane(leftSubPanel);
+            else if (key == playerSettings.getFlipRight()) Controllers.flipVisiblePane(rightSubPanel);
+        });
+
         // Setup automatic LOOK and STATUS
         automaticActions = new ScheduledThreadPoolExecutor(2);
         automaticActions.setRemoveOnCancelPolicy(true);
@@ -85,7 +105,7 @@ public class spectateController implements Controller {
 
     private void updateMap() {
         Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, gameCanvas, stateMgr.playersList, null);
+        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, null);
     }
 
     @FXML
