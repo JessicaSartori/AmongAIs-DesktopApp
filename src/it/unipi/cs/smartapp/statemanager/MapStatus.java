@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class MapStatus {
 
     // Sizes of canvas in gameScene
-    private Integer canvasHeight = null, canvasWidth = null;
+    private Double canvasHeight = null, canvasWidth = null;
 
     private Character[][] gameMap = null;
     private Integer mapSize = null;
@@ -22,7 +22,7 @@ public class MapStatus {
     private boolean loaded;
 
     /*
-     * Constructors
+     * Constructor
      */
     public MapStatus(){
         sprites = new HashMap<>();
@@ -34,18 +34,15 @@ public class MapStatus {
      */
     public void setGameMap(String[] rows) { gameMap = stringToCharMap(rows); }
     public void setMapSize(Integer s) { mapSize = s; }
-    public void setCanvasHeight(Integer h) { canvasHeight = h; }
-    public void setCanvasWidth(Integer w) { canvasWidth = w; }
+    public void setCanvasHeight(Double h) { canvasHeight = h; }
+    public void setCanvasWidth(Double w) { canvasWidth = w; }
 
     /*
      * Getters
      */
     public Character[][] getGameMap(){ return gameMap; }
     public Integer getMapSize(){ return mapSize; }
-    public Integer getCellSize(){
-        // Currently square
-        return canvasHeight / (mapSize + 2);
-    }
+    public Double getCellSize(){ return canvasHeight / (mapSize + 2); }
 
     /*
      * Method to parse map
@@ -67,22 +64,22 @@ public class MapStatus {
     public void drawMap(GraphicsContext canvasContext, Canvas mapCanvas, ObservableList<Player> players, String currentUser) {
         // First time, adjust map size and load sprites
         if(!loaded){
-            setCanvasHeight((int) mapCanvas.getHeight());
-            setCanvasWidth((int) mapCanvas.getWidth());
+            setCanvasHeight(mapCanvas.getHeight());
+            setCanvasWidth(mapCanvas.getWidth());
             loadSprites();
             loaded = true;
         }
 
-        Integer cellSize = getCellSize();
+        Double cellSize = getCellSize();
 
         // Clear canvas
-        canvasContext.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
+        canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
 
         // Increase font size and make it bold
         canvasContext.setFont(Font.font(canvasContext.getFont().getFamily(), FontWeight.BOLD, 15));
 
         // Draw map
-        int xCanvas = cellSize, yCanvas = cellSize;
+        Double xCanvas = cellSize, yCanvas = cellSize;
         for(int r = 0; r < mapSize; r++) {
             for (int c = 0; c < mapSize; c++) {
                 Image sprite = setSprite(gameMap[r][c]);
@@ -114,8 +111,8 @@ public class MapStatus {
     }
 
     public void drawCell(GraphicsContext canvasContext, Integer x, Integer y, Image image) {
-        Integer cellSize = getCellSize();
-        int xCanvas = x*cellSize, yCanvas = y*cellSize;
+        Double cellSize = getCellSize();
+        Double xCanvas = x*cellSize, yCanvas = y*cellSize;
 
         canvasContext.drawImage(image, xCanvas, yCanvas, cellSize, cellSize);
     }
@@ -174,13 +171,13 @@ public class MapStatus {
         drawCell(canvasContext, c + 1, r + 1, explosion);
 
         // Redraw square around current player
-        Integer cellSize = getCellSize();
-        int xCanvas = (playerPos[0] + 1)*cellSize, yCanvas = (playerPos[1] + 1)*cellSize;
+        Double cellSize = getCellSize();
+        Double xCanvas = (playerPos[0] + 1)*cellSize, yCanvas = (playerPos[1] + 1)*cellSize;
         canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
     }
 
     public void loadSprites(){
-        Integer cellSize = getCellSize();
+        Double cellSize = getCellSize();
         Image icon = new Image("it/unipi/cs/smartapp/sprites/transparent.png", cellSize, cellSize, true, true);
         sprites.put(' ', icon);
         icon = new Image("it/unipi/cs/smartapp/sprites/grass.png", cellSize, cellSize, true, true); // Grass
