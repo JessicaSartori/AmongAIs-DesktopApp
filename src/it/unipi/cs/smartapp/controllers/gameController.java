@@ -1,5 +1,6 @@
 package it.unipi.cs.smartapp.controllers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -49,6 +50,7 @@ public class gameController implements Controller {
     @FXML
     private TableView<Player> tblPlayers;
 
+
     public void initialize() {
         stateMgr = StateManager.getInstance();
         playerSettings = PlayerSettings.getInstance();
@@ -71,20 +73,20 @@ public class gameController implements Controller {
     public void updateContent() {
         gameServer.setMinDelay(150);
 
+        // Setup chat
+        chat.setupChat();
+
+        // Initialize status and map
+        Controllers.updateStatus(false);
+        Controllers.updateMap();
+
         // Prepare the interface
         btnStartMatch.setVisible(stateMgr.getCreator());
         lobbyName.setText(stateMgr.getGameName());
         playerName.setText(stateMgr.getUsername());
         lblResponse.setText("");
-
-        // Setup chat
-        chat.setupChat();
-
-        // Retrieve other player info from the Game Server
-        Controllers.updateStatus(false);
-
-        // Setup table with players info
         table.createTable();
+        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
 
         // Update the interface with status information
         if (stateMgr.player.getLoyalty() == 0) {
@@ -96,9 +98,6 @@ public class gameController implements Controller {
         }
         playerScore.setText(stateMgr.player.getScore().toString());
         updateEnergy();
-
-        // Update the map
-        updateMap();
 
         // Keyboard events
         gamePanel.setOnKeyPressed(keyEvent -> {
@@ -121,15 +120,12 @@ public class gameController implements Controller {
         });
 
         // Setup automatic LOOK and STATUS
-        automaticActions = new ScheduledThreadPoolExecutor(2);
-        automaticActions.setRemoveOnCancelPolicy(true);
+        automaticActions = Controllers.setupPoolExecutor();
         automaticActions.scheduleWithFixedDelay(this::updateStatus,
-                500, PlayerSettings.getInstance().getStatusFreq(),
-                TimeUnit.MILLISECONDS
+                500, PlayerSettings.getInstance().getStatusFreq(), TimeUnit.MILLISECONDS
         );
         automaticActions.scheduleWithFixedDelay(this::updateMap,
-                500, PlayerSettings.getInstance().getMapFreq(),
-                TimeUnit.MILLISECONDS
+                500, PlayerSettings.getInstance().getMapFreq(), TimeUnit.MILLISECONDS
         );
     }
 
@@ -166,24 +162,26 @@ public class gameController implements Controller {
 
     public void updateStatus() {
         Controllers.updateStatus(false);
-        updateEnergy();
+        Platform.runLater(() -> {
+            updateEnergy();
 
-        // Update Game View Values
-        if (stateMgr.getGameState() == GameState.ACTIVE && firstTime) {
-            lblResponse.setTextFill(Color.GREEN);
-            lblResponse.setText("GAME STARTED");
-            firstTime = false;
-        }
+            // Update Game View Values
+            if (stateMgr.getGameState() == GameState.ACTIVE && firstTime) {
+                lblResponse.setTextFill(Color.GREEN);
+                lblResponse.setText("GAME STARTED");
+                firstTime = false;
+            }
 
-        // Check finished game
-        if (stateMgr.getGameState() == GameState.FINISHED) {
-            Renderer.getInstance().show("resultScene");
-        }
+            // Check finished game
+            if (stateMgr.getGameState() == GameState.FINISHED) {
+                Renderer.getInstance().show("resultScene");
+            }
+        });
     }
 
     public void updateMap() {
         Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
+        Platform.runLater(() -> stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername()));
     }
 
     public void movePlayer(Character direction) {

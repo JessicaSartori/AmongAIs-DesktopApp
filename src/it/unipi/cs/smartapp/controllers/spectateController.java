@@ -1,21 +1,21 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.statemanager.GameState;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.application.Platform;
 
 import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.drivers.GameServerDriver;
 import it.unipi.cs.smartapp.statemanager.StateManager;
 import it.unipi.cs.smartapp.statemanager.PlayerSettings;
 import it.unipi.cs.smartapp.statemanager.Player;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -64,20 +64,17 @@ public class spectateController implements Controller {
     public void updateContent() {
         GameServerDriver.getInstance().setMinDelay(50);
 
-        // Prepare the interface
-        lobbyName.setText(stateMgr.getGameName());
-
         // Setup chat
         chat.setupChat();
 
-        // Initialize status
+        // Initialize status and map
         Controllers.updateStatus(true);
+        Controllers.updateMap();
 
-        // Setup table with players info
+        // Prepare the interface
+        lobbyName.setText(stateMgr.getGameName());
         table.createTable();
-
-        // Initialize map
-        updateMap();
+        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, null);
 
         // Keyboard events
         spectatePanel.setOnKeyPressed(keyEvent -> {
@@ -87,15 +84,12 @@ public class spectateController implements Controller {
         });
 
         // Setup automatic LOOK and STATUS
-        automaticActions = new ScheduledThreadPoolExecutor(2);
-        automaticActions.setRemoveOnCancelPolicy(true);
+        automaticActions = Controllers.setupPoolExecutor();
         automaticActions.scheduleWithFixedDelay(this::updateStatus,
-                500, PlayerSettings.getInstance().getStatusFreq(),
-                TimeUnit.MILLISECONDS
+                500, PlayerSettings.getInstance().getStatusFreq(), TimeUnit.MILLISECONDS
         );
         automaticActions.scheduleWithFixedDelay(this::updateMap,
-                500, PlayerSettings.getInstance().getMapFreq(),
-                TimeUnit.MILLISECONDS
+                500, PlayerSettings.getInstance().getMapFreq(), TimeUnit.MILLISECONDS
         );
     }
 
@@ -105,7 +99,7 @@ public class spectateController implements Controller {
 
     private void updateMap() {
         Controllers.updateMap();
-        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, null);
+        Platform.runLater(() -> stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, null));
     }
 
     @FXML

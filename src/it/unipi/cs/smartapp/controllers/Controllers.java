@@ -1,10 +1,14 @@
 package it.unipi.cs.smartapp.controllers;
 
+import javafx.scene.layout.Pane;
+
 import it.unipi.cs.smartapp.drivers.GameServerDriver;
 import it.unipi.cs.smartapp.drivers.GameServerResponse;
 import it.unipi.cs.smartapp.drivers.ResponseCode;
 import it.unipi.cs.smartapp.statemanager.StateManager;
-import javafx.scene.layout.Pane;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 
 public class Controllers {
@@ -55,8 +59,17 @@ public class Controllers {
     }
 
     static void flipVisiblePane(Pane panel){
-        if(panel.isVisible()) panel.setVisible(false);
-        else panel.setVisible(true);
+        panel.setVisible(!panel.isVisible());
         panel.toFront();
+    }
+
+    static ScheduledThreadPoolExecutor setupPoolExecutor() {
+        ScheduledThreadPoolExecutor automaticActions = new ScheduledThreadPoolExecutor(2,r -> {
+            Thread t = Executors.defaultThreadFactory().newThread(r);
+            t.setDaemon(true);
+            return t;
+        });
+        automaticActions.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+        return automaticActions;
     }
 }
