@@ -7,27 +7,15 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="spectatePanel" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.spectateController">
-   <Pane fx:id="leftSubPanel" focusTraversable="true" prefHeight="720.0" prefWidth="315.0" AnchorPane.leftAnchor="0.0">
-      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefWidth="60.0" text="Quit" />
+   <Pane fx:id="leftSubPanel" focusTraversable="true" prefHeight="670.0" prefWidth="315.0" AnchorPane.leftAnchor="0.0">
 
-      <Label layoutX="82.0" layoutY="26.0" text="Lobby name:">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="lobbyName" layoutX="191.0" layoutY="26.0" text="lobby">
+      <Label layoutX="125.0" layoutY="14.0" text="Players:">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
 
-      <Label layoutX="128.0" layoutY="59.0" text="Players:">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Label>
-
-      <TableView fx:id="tblPlayers" layoutX="14.0" layoutY="86.0" prefHeight="607.0" prefWidth="294.0">
+      <TableView fx:id="tblPlayers" layoutX="11.0" layoutY="40.0" prefHeight="625.0" prefWidth="294.0">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
@@ -42,17 +30,29 @@
 
 
    <Canvas fx:id="mapCanvas" focusTraversable="true" height="645.0" layoutX="318.0" width="645.0" />
+   <Button layoutX="14.0" layoutY="680.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefWidth="60.0" text="Quit" />
+
+   <Label layoutX="562.0" layoutY="679.0" text="Lobby name:">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+   <Label fx:id="lobbyName" layoutX="671.0" layoutY="679.0" text="lobby">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
 
 
    <Pane fx:id="rightSubPanel" focusTraversable="true" layoutX="965" prefHeight="720.0" prefWidth="315.0" AnchorPane.rightAnchor="0.0">
-      <Label layoutX="25.0" layoutY="29.0" text="Game chat:">
+      <Label layoutX="26.0" layoutY="14.0" text="Game chat:">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
 
-      <ScrollPane fx:id="chatPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="26.0" layoutY="56.0" prefHeight="635.0" prefWidth="265.0" style="-fx-border-color: gray; -fx-background-color: white; -fx-border-radius: 5; -fx-padding: 5;" vvalue="1.0" AnchorPane.rightAnchor="24.333333333333314" AnchorPane.topAnchor="56.0">
-         <TextFlow prefHeight="455.0" prefWidth="253.0" style="-fx-background-color: white;">
+      <ScrollPane fx:id="chatPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="26.0" layoutY="40.0" prefHeight="662.0" prefWidth="265.0" style="-fx-border-color: gray; -fx-background-color: white; -fx-border-radius: 5; -fx-padding: 5;" vvalue="1.0" AnchorPane.rightAnchor="24.333333333333314" AnchorPane.topAnchor="56.0">
+         <TextFlow prefHeight="648.0" prefWidth="253.0" style="-fx-background-color: white;">
             <opaqueInsets>
                <Insets />
             </opaqueInsets>

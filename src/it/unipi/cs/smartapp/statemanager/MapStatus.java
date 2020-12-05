@@ -67,7 +67,7 @@ public class MapStatus {
      * Methods to draw the map on canvas
      */
     public void drawMap(GraphicsContext canvasContext, Canvas mapCanvas, ObservableList<Player> players, String currentUser) {
-        // First time, adjust map size and load sprites
+        // First time, adjust canvas and load sprites
         if(!loaded){
             canvasHeight = mapCanvas.getHeight();
             cellSize = canvasHeight / (mapSize + 2);
@@ -100,16 +100,20 @@ public class MapStatus {
                 Image sprite = setSprite(gameMap[r][c]);
                 canvasContext.drawImage(sprite, xCanvas, yCanvas, cellSize, cellSize);
 
+                if(Character.isUpperCase(gameMap[r][c])) { canvasContext.setFill(Color.web("#B30000")); canvasContext.setStroke(Color.web("#B30000"));}
+                else { canvasContext.setFill(Color.BLUE); canvasContext.setStroke(Color.BLUE); }
+                canvasContext.setLineWidth(2);
+
                 // Write names on players
                 String username = findName(players, gameMap[r][c]);
                 if(username != null) {
-                    if(Character.isUpperCase(gameMap[r][c])) { canvasContext.setFill(Color.web("#B30000")); canvasContext.setStroke(Color.web("#B30000"));}
-                    else { canvasContext.setFill(Color.BLUE); canvasContext.setStroke(Color.BLUE); }
+                    canvasContext.fillText(username, xCanvas - (username.length() * 2), yCanvas - 5);
 
-                    canvasContext.fillText(username, xCanvas - username.length()/2, yCanvas - username.length()/2);
-                }
-                if(currentUser != null && currentUser.equals(username))
+                    if(currentUser.equals(username)) canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
+                } else if(gameMap[r][c] == 'X' || gameMap[r][c] == 'x') {
+                    canvasContext.fillText("Flag", xCanvas - 5, yCanvas - 5);
                     canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
+                }
 
                 xCanvas += cellSize;
             }
