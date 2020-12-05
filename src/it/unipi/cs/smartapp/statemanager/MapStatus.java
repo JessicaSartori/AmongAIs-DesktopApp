@@ -8,8 +8,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-
 import java.util.HashMap;
+
 
 public class MapStatus {
 
@@ -20,7 +20,7 @@ public class MapStatus {
     private Integer mapSize = null, mapWidth = null;
     private Double cellSize = null;
     private Character ratio = null;
-    private boolean loaded;
+    private Boolean loaded;
 
     private final HashMap<Character, Image> sprites;
 
@@ -40,6 +40,7 @@ public class MapStatus {
     public void setMapRatio(Character r) { ratio = r; mapWidth = (ratio == 'Q') ? mapSize : mapSize*2; }
     public void setCanvasHeight(Double h) { canvasHeight = h; }
     public void setCanvasWidth(Double w) { canvasWidth = w; }
+    public void setLoaded(Boolean l) { loaded = l; }
 
     /*
      * Getters
@@ -76,8 +77,10 @@ public class MapStatus {
                 mapCanvas.setWidth(mapCanvas.getWidth() + cellSize*mapSize);
                 // Recenter canvas width-wise
                 mapCanvas.setLayoutX(mapCanvas.getLayoutX() - (cellSize*mapSize) / 2);
-                //mapCanvas.setLayoutX(0);
             }
+            else
+                mapCanvas.setLayoutX(318.0);
+
             canvasWidth = mapCanvas.getWidth();
 
             loadSprites();
