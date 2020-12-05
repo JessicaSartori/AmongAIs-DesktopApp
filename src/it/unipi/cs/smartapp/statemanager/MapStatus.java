@@ -13,6 +13,9 @@ import java.util.HashMap;
 
 public class MapStatus {
 
+    // Constant - Default X layout of map canvas
+    private static final Double DEFAULT_LAYOUT_X = 318.0;
+
     // Sizes of canvas in gameScene
     private Double canvasHeight = null, canvasWidth = null;
 
@@ -40,7 +43,6 @@ public class MapStatus {
     public void setMapRatio(Character r) { ratio = r; mapWidth = (ratio == 'Q') ? mapSize : mapSize*2; }
     public void setCanvasHeight(Double h) { canvasHeight = h; }
     public void setCanvasWidth(Double w) { canvasWidth = w; }
-    public void setLoaded(Boolean l) { loaded = l; }
 
     /*
      * Getters
@@ -67,7 +69,7 @@ public class MapStatus {
      * Methods to draw the map on canvas
      */
     public void drawMap(GraphicsContext canvasContext, Canvas mapCanvas, ObservableList<Player> players, String currentUser) {
-        // First time, adjust canvas and load sprites
+        // Adjust canvas size and load sprites every time scene is loaded
         if(!loaded){
             canvasHeight = mapCanvas.getHeight();
             cellSize = canvasHeight / (mapSize + 2);
@@ -76,10 +78,10 @@ public class MapStatus {
                 // Enlarge canvas accordingly
                 mapCanvas.setWidth(mapCanvas.getWidth() + cellSize*mapSize);
                 // Recenter canvas width-wise
-                mapCanvas.setLayoutX(mapCanvas.getLayoutX() - (cellSize*mapSize) / 2);
+                mapCanvas.setLayoutX(DEFAULT_LAYOUT_X - (cellSize*mapSize) / 2);
             }
             else
-                mapCanvas.setLayoutX(318.0);
+                mapCanvas.setLayoutX(DEFAULT_LAYOUT_X);
 
             canvasWidth = mapCanvas.getWidth();
 
