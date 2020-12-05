@@ -266,8 +266,7 @@ public class GameServerDriver extends SocketDriver {
         super.openConnection();
 
         if(isConnected()) {
-            lastCommandSent = 0;
-
+            lastCommandSent = System.currentTimeMillis();
             connectionSaver = new Thread(() -> {
                 System.out.println("NOP Thread: Started");
 
