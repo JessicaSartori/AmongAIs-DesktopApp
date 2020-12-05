@@ -148,25 +148,25 @@ public class MapStatus {
             case 'N' -> {
                 if(landed == '?') r = -1;
                 else if(landed == '.' || landed == '~' || landed == '@') r -= prevEnergy;
-                else while(gameMap[r][c] != landed) r--;
+                else while(gameMap[r][c] != landed && r >= 0) r--;
                 playerKey = (team == 0) ? '8' : '7';
             }
             case 'S' -> {
                 if(landed == '?') r = mapSize;
                 else if(landed == '.' || landed == '~' || landed == '@') r += prevEnergy;
-                else while(gameMap[r][c] != landed) r++;
+                else while(gameMap[r][c] != landed && r <= mapSize) r++;
                 playerKey = (team == 0) ? '2' : '1';
             }
             case 'W' -> {
                 if(landed == '?') c = -1;
                 else if(landed == '.' || landed == '~' || landed == '@') c -= prevEnergy;
-                else while(gameMap[r][c] != landed) c--;
+                else while(gameMap[r][c] != landed && c >= 0) c--;
                 playerKey = (team == 0) ? '4' : '3';
             }
             case 'E' -> {
-                if(landed == '?') c = mapSize;
+                if(landed == '?') c = mapWidth;
                 else if(landed == '.' || landed == '~' || landed == '@') c += prevEnergy;
-                else while(gameMap[r][c] != landed) c++;
+                else while(gameMap[r][c] != landed && c <= mapWidth) c++;
                 playerKey = (team == 0) ? '6' : '5';
             }
         }
