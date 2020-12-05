@@ -172,12 +172,10 @@ public class gameController implements Controller {
                 Alert message = new Alert(Alert.AlertType.INFORMATION);
                 message.setTitle("Game finished!");
                 message.setContentText("Click OK to see final results or close this message to stay in game.");
-                Optional<ButtonType> result = message.showAndWait();
+                message.showAndWait();
 
-                if(result.get() == ButtonType.OK) {
-                    quitScene();
-                    Renderer.getInstance().show("resultScene");
-                }
+                quitScene();
+                Renderer.getInstance().show("resultScene");
             }
         });
     }

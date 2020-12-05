@@ -43,13 +43,15 @@ public class StateManager {
     public GameState getGameState() { return gameStatus.getState(); }
 
 
-    public void setInGame(String gameName, Boolean created) {
-        player = new Player();
+    public void setInGame(String gameName, Boolean created, Boolean spectator) {
         players = new HashMap<>();
-        players.put(currentUsername, player);
-
         playersList = FXCollections.observableArrayList();
-        playersList.add(player);
+
+        if(!spectator) {
+            player = new Player();
+            players.put(currentUsername, player);
+            playersList.add(player);
+        }
 
         gameStatus = new GameStatus(gameName, created);
         map = new MapStatus();

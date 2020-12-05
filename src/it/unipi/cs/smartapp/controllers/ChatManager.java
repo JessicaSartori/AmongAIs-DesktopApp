@@ -1,6 +1,5 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.drivers.ChatSystemDriver;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -9,6 +8,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import it.unipi.cs.smartapp.statemanager.*;
+import it.unipi.cs.smartapp.drivers.ChatSystemDriver;
 
 
 public class ChatManager {
@@ -47,7 +47,7 @@ public class ChatManager {
         }
 
         if(message.user.equals("@GameServer")) {
-            handleSystemMessage(message);
+            if(stateMgr.getGameState() != GameState.FINISHED) handleSystemMessage(message);
             Text msg = new Text(message.user + ": " + message.text + "\n");
             msg.setFill(Color.DARKORANGE);
             msg.setFont(Font.font(fontFamily, FontPosture.ITALIC, fontSize));

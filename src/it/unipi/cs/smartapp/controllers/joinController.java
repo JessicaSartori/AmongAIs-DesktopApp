@@ -44,7 +44,7 @@ public class joinController implements Controller {
         if(isValid(gameName) && tryConnect() &&
                 join(gameName, 'H')) {
 
-            stateMgr.setInGame(gameName, false);
+            stateMgr.setInGame(gameName, false, false);
             Renderer.getInstance().show("gameScene");
         }
     }
@@ -57,7 +57,7 @@ public class joinController implements Controller {
         if(isValid(gameName) && tryConnect() &&
                 join(gameName, 'O')) {
 
-            stateMgr.setInGame(gameName, false);
+            stateMgr.setInGame(gameName, false, true);
             Renderer.getInstance().show("spectateScene");
         }
     }

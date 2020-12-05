@@ -66,7 +66,7 @@ public class createController implements Controller {
         if(isValid(gameName) && tryConnect() &&
                 create(gameName, options) && join(gameName)) {
 
-            stateManager.setInGame(gameName, true);
+            stateManager.setInGame(gameName, true, false);
             Renderer.getInstance().show("gameScene");
         }
     }

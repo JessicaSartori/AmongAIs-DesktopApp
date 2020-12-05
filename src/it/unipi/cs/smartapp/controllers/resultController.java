@@ -37,7 +37,7 @@ public class resultController implements Controller {
 
     @FXML
     private void btnGoBackPressed() {
-        GameServerDriver.getInstance().closeConnection();
+        Controllers.closeGameServerConnection();
         Renderer.getInstance().show("mainMenu");
     }
 }
