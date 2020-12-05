@@ -83,6 +83,5 @@ public class Controllers {
         GameServerResponse response = gameServer.sendLEAVE(StateManager.getInstance().getGameName(), "Bye");
         if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
         gameServer.closeConnection();
-        gameServer.setMinDelay(500);
     }
 }

@@ -31,7 +31,6 @@ public class GameServerDriver extends SocketDriver {
     private GameServerDriver() {
         HOSTNAME = "margot.di.unipi.it";
         PORT = 8421;
-        MIN_DELAY = 500;
         lastCommandSent = 0;
     }
 
@@ -266,6 +265,7 @@ public class GameServerDriver extends SocketDriver {
         super.openConnection();
 
         if(isConnected()) {
+            MIN_DELAY = 500;
             lastCommandSent = System.currentTimeMillis();
             connectionSaver = new Thread(() -> {
                 System.out.println("NOP Thread: Started");
