@@ -66,6 +66,7 @@ public class StateManager {
             switch (keyword) {
                 case "state" -> gameStatus.setState(GameState.fromString(value));
                 case "size" -> map.setMapSize(Integer.parseInt(value));
+                case "ratio" -> map.setMapRatio(value.charAt(0));
             }
         }
     }

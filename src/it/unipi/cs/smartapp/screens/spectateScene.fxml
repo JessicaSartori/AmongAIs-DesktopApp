@@ -40,8 +40,8 @@
       </TableView>
    </Pane>
 
-   
-   <Canvas fx:id="mapCanvas" focusTraversable="true" height="720.0" layoutX="280.0" width="720.0" />
+
+   <Canvas fx:id="mapCanvas" focusTraversable="true" height="645.0" layoutX="318.0" width="645.0" />
 
 
    <Pane fx:id="rightSubPanel" focusTraversable="true" layoutX="965" prefHeight="720.0" prefWidth="315.0" AnchorPane.rightAnchor="0.0">
