@@ -16,7 +16,6 @@ import it.unipi.cs.smartapp.statemanager.PlayerSettings;
 import it.unipi.cs.smartapp.statemanager.GameState;
 import it.unipi.cs.smartapp.statemanager.Player;
 
-import java.util.Optional;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -31,8 +30,6 @@ public class spectateController implements Controller {
     private TableManager table;
 
     private ScheduledThreadPoolExecutor automaticActions;
-
-    private boolean gameEnded = false;
 
     @FXML
     private Label lobbyName;
@@ -100,16 +97,14 @@ public class spectateController implements Controller {
 
         Platform.runLater(() -> {
             // Check finished game
-            if (stateMgr.getGameState() == GameState.FINISHED && !gameEnded) {
-                gameEnded = true;
+            if (stateMgr.getGameState() == GameState.FINISHED) {
+                quitScene();
+
                 Alert message = new Alert(Alert.AlertType.INFORMATION);
                 message.setTitle("Game finished!");
                 message.setContentText("Click OK to see final results or close this message to stay in game.");
-                Optional<ButtonType> result = message.showAndWait();
-
-                if(result.get() == ButtonType.OK) {
-                    quitScene("resultScene");
-                }
+                message.showAndWait();
+                Renderer.getInstance().show("resultScene");
             }
         });
     }
@@ -120,12 +115,14 @@ public class spectateController implements Controller {
     }
 
     @FXML
-    public void btnGoBackPressed() { quitScene("mainMenu"); }
-
-    private void quitScene(String nextScene) {
-        automaticActions.shutdownNow();
+    public void btnGoBackPressed() {
+        quitScene();
         Controllers.closeGameServerConnection();
+        Renderer.getInstance().show("menuScene");
+    }
+
+    private void quitScene() {
+        automaticActions.shutdownNow();
         chat.closeChat();
-        Renderer.getInstance().show(nextScene);
     }
 }
