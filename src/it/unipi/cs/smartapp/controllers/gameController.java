@@ -14,7 +14,6 @@ import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.statemanager.*;
 import it.unipi.cs.smartapp.screens.Renderer;
 
-import java.util.Optional;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -29,7 +28,7 @@ public class gameController implements Controller {
     private ChatManager chat;
     private TableManager table;
 
-    private Boolean firstTime = true, gameEnded = false;
+    private Boolean firstTime = true;
     private ScheduledThreadPoolExecutor automaticActions;
 
     @FXML
@@ -167,14 +166,13 @@ public class gameController implements Controller {
             }
 
             // Check finished game
-            if (stateMgr.getGameState() == GameState.FINISHED && !gameEnded) {
-                gameEnded = true;
+            if (stateMgr.getGameState() == GameState.FINISHED) {
+                quitScene();
+
                 Alert message = new Alert(Alert.AlertType.INFORMATION);
                 message.setTitle("Game finished!");
                 message.setContentText("Click OK to see final results or close this message to stay in game.");
                 message.showAndWait();
-
-                quitScene();
                 Renderer.getInstance().show("resultScene");
             }
         });
