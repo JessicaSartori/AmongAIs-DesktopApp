@@ -13,7 +13,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 public class Controllers {
 
-    static void updateStatus(boolean spectating) {
+    // Send s STATUS request, parse the response ad update the state
+    public static void updateStatus(boolean spectating) {
         GameServerDriver gameServer = GameServerDriver.getInstance();
         StateManager stateMgr = StateManager.getInstance();
 
@@ -43,7 +44,8 @@ public class Controllers {
         }
     }
 
-    static void updateMap() {
+    // Send a LOOK request and update the state
+    public static void updateMap() {
         GameServerDriver gameServer = GameServerDriver.getInstance();
         StateManager stateMgr = StateManager.getInstance();
 
@@ -58,12 +60,14 @@ public class Controllers {
         stateMgr.map.setGameMap((String[]) response.data);
     }
 
-    static void flipVisiblePane(Pane panel){
+    // Flip visibility state of a pane and put it to front
+    public static void flipVisiblePane(Pane panel){
         panel.setVisible(!panel.isVisible());
         panel.toFront();
     }
 
-    static ScheduledThreadPoolExecutor setupPoolExecutor() {
+    // Return a pool executor with 2 daemon threads to be used for delayed tasks (automatic actions)
+    public static ScheduledThreadPoolExecutor setupPoolExecutor() {
         ScheduledThreadPoolExecutor automaticActions = new ScheduledThreadPoolExecutor(2,r -> {
             Thread t = Executors.defaultThreadFactory().newThread(r);
             t.setDaemon(true);
@@ -71,5 +75,14 @@ public class Controllers {
         });
         automaticActions.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
         return automaticActions;
+    }
+
+    public static void closeGameServerConnection() {
+        GameServerDriver gameServer = GameServerDriver.getInstance();
+
+        GameServerResponse response = gameServer.sendLEAVE(StateManager.getInstance().getGameName(), "Bye");
+        if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
+        gameServer.closeConnection();
+        gameServer.setMinDelay(500);
     }
 }

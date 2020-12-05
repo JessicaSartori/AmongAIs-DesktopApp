@@ -29,7 +29,7 @@ public class gameController implements Controller {
     private ChatManager chat;
     private TableManager table;
 
-    private Boolean firstTime = true;
+    private Boolean firstTime = true, gameEnded = false;
     private ScheduledThreadPoolExecutor automaticActions;
 
     @FXML
@@ -138,15 +138,8 @@ public class gameController implements Controller {
 
     @FXML
     public void btnGoBackPressed() {
-        automaticActions.shutdownNow();
-
-        GameServerResponse response = gameServer.sendLEAVE(stateMgr.getGameName(), "Done playing");
-        if (response.code != ResponseCode.OK) { System.err.println(response.freeText); }
-        gameServer.closeConnection();
-        gameServer.setMinDelay(500);
-
-        chat.closeChat();
-
+        quitScene();
+        Controllers.closeGameServerConnection();
         Renderer.getInstance().show("mainMenu");
     }
 
@@ -174,13 +167,15 @@ public class gameController implements Controller {
             }
 
             // Check finished game
-            if (stateMgr.getGameState() == GameState.FINISHED) {
+            if (stateMgr.getGameState() == GameState.FINISHED && !gameEnded) {
+                gameEnded = true;
                 Alert message = new Alert(Alert.AlertType.INFORMATION);
                 message.setTitle("Game finished!");
                 message.setContentText("Click OK to see final results or close this message to stay in game.");
                 Optional<ButtonType> result = message.showAndWait();
 
                 if(result.get() == ButtonType.OK) {
+                    quitScene();
                     Renderer.getInstance().show("resultScene");
                 }
             }
@@ -310,5 +305,10 @@ public class gameController implements Controller {
         }
         lblResponse.setTextFill(Color.GREEN);
         lblResponse.setText(response.freeText);
+    }
+
+    private void quitScene() {
+        automaticActions.shutdownNow();
+        chat.closeChat();
     }
 }

@@ -3,9 +3,7 @@ package it.unipi.cs.smartapp.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -15,8 +13,10 @@ import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.drivers.GameServerDriver;
 import it.unipi.cs.smartapp.statemanager.StateManager;
 import it.unipi.cs.smartapp.statemanager.PlayerSettings;
+import it.unipi.cs.smartapp.statemanager.GameState;
 import it.unipi.cs.smartapp.statemanager.Player;
 
+import java.util.Optional;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -31,6 +31,8 @@ public class spectateController implements Controller {
     private TableManager table;
 
     private ScheduledThreadPoolExecutor automaticActions;
+
+    private boolean gameEnded = false;
 
     @FXML
     private Label lobbyName;
@@ -95,6 +97,21 @@ public class spectateController implements Controller {
 
     private void updateStatus() {
         Controllers.updateStatus(true);
+
+        Platform.runLater(() -> {
+            // Check finished game
+            if (stateMgr.getGameState() == GameState.FINISHED && !gameEnded) {
+                gameEnded = true;
+                Alert message = new Alert(Alert.AlertType.INFORMATION);
+                message.setTitle("Game finished!");
+                message.setContentText("Click OK to see final results or close this message to stay in game.");
+                Optional<ButtonType> result = message.showAndWait();
+
+                if(result.get() == ButtonType.OK) {
+                    quitScene("resultScene");
+                }
+            }
+        });
     }
 
     private void updateMap() {
@@ -103,13 +120,12 @@ public class spectateController implements Controller {
     }
 
     @FXML
-    public void btnGoBackPressed() {
+    public void btnGoBackPressed() { quitScene("mainMenu"); }
+
+    private void quitScene(String nextScene) {
         automaticActions.shutdownNow();
-        GameServerDriver.getInstance().closeConnection();
-        GameServerDriver.getInstance().setMinDelay(500);
-
+        Controllers.closeGameServerConnection();
         chat.closeChat();
-
-        Renderer.getInstance().show("mainMenu");
+        Renderer.getInstance().show(nextScene);
     }
 }
