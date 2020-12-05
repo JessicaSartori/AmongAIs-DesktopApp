@@ -38,6 +38,9 @@ public class menuController implements Controller {
     private void btnBackPressed() { Renderer.getInstance().show("login"); }
 
     @FXML
+    private void btnHowToPlayPressed() { Renderer.getInstance().show("howToPlayScene"); }
+
+    @FXML
     private void btnGameSettings() { Renderer.getInstance().show("settings"); }
 
     @FXML
