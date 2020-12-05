@@ -30,6 +30,7 @@
 
 
    <Canvas fx:id="mapCanvas" focusTraversable="true" height="645.0" layoutX="318.0" width="645.0" />
+
    <Button layoutX="14.0" layoutY="680.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefWidth="60.0" text="Quit" />
 
    <Label layoutX="562.0" layoutY="679.0" text="Lobby name:">

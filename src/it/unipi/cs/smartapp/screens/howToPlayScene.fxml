@@ -7,9 +7,9 @@
 <AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.howToPlayController">
    <children>
       <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefHeight="27.0" prefWidth="78.0" text="Go Back" />
-      <Label layoutX="558.0" layoutY="94.0" text="Among AIs">
+      <Label alignment="CENTER" layoutX="297.0" layoutY="38.0" prefHeight="137.0" prefWidth="206.0" text="AmongAIs" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="50.0">
          <font>
-            <Font size="36.0" />
+            <Font name="Segoe UI Bold Italic" size="36.0" />
          </font>
       </Label>
       <Label layoutX="590.0" layoutY="170.0" text="How to Play">
