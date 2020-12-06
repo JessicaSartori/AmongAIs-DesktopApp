@@ -24,6 +24,8 @@ public class settingsController implements Controller {
     private Button btnMoveUp, btnMoveDown, btnMoveLeft, btnMoveRight;
     @FXML
     private Button btnShootUp, btnShootDown, btnShootLeft, btnShootRight;
+    @FXML
+    private Button btnToggleChat, btnToggleList;
 
 
     public void initialize() {
@@ -87,6 +89,10 @@ public class settingsController implements Controller {
     private void btnShootLeftPressed() { setKeyButton(btnShootLeft, settings.getShootLeft()); }
     @FXML
     private void btnShootRightPressed() { setKeyButton(btnShootRight, settings.getShootRight()); }
+    @FXML
+    private void btnToggleChatPressed() { setKeyButton(btnToggleChat, settings.getShootRight()); }
+    @FXML
+    private void btnToggleListPressed() { setKeyButton(btnToggleList, settings.getShootRight()); }
 
     private void setKeyButton(Button btn, KeyCode oldValue) {
         btn.setText("...");
@@ -106,6 +112,8 @@ public class settingsController implements Controller {
                     case "btnShootDown" -> settings.setShootDown(newValue);
                     case "btnShootLeft" -> settings.setShootLeft(newValue);
                     case "btnShootRight" -> settings.setShootRight(newValue);
+                    case "btnToggleChat" -> settings.setFlipRight(newValue);
+                    case "btnToggleList" -> settings.setFlipLeft(newValue);
                 }
             } else {
                 btn.setText(oldValue.toString());
