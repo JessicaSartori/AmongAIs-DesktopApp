@@ -4,32 +4,25 @@ import javafx.scene.input.KeyCode;
 
 
 public class PlayerSettings {
+
     static private PlayerSettings instance = null;
-
-    // Moving Key Bindings
-    private KeyCode moveUp = null;
-    private KeyCode moveDown = null;
-    private KeyCode moveLeft = null;
-    private KeyCode moveRight = null;
-
-    // Shooting Key Bindings
-    private KeyCode shootUp = null;
-    private KeyCode shootDown = null;
-    private KeyCode shootLeft = null;
-    private KeyCode shootRight = null;
-
-    // Side panels Key Bindings
-    private KeyCode flipLeft = null;
-    private KeyCode flipRight = null;
-
-    // Map & Status Frequencies
-    private Integer mapFreq = null;
-    private Integer statusFreq = null;
 
     static public PlayerSettings getInstance() {
         if(instance == null) instance = new PlayerSettings();
         return instance;
     }
+
+
+    // Moving/Shooting Key Bindings
+    private KeyCode moveUp, moveDown, moveLeft, moveRight;
+    private KeyCode shootUp, shootDown, shootLeft, shootRight;
+
+    // Side panels Key Bindings
+    private KeyCode flipLeft, flipRight;
+
+    // Map & Status Frequencies
+    private Integer mapFreq, statusFreq;
+
 
     // Default Player Settings
     private PlayerSettings() {
