@@ -7,25 +7,95 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="gamePanel" focusTraversable="true" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.gameController">
-   <Pane fx:id="leftSubPanel" focusTraversable="true" prefHeight="672.0" prefWidth="315.0" AnchorPane.leftAnchor="0.0">
 
-      <TextField fx:id="txtPlayerVote" focusTraversable="false" layoutX="23.0" layoutY="21.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="126.0" promptText="Write a player name" />
-      <TextField fx:id="txtPlayerJudge" focusTraversable="false" layoutX="158.0" layoutY="21.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="126.0" promptText="Nature (H/AI)" />
-      <Button fx:id="btnAccuse" focusTraversable="false" layoutX="23.0" layoutY="59.0" mnemonicParsing="false" onAction="#btnAccusePressed" prefHeight="40.0" prefWidth="126.0" text="Accuse" />
-      <Button fx:id="btnJudge" focusTraversable="false" layoutX="158.0" layoutY="59.0" mnemonicParsing="false" onAction="#btnJudgePressed" prefHeight="40.0" prefWidth="126.0" text="Judge" />
+   <Button focusTraversable="false" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" text="Quit match" />
 
-      <Label fx:id="lblListPlayers" layoutX="123.0" layoutY="114.0" text="Players">
+   <Label layoutX="93.0" layoutY="13.0" text="Lobby name:">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+   <Label fx:id="lobbyName" layoutX="202.0" layoutY="13.0" text="lobby">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+
+   <Label layoutX="319.0" layoutY="13.0" text="Game status:">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+   <Label fx:id="lblGameState" layoutX="428.0" layoutY="13.0" text="FINISHED">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+
+   <Label layoutX="519.0" layoutY="13.0" text="Player status:">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+   <Label fx:id="lblPlayerState" layoutX="632.0" layoutY="13.0" text="lobbyowner">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+
+   <Label fx:id="txtLoyalty" layoutX="737.0" layoutY="13.0" text="Loyalty: ">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+   <Label fx:id="playerLoyalty" layoutX="809.0" layoutY="13.0" prefHeight="27.0" prefWidth="101.0" text="Normal">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+
+   <Label fx:id="txtScore" layoutX="921.0" layoutY="13.0" text="Score: ">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+   <Label fx:id="playerScore" layoutX="972.0" layoutY="13.0" text="0">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+
+   <Label fx:id="txtEnergy" layoutX="1001.0" layoutY="13.0" text="Energy: ">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+   <ProgressBar fx:id="playerEnergyBar" layoutX="1070.0" layoutY="13.0" prefHeight="27.0" prefWidth="153.0" progress="1.0" />
+   <Label fx:id="playerEnergy" alignment="CENTER" contentDisplay="CENTER" layoutX="1227.0" layoutY="13.0" style="-fx-scale-z: 1000;" text="256" textFill="BLACK">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+
+
+   <Pane fx:id="leftSubPanel" focusTraversable="true" layoutY="53.0" prefHeight="729.0" prefWidth="315.0" AnchorPane.leftAnchor="0.0">
+
+      <TextField fx:id="txtPlayerVote" focusTraversable="false" layoutX="27.0" layoutY="567.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="126.0" promptText="Write a player name" />
+      <TextField fx:id="txtPlayerJudge" focusTraversable="false" layoutX="162.0" layoutY="567.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="126.0" promptText="Nature (H/AI)" />
+      <Button fx:id="btnAccuse" focusTraversable="false" layoutX="27.0" layoutY="605.0" mnemonicParsing="false" onAction="#btnAccusePressed" prefHeight="40.0" prefWidth="126.0" text="Accuse" />
+      <Button fx:id="btnJudge" focusTraversable="false" layoutX="162.0" layoutY="605.0" mnemonicParsing="false" onAction="#btnJudgePressed" prefHeight="40.0" prefWidth="126.0" text="Judge" />
+
+      <Label fx:id="lblListPlayers" layoutX="123.0" layoutY="14.0" text="Players">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
 
-      <TableView fx:id="tblPlayers" focusTraversable="false" layoutX="11.0" layoutY="145.0" prefHeight="507.0" prefWidth="294.0">
+      <TableView fx:id="tblPlayers" focusTraversable="false" layoutX="11.0" layoutY="44.0" prefHeight="505.0" prefWidth="294.0">
          <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
          <columns>
             <TableColumn prefWidth="75.0" text="Team" />
             <TableColumn prefWidth="75.0" text="Name" />
-            <TableColumn prefWidth="75.0" text="Score" />
             <TableColumn prefWidth="75.0" text="Status" />
          </columns>
       </TableView>
@@ -33,74 +103,16 @@
    </Pane>
 
 
-   <Canvas fx:id="mapCanvas" focusTraversable="true" height="645.0" layoutX="318.0" width="645.0" />
+   <Canvas fx:id="mapCanvas" focusTraversable="true" height="645.0" layoutX="318.0" layoutY="42.0" width="645.0" />
 
-   <Button focusTraversable="false" layoutX="14.0" layoutY="682.0" mnemonicParsing="false" onAction="#btnGoBackPressed" text="Quit match" />
-
-   <Label layoutX="94.0" layoutY="685.0" text="Lobby name:">
+   <Label fx:id="lblResponse" alignment="CENTER" layoutX="351.0" layoutY="379.0" prefHeight="27.0" prefWidth="601.0" text="responseLabel" textAlignment="CENTER" textFill="red" wrapText="true">
       <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Label>
-   <Label fx:id="lobbyName" layoutX="179.0" layoutY="685.0" text="lobby">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Label>
-
-   <Label layoutX="284.0" layoutY="685.0" text="Player name:">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Label>
-   <Label fx:id="playerName" layoutX="369.0" layoutY="685.0" text="Guest_1234">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Label>
-
-   <Label fx:id="lblResponse" layoutX="510.0" layoutY="681.0" prefHeight="27.0" prefWidth="260.0" text="responseLabel" textAlignment="CENTER" textFill="red">
-      <font>
-         <Font size="14.0" />
-      </font>
-   </Label>
-
-   <Label fx:id="txtLoyalty" layoutX="772.0" layoutY="685.0" text="Loyalty: ">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Label>
-   <Label fx:id="playerLoyalty" layoutX="828.0" layoutY="685.0" prefHeight="18.0" prefWidth="76.0" text="Normal">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Label>
-
-   <Label fx:id="txtScore" layoutX="923.0" layoutY="685.0" text="Score: ">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Label>
-   <Label fx:id="playerScore" layoutX="978.0" layoutY="685.0" text="0">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Label>
-
-   <Label fx:id="txtEnergy" layoutX="1017.0" layoutY="685.0" text="Energy: ">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Label>
-   <ProgressBar fx:id="playerEnergyBar" layoutX="1070.0" layoutY="681.0" prefHeight="27.0" prefWidth="153.0" progress="1.0" />
-   <Label fx:id="playerEnergy" alignment="CENTER" contentDisplay="CENTER" layoutX="1231.0" layoutY="685.0" style="-fx-scale-z: 1000;" text="256" textFill="BLACK">
-      <font>
-         <Font name="System Bold" size="14.0" />
+         <Font name="System Bold" size="28.0" />
       </font>
    </Label>
 
 
-   <Pane fx:id="rightSubPanel" focusTraversable="true" layoutX="965" prefHeight="672.0" prefWidth="315.0" AnchorPane.rightAnchor="0.0">
+   <Pane fx:id="rightSubPanel" focusTraversable="true" layoutX="965" layoutY="55.0" prefHeight="729.0" prefWidth="315.0" AnchorPane.rightAnchor="0.0">
       <Label layoutX="25.0" layoutY="14.0" text="Game chat:">
          <font>
             <Font name="System Bold" size="18.0" />
@@ -109,7 +121,7 @@
 
       <ScrollPane fx:id="chatPane" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" layoutX="24.0" layoutY="44.0" prefHeight="515.0" prefWidth="265.0" style="-fx-border-color: gray; -fx-background-color: white; -fx-border-radius: 5; -fx-padding: 5;" vvalue="1.0" AnchorPane.rightAnchor="26.333333333333314" AnchorPane.topAnchor="44.0">
          <content>
-            <TextFlow style="-fx-background-color: white;">
+            <TextFlow prefHeight="475.0" prefWidth="253.0" style="-fx-background-color: white;">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -117,10 +129,7 @@
          </content>
       </ScrollPane>
 
-      <TextField fx:id="txtMessage" focusTraversable="false" layoutX="25.0" layoutY="571.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="263.0" promptText="Write something in chat..." />
-
-      <Button fx:id="btnUpdMap" focusTraversable="false" layoutX="25.0" layoutY="607.0" mnemonicParsing="false" onAction="#btnUpdMapPressed" prefHeight="40.0" prefWidth="60.0" text="Map" />
-      <Button fx:id="btnStartMatch" focusTraversable="false" layoutX="107.0" layoutY="607.0" mnemonicParsing="false" onAction="#btnStartMatchPressed" prefHeight="40.0" prefWidth="100.0" text="Start!" />
-      <Button fx:id="btnUpdStatus" focusTraversable="false" layoutX="230.0" layoutY="607.0" mnemonicParsing="false" onAction="#btnUpdStatusPressed" prefHeight="40.0" prefWidth="60.0" text="Status" />
+      <TextField fx:id="txtMessage" focusTraversable="false" layoutX="26.0" layoutY="568.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="263.0" promptText="Write something in chat..." />
+      <Button fx:id="btnStartMatch" focusTraversable="false" layoutX="108.0" layoutY="604.0" mnemonicParsing="false" onAction="#btnStartMatchPressed" prefHeight="40.0" prefWidth="100.0" text="Start!" />
    </Pane>
 </AnchorPane>

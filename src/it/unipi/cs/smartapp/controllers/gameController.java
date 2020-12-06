@@ -1,7 +1,9 @@
 package it.unipi.cs.smartapp.controllers;
 
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -13,6 +15,7 @@ import javafx.scene.paint.Color;
 import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.statemanager.*;
 import it.unipi.cs.smartapp.screens.Renderer;
+import javafx.util.Duration;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -32,7 +35,7 @@ public class gameController implements Controller {
     private ScheduledThreadPoolExecutor automaticActions;
 
     @FXML
-    private Label lobbyName, playerName, playerLoyalty, playerEnergy, playerScore, lblResponse;
+    private Label lobbyName, playerLoyalty, playerEnergy, playerScore, lblResponse, lblGameState, lblPlayerState;
     @FXML
     private TextField txtPlayerVote, txtPlayerJudge, txtMessage;
     @FXML
@@ -83,7 +86,9 @@ public class gameController implements Controller {
         // Prepare the interface
         btnStartMatch.setVisible(stateMgr.getCreator());
         lobbyName.setText(stateMgr.getGameName());
-        playerName.setText(stateMgr.getUsername());
+        lblGameState.setText(stateMgr.getGameState().toString());
+        lblPlayerState.setText(stateMgr.player.getState());
+        lblResponse.setTextFill(Color.RED);
         lblResponse.setText("");
         table.createTable();
         stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
@@ -97,12 +102,15 @@ public class gameController implements Controller {
             playerLoyalty.setStyle("-fx-text-fill: red;");
         }
         playerScore.setText(stateMgr.player.getScore().toString());
+        lblGameState.setText(stateMgr.getGameState().toString());
+        lblPlayerState.setText(stateMgr.player.getState());
         updateEnergy();
 
         // Keyboard events
         gamePanel.setOnKeyPressed(keyEvent -> {
             if (!(stateMgr.getGameState() == GameState.ACTIVE)) {
                 lblResponse.setText("Can not move or shoot while in lobby");
+                labelFader(lblResponse, 3.0).play();
                 return;
             }
 
@@ -151,12 +159,15 @@ public class gameController implements Controller {
         Controllers.updateStatus(false);
         Platform.runLater(() -> {
             playerScore.setText(stateMgr.player.getScore().toString());
+            lblGameState.setText(stateMgr.getGameState().toString());
+            lblPlayerState.setText(stateMgr.player.getState());
             updateEnergy();
 
             // Update Game View Values
             if (stateMgr.getGameState() == GameState.ACTIVE && firstTime) {
                 lblResponse.setTextFill(Color.GREEN);
                 lblResponse.setText("GAME STARTED");
+                labelFader(lblResponse, 3.0).play();
                 firstTime = false;
             }
 
@@ -188,6 +199,7 @@ public class gameController implements Controller {
             }
             case ERROR -> {
                 lblResponse.setText(res.freeText);
+                labelFader(lblResponse, 2.0).play();
                 return;
             }
         }
@@ -216,6 +228,7 @@ public class gameController implements Controller {
             }
             case ERROR -> {
                 lblResponse.setText(res.freeText);
+                labelFader(lblResponse, 2.0).play();
                 return;
             }
         }
@@ -239,11 +252,6 @@ public class gameController implements Controller {
             return;
         }
         System.out.println(res.freeText);
-
-        Alert message = new Alert(Alert.AlertType.INFORMATION);
-        message.setTitle("Game started!");
-        message.setContentText("The minimum number of player is reached, the game has started!");
-        message.showAndWait();
     }
 
     // Update ProgressBar correctly
@@ -259,6 +267,7 @@ public class gameController implements Controller {
 
         if(txtPlayerVote.getText().trim().isEmpty()) {
             lblResponse.setText("Player name empty");
+            labelFader(lblResponse, 3.0).play();
             return;
         }
 
@@ -266,10 +275,12 @@ public class gameController implements Controller {
 
         if(response.code != ResponseCode.OK) {
             lblResponse.setText(response.freeText);
+            labelFader(lblResponse, 3.0).play();
             return;
         }
         lblResponse.setTextFill(Color.GREEN);
         lblResponse.setText(response.freeText);
+        labelFader(lblResponse, 2.0).play();
     }
 
     @FXML
@@ -278,12 +289,14 @@ public class gameController implements Controller {
 
         if(txtPlayerVote.getText().trim().isEmpty()) {
             lblResponse.setText("Player name empty");
+            labelFader(lblResponse, 3.0).play();
             return;
         }
 
         System.out.println("Vote: " + txtPlayerVote.getText() + " Judge: " + txtPlayerJudge.getText());
         if(!txtPlayerJudge.getText().equalsIgnoreCase("AI") && !txtPlayerJudge.getText().equalsIgnoreCase("H")) {
             lblResponse.setText("Invalid nature");
+            labelFader(lblResponse, 3.0).play();
             return;
         }
 
@@ -292,14 +305,24 @@ public class gameController implements Controller {
 
         if(response.code != ResponseCode.OK) {
             lblResponse.setText(response.freeText);
+            labelFader(lblResponse,2.0 ).play();
             return;
         }
         lblResponse.setTextFill(Color.GREEN);
         lblResponse.setText(response.freeText);
+        labelFader(lblResponse, 2.0).play();
     }
 
     private void quitScene() {
         automaticActions.shutdownNow();
         chat.closeChat();
+    }
+
+    private FadeTransition labelFader(Node node, Double seconds) {
+        FadeTransition fade = new FadeTransition(Duration.seconds(seconds), node);
+        fade.setFromValue(1);
+        fade.setToValue(0);
+
+        return fade;
     }
 }

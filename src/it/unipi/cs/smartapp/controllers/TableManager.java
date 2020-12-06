@@ -31,15 +31,11 @@ public class TableManager {
         usernameCol.setCellValueFactory(new PropertyValueFactory<>(Player.usernamePropertyName));
         usernameCol.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Player, Integer> scoreCol = new TableColumn<>("Score");
-        scoreCol.setCellValueFactory(new PropertyValueFactory<>(Player.scorePropertyName));
-        scoreCol.setStyle("-fx-alignment: CENTER;");
-
         TableColumn<Player, String> stateCol = new TableColumn<>("Status");
         stateCol.setCellValueFactory(new PropertyValueFactory<>(Player.statePropertyName));
         stateCol.setStyle("-fx-alignment: CENTER;");
 
-        tblPlayers.getColumns().setAll(teamCol, usernameCol, scoreCol, stateCol);
+        tblPlayers.getColumns().setAll(teamCol, usernameCol, stateCol);
     }
 
     public void createResult() {
