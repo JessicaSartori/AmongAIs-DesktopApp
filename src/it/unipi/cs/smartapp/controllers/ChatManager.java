@@ -47,7 +47,7 @@ public class ChatManager {
         }
 
         if(message.user.equals("@GameServer")) {
-            if(stateMgr.getGameState() != GameState.FINISHED) handleSystemMessage(message);
+            handleSystemMessage(message);
             Text msg = new Text(message.user + ": " + message.text + "\n");
             msg.setFill(Color.DARKORANGE);
             msg.setFont(Font.font(fontFamily, FontPosture.ITALIC, fontSize));
