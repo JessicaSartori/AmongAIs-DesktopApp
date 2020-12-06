@@ -130,12 +130,6 @@ public class gameController implements Controller {
     }
 
     @FXML
-    private void btnUpdStatusPressed() { updateStatus(); }
-
-    @FXML
-    private void btnUpdMapPressed() { updateMap(); }
-
-    @FXML
     public void btnGoBackPressed() {
         quitScene();
         Controllers.closeGameServerConnection();
@@ -156,6 +150,7 @@ public class gameController implements Controller {
     public void updateStatus() {
         Controllers.updateStatus(false);
         Platform.runLater(() -> {
+            playerScore.setText(stateMgr.player.getScore().toString());
             updateEnergy();
 
             // Update Game View Values

@@ -27,9 +27,14 @@ public class loginController implements Controller {
 
     @Override
     public void updateContent() {
-        String username = stateMgr.getUsername();
-        if(username != null) {
-            usernameField.setText(username);
+        String privateUsername = stateMgr.getPrivateUsername();
+        String publicUsername = stateMgr.getUsername();
+
+        if(privateUsername != null) {
+            usernameField.setText(privateUsername);
+        }
+        if(publicUsername != null) {
+            publicUsernameField.setText(publicUsername);
         }
     }
 
