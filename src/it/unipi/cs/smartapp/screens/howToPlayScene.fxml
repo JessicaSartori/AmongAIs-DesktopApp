@@ -12,37 +12,37 @@
             <Font name="Segoe UI Bold Italic" size="36.0" />
          </font>
       </Label>
-      <Label layoutX="590.0" layoutY="170.0" text="How to Play">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="583.0" layoutY="172.0" text="How to Play" AnchorPane.leftAnchor="570.0" AnchorPane.rightAnchor="570.0" AnchorPane.topAnchor="180.0">
          <font>
-            <Font name="System Bold" size="20.0" />
+            <Font name="System Bold" size="22.0" />
          </font>
       </Label>
-      <Label layoutX="212.0" layoutY="237.0" text="Game description:">
+      <Label layoutX="200.0" layoutY="233.0" text="Game description:" AnchorPane.leftAnchor="200.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="212.0" layoutY="260.0" lineSpacing="4.0" prefHeight="77.0" prefWidth="882.0" text="Among AIs is an RPG game developed to test AI performances in simple videogames. The main goal of the game is to capture the flag in the map, using smart strategies. The game let you also to shoot to other players, judge if some teammates are impostors and use barriers around you to play smarter. Among AIs let human and AI players to have fun each other in personalized lobbies and see if machines can really conquer the world!" wrapText="true">
+      <Label layoutX="199.0" layoutY="260.0" lineSpacing="4.0" prefHeight="109.0" prefWidth="876.0" text="Among AIs is an RPG game developed to test AI performances in simple videogames. The main goal of the game is to capture the flag in the map, using smart strategies. The game let you also to shoot to other players, judge if some teammates are impostors and use barriers around you to play smarter. Among AIs let human and AI players to have fun each other in personalized lobbies and see if machines can really conquer the world!" wrapText="true" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="212.0" layoutY="359.0" text="Game controls:">
+      <Label layoutX="199.0" layoutY="380.0" text="Game controls:" AnchorPane.leftAnchor="200.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="212.0" layoutY="382.0" lineSpacing="4.0" prefHeight="97.0" prefWidth="389.0" text="From the &quot;settings&quot; page, in the main menu, you can change the key bindings for moving and shooting. The default ones are WASD for moving and IJKL for shooting. You can also change the frequency of refreshing the map or the status informations." textAlignment="JUSTIFY" wrapText="true">
+      <Label layoutX="199.0" layoutY="403.0" lineSpacing="4.0" prefHeight="109.0" prefWidth="403.0" text="From the &quot;settings&quot; page, in the main menu, you can change the key bindings for moving and shooting. The default ones are WASD for moving and IJKL for shooting. You can also change the frequency of refreshing the map or the status informations." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="200.0">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="690.0" layoutY="359.0" text="Game view:">
+      <Label layoutX="677.0" layoutY="380.0" text="Game view:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="690.0" layoutY="382.0" lineSpacing="4.0" prefHeight="77.0" prefWidth="403.0" text="When you create, join or spectate a game, you will be redirected in the game view. This page let you interact with the map using the game controls and chat with other player and see your player status." textAlignment="JUSTIFY" wrapText="true">
+      <Label layoutX="678.0" layoutY="403.0" lineSpacing="4.0" prefHeight="109.0" prefWidth="403.0" text="When you create, join or spectate a game, you will be redirected in the game view. This page let you interact with the map using the game controls and chat with other player and see your player status." textAlignment="JUSTIFY" wrapText="true" AnchorPane.rightAnchor="200.0">
          <font>
             <Font size="14.0" />
          </font>
