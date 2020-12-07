@@ -12,7 +12,7 @@
             <Font name="Segoe UI Bold Italic" size="36.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="583.0" layoutY="172.0" text="How to Play" AnchorPane.leftAnchor="570.0" AnchorPane.rightAnchor="570.0" AnchorPane.topAnchor="180.0">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="557.0" layoutY="174.0" prefHeight="26.0" prefWidth="166.0" text="How to Play" AnchorPane.leftAnchor="557.0" AnchorPane.rightAnchor="557.0" AnchorPane.topAnchor="174.0">
          <font>
             <Font name="System Bold" size="22.0" />
          </font>
@@ -22,27 +22,27 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="199.0" layoutY="260.0" lineSpacing="4.0" prefHeight="109.0" prefWidth="876.0" text="Among AIs is an RPG game developed to test AI performances in simple videogames. The main goal of the game is to capture the flag in the map, using smart strategies. The game let you also to shoot to other players, judge if some teammates are impostors and use barriers around you to play smarter. Among AIs let human and AI players to have fun each other in personalized lobbies and see if machines can really conquer the world!" wrapText="true" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
+      <Label layoutX="199.0" layoutY="260.0" lineSpacing="4.0" prefHeight="126.0" prefWidth="880.0" text="Among AIs is a CTF game developed to pit humans and AI agents against each other. The main goal of the game is to take the flag of the opposing team, while applying smart strategies. You can shoot other players, accuse your teammates of being impostors and play the Turing game, judging if a certain player is of human or AI nature. Also, barriers around you can be used to play smarter.Wether you are an AI or a human, Among AIs lets you have fun in personalized lobbies: see if machines can really conquer the world!" wrapText="true" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="199.0" layoutY="380.0" text="Game controls:" AnchorPane.leftAnchor="200.0">
+      <Label layoutX="200.0" layoutY="387.0" text="Game controls:" AnchorPane.leftAnchor="200.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="199.0" layoutY="403.0" lineSpacing="4.0" prefHeight="109.0" prefWidth="403.0" text="From the &quot;settings&quot; page, in the main menu, you can change the key bindings for moving and shooting. The default ones are WASD for moving and IJKL for shooting. You can also change the frequency of refreshing the map or the status informations." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="200.0">
+      <Label layoutX="200.0" layoutY="410.0" lineSpacing="4.0" prefHeight="192.0" prefWidth="403.0" text="From the &quot;settings&quot; page in the main menu, you can change the key bindings for different actions. These include: moving (default is WASD), shooting (default is IJKL), refresh frequency of the map and status information. Finally, you can pick the keys to hide/show side panels in game and spectate views: these will be useful when you play on wider maps." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="200.0">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="677.0" layoutY="380.0" text="Game view:">
+      <Label layoutX="677.0" layoutY="387.0" text="Game view:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="678.0" layoutY="403.0" lineSpacing="4.0" prefHeight="109.0" prefWidth="403.0" text="When you create, join or spectate a game, you will be redirected in the game view. This page let you interact with the map using the game controls and chat with other player and see your player status." textAlignment="JUSTIFY" wrapText="true" AnchorPane.rightAnchor="200.0">
+      <Label layoutX="677.0" layoutY="410.0" lineSpacing="4.0" prefHeight="192.0" prefWidth="403.0" text="When you create or join a game, you will be directed to the game view. This is where the action happens: from there you can play using game controls, keep track of your player status and chat with others. If instead you decide to spectate a game, a cleaner version of that view will be shown, so that you can easily see everything that is going on." textAlignment="JUSTIFY" wrapText="true" AnchorPane.rightAnchor="200.0">
          <font>
             <Font size="14.0" />
          </font>

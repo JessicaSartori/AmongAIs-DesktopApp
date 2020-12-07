@@ -8,70 +8,70 @@
 
 <AnchorPane fx:id="gamePanel" focusTraversable="true" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.gameController">
 
-   <Button focusTraversable="false" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" text="Quit match" />
+   <Button focusTraversable="false" layoutX="2.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" text="Quit match" />
 
-   <Label layoutX="93.0" layoutY="13.0" text="Lobby name:">
+   <Label layoutX="93.0" layoutY="16.0" text="Lobby name:">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
    </Label>
-   <Label fx:id="lobbyName" layoutX="202.0" layoutY="13.0" text="lobby">
-      <font>
-         <Font name="System Bold" size="18.0" />
-      </font>
-   </Label>
-
-   <Label layoutX="319.0" layoutY="13.0" text="Game status:">
-      <font>
-         <Font name="System Bold" size="18.0" />
-      </font>
-   </Label>
-   <Label fx:id="lblGameState" layoutX="428.0" layoutY="13.0" text="FINISHED">
+   <Label fx:id="lobbyName" layoutX="224.0" layoutY="17.0" text="lobby">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
    </Label>
 
-   <Label layoutX="519.0" layoutY="13.0" text="Player status:">
+   <Label layoutX="287.0" layoutY="17.0" text="Game status:">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
    </Label>
-   <Label fx:id="lblPlayerState" layoutX="632.0" layoutY="13.0" text="lobbyowner">
-      <font>
-         <Font name="System Bold" size="18.0" />
-      </font>
-   </Label>
-
-   <Label fx:id="txtLoyalty" layoutX="737.0" layoutY="13.0" text="Loyalty: ">
-      <font>
-         <Font name="System Bold" size="18.0" />
-      </font>
-   </Label>
-   <Label fx:id="playerLoyalty" layoutX="809.0" layoutY="13.0" prefHeight="27.0" prefWidth="101.0" text="Normal">
+   <Label fx:id="lblGameState" layoutX="422.0" layoutY="17.0" text="FINISHED">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
    </Label>
 
-   <Label fx:id="txtScore" layoutX="921.0" layoutY="13.0" text="Score: ">
+   <Label layoutX="521.0" layoutY="16.0" text="Player status:">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
    </Label>
-   <Label fx:id="playerScore" layoutX="972.0" layoutY="13.0" text="0">
+   <Label fx:id="lblPlayerState" layoutX="663.0" layoutY="16.0" text="lobbyowner">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
    </Label>
 
-   <Label fx:id="txtEnergy" layoutX="1001.0" layoutY="13.0" text="Energy: ">
+   <Label fx:id="txtLoyalty" layoutX="782.0" layoutY="16.0" text="Loyalty: ">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
    </Label>
-   <ProgressBar fx:id="playerEnergyBar" layoutX="1070.0" layoutY="13.0" prefHeight="27.0" prefWidth="153.0" progress="1.0" />
-   <Label fx:id="playerEnergy" alignment="CENTER" contentDisplay="CENTER" layoutX="1227.0" layoutY="13.0" style="-fx-scale-z: 1000;" text="256" textFill="BLACK">
+   <Label fx:id="playerLoyalty" layoutX="864.0" layoutY="13.0" prefHeight="27.0" prefWidth="101.0" text="Normal">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+
+   <Label fx:id="txtScore" layoutX="613.0" layoutY="677.0" text="Score: ">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+   <Label fx:id="playerScore" layoutX="678.0" layoutY="677.0" text="0">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+
+   <Label fx:id="txtEnergy" layoutX="1008.0" layoutY="16.0" text="Energy: ">
+      <font>
+         <Font name="System Bold" size="18.0" />
+      </font>
+   </Label>
+   <ProgressBar fx:id="playerEnergyBar" layoutX="1089.0" layoutY="15.0" prefHeight="27.0" prefWidth="153.0" progress="1.0" />
+   <Label fx:id="playerEnergy" alignment="CENTER" contentDisplay="CENTER" layoutX="1242.0" layoutY="17.0" style="-fx-scale-z: 1000;" text="256" textFill="BLACK">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
@@ -112,7 +112,7 @@
    </Label>
 
 
-   <Pane fx:id="rightSubPanel" focusTraversable="true" layoutX="965" layoutY="55.0" prefHeight="729.0" prefWidth="315.0" AnchorPane.rightAnchor="0.0">
+   <Pane fx:id="rightSubPanel" focusTraversable="true" layoutX="965" layoutY="65.0" prefHeight="719.0" prefWidth="315.0" AnchorPane.rightAnchor="0.0">
       <Label layoutX="25.0" layoutY="14.0" text="Game chat:">
          <font>
             <Font name="System Bold" size="18.0" />

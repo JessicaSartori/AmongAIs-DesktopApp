@@ -15,7 +15,7 @@
          <Font name="System Bold" size="18.0" />
       </font>
    </Label>
-   <Label fx:id="lobbyName" layoutX="670.0" layoutY="13.0" text="lobby">
+   <Label fx:id="lobbyName" layoutX="692.0" layoutY="13.0" text="lobby">
       <font>
          <Font name="System Bold" size="18.0" />
       </font>
@@ -37,7 +37,6 @@
          <columns>
             <TableColumn prefWidth="75.0" text="Team" />
             <TableColumn prefWidth="75.0" text="Name" />
-            <TableColumn prefWidth="75.0" text="Score" />
             <TableColumn prefWidth="75.0" text="Status" />
          </columns>
       </TableView>
