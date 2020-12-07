@@ -1,7 +1,5 @@
 package it.unipi.cs.smartapp.controllers;
 
-import javafx.animation.FadeTransition;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -11,11 +9,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.application.Platform;
+import javafx.animation.FadeTransition;
+import javafx.util.Duration;
 
 import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.statemanager.*;
 import it.unipi.cs.smartapp.screens.Renderer;
-import javafx.util.Duration;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -108,13 +108,24 @@ public class gameController implements Controller {
 
         // Keyboard events
         gamePanel.setOnKeyPressed(keyEvent -> {
-            if (!(stateMgr.getGameState() == GameState.ACTIVE)) {
-                lblResponse.setText("Can not move or shoot while in lobby");
+            KeyCode key = keyEvent.getCode();
+
+            if (key == playerSettings.getFlipLeft()) Controllers.flipVisiblePane(leftSubPanel);
+            else if (key == playerSettings.getFlipRight()) Controllers.flipVisiblePane(rightSubPanel);
+
+            if (stateMgr.getGameState() != GameState.ACTIVE) {
+                lblResponse.setTextFill(Color.RED);
+                lblResponse.setText("Cannot move or shoot while in lobby");
+                labelFader(lblResponse, 3.0).play();
+                return;
+            }
+            if (stateMgr.player.getState().equalsIgnoreCase("killed")) {
+                lblResponse.setTextFill(Color.RED);
+                lblResponse.setText("Cannot move or shoot if dead");
                 labelFader(lblResponse, 3.0).play();
                 return;
             }
 
-            KeyCode key = keyEvent.getCode();
             if(key == playerSettings.getMoveUp()) movePlayer('N');
             else if (key == playerSettings.getMoveLeft()) movePlayer('W');
             else if (key == playerSettings.getMoveDown()) movePlayer('S');
@@ -123,8 +134,6 @@ public class gameController implements Controller {
             else if (key == playerSettings.getShootLeft()) tryToShoot('W');
             else if (key == playerSettings.getShootDown()) tryToShoot('S');
             else if (key == playerSettings.getShootRight()) tryToShoot('E');
-            else if (key == playerSettings.getFlipLeft()) Controllers.flipVisiblePane(leftSubPanel);
-            else if (key == playerSettings.getFlipRight()) Controllers.flipVisiblePane(rightSubPanel);
         });
 
         // Setup automatic LOOK and STATUS
@@ -165,7 +174,7 @@ public class gameController implements Controller {
 
             // Update Game View Values
             if (stateMgr.getGameState() == GameState.ACTIVE && firstTime) {
-                lblResponse.setTextFill(Color.GREEN);
+                lblResponse.setTextFill(Color.DARKGREEN);
                 lblResponse.setText("GAME STARTED");
                 labelFader(lblResponse, 3.0).play();
                 firstTime = false;
@@ -177,7 +186,7 @@ public class gameController implements Controller {
 
                 Alert message = new Alert(Alert.AlertType.INFORMATION);
                 message.setTitle("Game finished!");
-                message.setContentText("Click OK to see final results or close this message to stay in game.");
+                message.setContentText("Continue to see final results");
                 message.showAndWait();
                 Renderer.getInstance().show("resultScene");
             }
@@ -198,6 +207,7 @@ public class gameController implements Controller {
                 return;
             }
             case ERROR -> {
+                lblResponse.setTextFill(Color.RED);
                 lblResponse.setText(res.freeText);
                 labelFader(lblResponse, 2.0).play();
                 return;
@@ -227,6 +237,7 @@ public class gameController implements Controller {
                 return;
             }
             case ERROR -> {
+                lblResponse.setTextFill(Color.RED);
                 lblResponse.setText(res.freeText);
                 labelFader(lblResponse, 2.0).play();
                 return;
@@ -240,6 +251,13 @@ public class gameController implements Controller {
         stateMgr.map.drawShot(canvasContext, stateMgr.player.getPosition(), stateMgr.player.getTeam(), direction, landed, energy);
     }
 
+    // Update ProgressBar correctly
+    public void updateEnergy() {
+        Integer energyValue = stateMgr.player.getEnergy();
+        playerEnergy.setText(energyValue.toString());
+        playerEnergyBar.setProgress(((double) energyValue) / 256.0);
+    }
+
     @FXML
     public void btnStartMatchPressed() {
         GameServerResponse res = gameServer.sendSTART(stateMgr.getGameName());
@@ -249,67 +267,73 @@ public class gameController implements Controller {
             message.setTitle("Error");
             message.setContentText(res.freeText);
             message.showAndWait();
-            return;
         }
-        System.out.println(res.freeText);
-    }
-
-    // Update ProgressBar correctly
-    public void updateEnergy() {
-        Integer energyValue = stateMgr.player.getEnergy();
-        playerEnergy.setText(energyValue.toString());
-        playerEnergyBar.setProgress(((double) energyValue) / 256.0);
     }
 
     @FXML
     private void btnAccusePressed() {
-        lblResponse.setTextFill(Color.RED);
+        String username = txtPlayerVote.getText();
 
-        if(txtPlayerVote.getText().trim().isEmpty()) {
+        if(username.isBlank()) {
+            lblResponse.setTextFill(Color.RED);
             lblResponse.setText("Player name empty");
-            labelFader(lblResponse, 3.0).play();
+            labelFader(lblResponse, 2.0).play();
             return;
         }
 
-        GameServerResponse response = gameServer.sendACCUSE(stateMgr.getGameName(), txtPlayerVote.getText());
-
-        if(response.code != ResponseCode.OK) {
-            lblResponse.setText(response.freeText);
-            labelFader(lblResponse, 3.0).play();
-            return;
+        GameServerResponse response = gameServer.sendACCUSE(stateMgr.getGameName(), username);
+        switch (response.code) {
+            case FAIL -> {
+                System.err.println(response.freeText);
+                return;
+            }
+            case ERROR -> {
+                lblResponse.setTextFill(Color.RED);
+                lblResponse.setText(response.freeText);
+            }
+            case OK -> {
+                lblResponse.setTextFill(Color.DARKGREEN);
+                lblResponse.setText("You accused " + username + "!");
+            }
         }
-        lblResponse.setTextFill(Color.GREEN);
-        lblResponse.setText(response.freeText);
         labelFader(lblResponse, 2.0).play();
     }
 
     @FXML
     private void btnJudgePressed() {
-        lblResponse.setTextFill(Color.RED);
+        String username = txtPlayerVote.getText();
+        String nature = txtPlayerJudge.getText();
 
-        if(txtPlayerVote.getText().trim().isEmpty()) {
+        if(username.isBlank()) {
+            lblResponse.setTextFill(Color.RED);
             lblResponse.setText("Player name empty");
-            labelFader(lblResponse, 3.0).play();
+            labelFader(lblResponse, 2.0).play();
             return;
         }
 
-        System.out.println("Vote: " + txtPlayerVote.getText() + " Judge: " + txtPlayerJudge.getText());
-        if(!txtPlayerJudge.getText().equalsIgnoreCase("AI") && !txtPlayerJudge.getText().equalsIgnoreCase("H")) {
+        if(!nature.equalsIgnoreCase("AI") && !nature.equalsIgnoreCase("H")) {
+            lblResponse.setTextFill(Color.RED);
             lblResponse.setText("Invalid nature");
-            labelFader(lblResponse, 3.0).play();
+            labelFader(lblResponse, 2.0).play();
             return;
         }
 
         GameServerResponse response = gameServer.sendJUDGE(stateMgr.getGameName(), txtPlayerVote.getText(), txtPlayerJudge.getText().toUpperCase());
-        System.out.println("Response code: " + response.code + " free text: " + response.freeText);
-
-        if(response.code != ResponseCode.OK) {
-            lblResponse.setText(response.freeText);
-            labelFader(lblResponse,2.0 ).play();
-            return;
+        switch (response.code) {
+            case FAIL -> {
+                System.err.println(response.freeText);
+                return;
+            }
+            case ERROR -> {
+                lblResponse.setTextFill(Color.RED);
+                lblResponse.setText(response.freeText);
+                return;
+            }
+            case OK -> {
+                lblResponse.setTextFill(Color.DARKGREEN);
+                lblResponse.setText("You judged " + username + " as " + nature + "!");
+            }
         }
-        lblResponse.setTextFill(Color.GREEN);
-        lblResponse.setText(response.freeText);
         labelFader(lblResponse, 2.0).play();
     }
 
