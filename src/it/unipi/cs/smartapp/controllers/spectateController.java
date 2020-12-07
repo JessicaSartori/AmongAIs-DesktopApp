@@ -118,7 +118,7 @@ public class spectateController implements Controller {
     public void btnGoBackPressed() {
         quitScene();
         Controllers.closeGameServerConnection();
-        Renderer.getInstance().show("menuScene");
+        Renderer.getInstance().show("mainMenu");
     }
 
     private void quitScene() {
