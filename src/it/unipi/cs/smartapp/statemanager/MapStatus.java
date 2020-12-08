@@ -13,9 +13,6 @@ import java.util.HashMap;
 
 public class MapStatus {
 
-    // Constant - Default X layout of map canvas
-    private static final Double DEFAULT_LAYOUT_X = 318.0;
-
     // Sizes of canvas in gameScene
     private Double canvasHeight = null, canvasWidth = null;
 
@@ -72,18 +69,13 @@ public class MapStatus {
         // Adjust canvas size and load sprites every time scene is loaded
         if(!loaded){
             canvasHeight = mapCanvas.getHeight();
+            canvasWidth = mapCanvas.getWidth();
+
             cellSize = canvasHeight / (mapSize + 2);
 
-            if(ratio == 'W') {
-                // Enlarge canvas accordingly
-                mapCanvas.setWidth(mapCanvas.getWidth() + cellSize*mapSize);
-                // Recenter canvas width-wise
-                mapCanvas.setLayoutX(DEFAULT_LAYOUT_X - (cellSize*mapSize) / 2);
-            }
-            else
-                mapCanvas.setLayoutX(DEFAULT_LAYOUT_X);
-
-            canvasWidth = mapCanvas.getWidth();
+            // Enlarge canvas accordingly
+            if(ratio == 'W') mapCanvas.setWidth(canvasHeight + cellSize*mapSize);
+            else mapCanvas.setWidth(canvasHeight);
 
             loadSprites();
             loaded = true;

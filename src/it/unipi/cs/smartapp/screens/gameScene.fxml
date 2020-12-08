@@ -80,17 +80,6 @@
          </Label>
       </children></HBox>
 
-   <Label fx:id="txtScore" layoutX="613.0" layoutY="677.0" text="Score: " AnchorPane.bottomAnchor="30.0">
-      <font>
-         <Font name="System Bold" size="18.0" />
-      </font>
-   </Label>
-   <Label fx:id="playerScore" layoutX="678.0" layoutY="677.0" text="0" AnchorPane.bottomAnchor="30.0">
-      <font>
-         <Font name="System Bold" size="18.0" />
-      </font>
-   </Label>
-
 
    <Pane fx:id="leftSubPanel" focusTraversable="true" layoutY="53.0" prefHeight="729.0" prefWidth="315.0" AnchorPane.leftAnchor="0.0">
 
@@ -117,11 +106,26 @@
    </Pane>
    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="315.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="42.0">
       <children>
-      
-      
-         <Canvas fx:id="mapCanvas" focusTraversable="true" height="645.0" width="645.0" />
+
+
+         <Canvas fx:id="mapCanvas" focusTraversable="true" height="645.0" nodeOrientation="INHERIT" width="645.0" />
       </children>
    </VBox>
+   <HBox alignment="CENTER" layoutX="548.0" layoutY="743.0" prefWidth="200.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="315.0" AnchorPane.rightAnchor="300.0">
+      <children>
+
+         <Label fx:id="txtScore" text="Score: ">
+            <font>
+               <Font name="System Bold" size="18.0" />
+            </font>
+         </Label>
+         <Label fx:id="playerScore" text="0">
+            <font>
+               <Font name="System Bold" size="18.0" />
+            </font>
+         </Label>
+      </children>
+   </HBox>
 
    <Label fx:id="lblResponse" alignment="CENTER" contentDisplay="CENTER" layoutX="351.0" layoutY="379.0" prefHeight="27.0" prefWidth="601.0" text="responseLabel" textAlignment="CENTER" textFill="red" wrapText="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="315.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="42.0">
       <font>
