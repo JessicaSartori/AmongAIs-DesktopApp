@@ -6,35 +6,49 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.joinController">
 
-    <Label alignment="CENTER" layoutX="297.0" layoutY="38.0" prefHeight="137.0" prefWidth="206.0" text="AmongAIs" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="50.0">
+    <Label alignment="CENTER" layoutX="297.0" layoutY="38.0" prefHeight="137.0" prefWidth="206.0" text="AmongAIs" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
         <font>
             <Font name="Segoe UI Bold Italic" size="36.0" />
         </font>
     </Label>
-    <Label fx:id="errorLabel" layoutX="400.0" layoutY="210.0" prefHeight="30.0" prefWidth="480.0" text="errorLabel" textFill="RED" AnchorPane.topAnchor="210.0">
-        <font>
-        <Font size="14.0" />
-        </font>
-    </Label>
+    <VBox alignment="TOP_CENTER" fillWidth="false" layoutX="190.0" layoutY="280.0" prefHeight="200.0" prefWidth="100.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
+        <Label fx:id="errorLabel" prefHeight="30.0" prefWidth="480.0" text="errorLabel" textFill="RED">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
 
-    <TextField fx:id="gameNameField" layoutX="400.0" layoutY="240.0" prefHeight="30.0" prefWidth="480.0" promptText="Gamename" AnchorPane.topAnchor="240.0">
-        <font>
-        <Font size="14.0" />
-        </font>
-    </TextField>
-    <Button layoutX="417.0" layoutY="287.0" mnemonicParsing="false" onAction="#btnJoinPressed" prefHeight="30.0" prefWidth="200.0" text="Join" AnchorPane.topAnchor="287.0">
-        <font>
-          <Font size="13.0" />
-        </font>
-    </Button>
-    <Button layoutX="664.0" layoutY="287.0" mnemonicParsing="false" onAction="#btnSpectatePressed" prefHeight="30.0" prefWidth="200.0" text="Spectate" AnchorPane.topAnchor="287.0">
-        <font>
-          <Font size="13.0" />
-        </font>
-    </Button>
-    <Button layoutX="37.0" layoutY="38.0" mnemonicParsing="false" onAction="#backBtnPressed" prefWidth="80.0" text="Back" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+        <TextField fx:id="gameNameField" prefHeight="30.0" prefWidth="480.0" promptText="Gamename">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </TextField>
+        <Separator orientation="VERTICAL" prefHeight="20.0" visible="false"/>
+        <HBox alignment="TOP_CENTER" fillHeight="false" prefHeight="100.0" prefWidth="480.0">
+            <Button mnemonicParsing="false" onAction="#btnJoinPressed" prefHeight="30.0" prefWidth="200.0"
+                    text="Join">
+                <font>
+                    <Font size="13.0"/>
+                </font>
+            </Button>
+            <Separator prefWidth="50.0" visible="false"/>
+            <Button mnemonicParsing="false" onAction="#btnSpectatePressed" prefHeight="30.0" prefWidth="200.0"
+                    text="Spectate">
+                <font>
+                    <Font size="13.0"/>
+                </font>
+            </Button>
+        </HBox>
+    </VBox>
+    <Button layoutX="37.0" layoutY="38.0" mnemonicParsing="false" onAction="#backBtnPressed" prefHeight="30.0" prefWidth="80.0" text="Back" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
         <font>
         <Font size="13.0" />
         </font>
     </Button>
+    <Label alignment="CENTER" layoutX="327.0" layoutY="668.0" prefHeight="19.0" prefWidth="627.0" text="PC App - SmartApp 2020" textFill="#757575" AnchorPane.bottomAnchor="33.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <font>
+            <Font name="System Italic" size="13.0" />
+        </font>
+    </Label>
 </AnchorPane>

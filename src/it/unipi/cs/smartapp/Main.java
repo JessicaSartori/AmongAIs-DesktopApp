@@ -12,7 +12,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("AmongAIs");
-        primaryStage.setResizable(false);
+        //primaryStage.setResizable(false);
 
         r = Renderer.createInstance(primaryStage);
 

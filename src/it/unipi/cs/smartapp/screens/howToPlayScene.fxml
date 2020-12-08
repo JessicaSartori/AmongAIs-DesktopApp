@@ -5,47 +5,71 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.howToPlayController">
-   <children>
-      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefHeight="27.0" prefWidth="78.0" text="Go Back" />
-      <Label alignment="CENTER" layoutX="297.0" layoutY="38.0" prefHeight="137.0" prefWidth="206.0" text="AmongAIs" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="50.0">
+   <Label alignment="CENTER" layoutX="297.0" layoutY="38.0" prefHeight="137.0" prefWidth="206.0" text="AmongAIs" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+      <font>
+         <Font name="Segoe UI Bold Italic" size="36.0" />
+      </font>
+   </Label>
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="557.0" layoutY="174.0" prefHeight="26.0" prefWidth="166.0" text="How to Play" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="170.0">
+      <font>
+         <Font name="System Bold" size="22.0" />
+      </font>
+   </Label>
+   <VBox alignment="TOP_CENTER" layoutX="50.0" layoutY="233.0" prefHeight="420.0" prefWidth="1280.0"
+         AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="230.0">
+      <Label prefHeight="30.0" prefWidth="880.0" text="Game description:">
          <font>
-            <Font name="Segoe UI Bold Italic" size="36.0" />
+            <Font size="18.0"/>
          </font>
       </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="557.0" layoutY="174.0" prefHeight="26.0" prefWidth="166.0" text="How to Play" AnchorPane.leftAnchor="557.0" AnchorPane.rightAnchor="557.0" AnchorPane.topAnchor="174.0">
+      <Label lineSpacing="4.0" prefHeight="126.0" prefWidth="880.0"
+             text="Among AIs is a CTF game developed to pit humans and AI agents against each other. The main goal of the game is to take the flag of the opposing team, while applying smart strategies. You can shoot other players, accuse your teammates of being impostors and play the Turing game, judging if a certain player is of human or AI nature. Also, barriers around you can be used to play smarter. Whether you are an AI or a human, Among AIs lets you have fun in personalized lobbies: see if machines can really conquer the world!"
+             wrapText="true">
          <font>
-            <Font name="System Bold" size="22.0" />
+            <Font size="14.0"/>
          </font>
       </Label>
-      <Label layoutX="200.0" layoutY="233.0" text="Game description:" AnchorPane.leftAnchor="200.0">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="199.0" layoutY="260.0" lineSpacing="4.0" prefHeight="126.0" prefWidth="880.0" text="Among AIs is a CTF game developed to pit humans and AI agents against each other. The main goal of the game is to take the flag of the opposing team, while applying smart strategies. You can shoot other players, accuse your teammates of being impostors and play the Turing game, judging if a certain player is of human or AI nature. Also, barriers around you can be used to play smarter.Wether you are an AI or a human, Among AIs lets you have fun in personalized lobbies: see if machines can really conquer the world!" wrapText="true" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="200.0" layoutY="387.0" text="Game controls:" AnchorPane.leftAnchor="200.0">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="200.0" layoutY="410.0" lineSpacing="4.0" prefHeight="192.0" prefWidth="403.0" text="From the &quot;settings&quot; page in the main menu, you can change the key bindings for different actions. These include: moving (default is WASD), shooting (default is IJKL), refresh frequency of the map and status information. Finally, you can pick the keys to hide/show side panels in game and spectate views: these will be useful when you play on wider maps." textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="200.0">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="677.0" layoutY="387.0" text="Game view:">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="677.0" layoutY="410.0" lineSpacing="4.0" prefHeight="192.0" prefWidth="403.0" text="When you create or join a game, you will be directed to the game view. This is where the action happens: from there you can play using game controls, keep track of your player status and chat with others. If instead you decide to spectate a game, a cleaner version of that view will be shown, so that you can easily see everything that is going on." textAlignment="JUSTIFY" wrapText="true" AnchorPane.rightAnchor="200.0">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-   </children>
+      <Separator orientation="VERTICAL" prefHeight="10.0" visible="false"/>
+      <HBox alignment="TOP_CENTER" prefHeight="203.0" prefWidth="1280.0">
+         <VBox alignment="TOP_CENTER" prefHeight="74.0" prefWidth="410.0">
+            <Label prefHeight="30.0" prefWidth="410.0" text="Game controls:">
+               <font>
+                  <Font size="18.0"/>
+               </font>
+            </Label>
+            <Label lineSpacing="4.0" prefHeight="190.0" prefWidth="410.0"
+                   text="From the &quot;settings&quot; page in the main menu, you can change the key bindings for different actions. These include: moving (default is WASD), shooting (default is IJKL), refresh frequency of the map and status information. Finally, you can pick the keys to hide/show side panels in game and spectate views: these will be useful when you play on wider maps."
+                   textAlignment="JUSTIFY" wrapText="true">
+               <font>
+                  <Font size="14.0"/>
+               </font>
+            </Label>
+         </VBox>
+         <Separator prefWidth="60.0"/>
+         <VBox prefHeight="200.0" prefWidth="410.0">
+            <Label prefHeight="30.0" prefWidth="410.0" text="Game view:">
+               <font>
+                  <Font size="18.0"/>
+               </font>
+            </Label>
+            <Label lineSpacing="4.0" prefHeight="190.0" prefWidth="410.0"
+                   text="When you create or join a game, you will be directed to the game view. This is where the action happens: from there you can play using game controls, keep track of your player status and chat with others. If instead you decide to spectate a game, a cleaner version of that view will be shown, so that you can easily see everything that is going on."
+                   textAlignment="JUSTIFY" wrapText="true">
+               <font>
+                  <Font size="14.0"/>
+               </font>
+            </Label>
+         </VBox>
+      </HBox>
+   </VBox>
+   <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefHeight="30.0" prefWidth="80.0" text="Back" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+      <font>
+         <Font size="13.0" />
+      </font>
+   </Button>
+   <Label alignment="CENTER" layoutX="327.0" layoutY="668.0" prefHeight="19.0" prefWidth="627.0" text="PC App - SmartApp 2020" textFill="#757575" AnchorPane.bottomAnchor="33.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <font>
+         <Font name="System Italic" size="13.0" />
+      </font>
+   </Label>
 </AnchorPane>

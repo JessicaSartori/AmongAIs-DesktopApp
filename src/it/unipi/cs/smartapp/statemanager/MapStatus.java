@@ -111,7 +111,7 @@ public class MapStatus {
                 if(username != null) {
                     canvasContext.fillText(username, xCanvas - (username.length() * 2), yCanvas - 5);
 
-                    if(currentUser.equals(username)) canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
+                    if(currentUser != null && currentUser.equals(username)) canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
                 } else if(gameMap[r][c] == 'X' || gameMap[r][c] == 'x') {
                     canvasContext.fillText("Flag", xCanvas - 5, yCanvas - 5);
                     canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
@@ -125,7 +125,7 @@ public class MapStatus {
     }
 
     public void drawCell(GraphicsContext canvasContext, Integer x, Integer y, Image image) {
-        Double xCanvas = x*cellSize, yCanvas = y*cellSize;
+        double xCanvas = x*cellSize, yCanvas = y*cellSize;
 
         canvasContext.drawImage(image, xCanvas, yCanvas, cellSize, cellSize);
     }
@@ -145,7 +145,7 @@ public class MapStatus {
 
     public void drawShot(GraphicsContext canvasContext, Integer[] playerPos, Integer team, Character shotDirection, Character landed, Integer prevEnergy) {
         Integer c = playerPos[0], r = playerPos[1];
-        Character playerKey = ' ', explosionKey = ' ';
+        char playerKey = ' ', explosionKey;
 
         if(Character.isUpperCase(gameMap[r][c])) canvasContext.setStroke(Color.web("#B30000"));
         else canvasContext.setStroke(Color.BLUE);
@@ -191,7 +191,7 @@ public class MapStatus {
         drawCell(canvasContext, c + 1, r + 1, explosion);
 
         // Redraw square around current player
-        Double xCanvas = (playerPos[0] + 1)*cellSize, yCanvas = (playerPos[1] + 1)*cellSize;
+        double xCanvas = (playerPos[0] + 1)*cellSize, yCanvas = (playerPos[1] + 1)*cellSize;
         canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
     }
 
