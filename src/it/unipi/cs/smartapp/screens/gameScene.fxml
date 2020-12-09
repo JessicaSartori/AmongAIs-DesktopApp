@@ -98,7 +98,7 @@
          <columns>
             <TableColumn editable="false" prefWidth="75.0" sortable="false" text="Team" />
             <TableColumn editable="false" prefWidth="75.0" sortable="false" text="Name" />
-            <TableColumn editable="false" prefWidth="75.0" sortType="DESCENDING" sortable="false" text="Status" />
+            <TableColumn editable="false" prefWidth="75.0" sortable="false" text="Status" />
          </columns>
       </TableView>
 
