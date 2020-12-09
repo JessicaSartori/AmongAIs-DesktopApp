@@ -39,6 +39,7 @@ public class ChatManager {
         ChatMessage message = stateMgr.newMessages.poll();
         if(message == null) return;
 
+        // If channel is not the lobby main one
         if(!stateMgr.getGameName().equals(message.channel)) {
             Text channelTxt =  new Text("(" + message.channel + ") ");
             channelTxt.setFill(Color.YELLOW);
@@ -47,6 +48,7 @@ public class ChatManager {
         }
 
         if(message.user.equals("@GameServer")) {
+            // If message is from game server
             handleSystemMessage(message);
             Text msg = new Text(message.user + ": " + message.text + "\n");
             msg.setFill(Color.DARKORANGE);
@@ -54,6 +56,7 @@ public class ChatManager {
             chatArea.getChildren().add(msg);
 
         } else {
+            // Otherwise
             Text usernameTxt = new Text(message.user);
             usernameTxt.setFont(Font.font(fontFamily, fontSize));
             try {
@@ -67,6 +70,7 @@ public class ChatManager {
             chatArea.getChildren().add(messageTxt);
         }
 
+        // Scroll the chat down
         chatPane.setVvalue(1.0);
     }
 
@@ -111,7 +115,7 @@ public class ChatManager {
         }
 
         // Handle player disconnection
-        else if(message.text.contains(" left ")) {
+        else if(stateMgr.getGameState() != GameState.FINISHED && message.text.contains(" left ")) {
             String username = message.text.split(" ")[0];
             stateMgr.removePlayer(username);
         }
@@ -130,6 +134,11 @@ public class ChatManager {
             Player user = stateMgr.players.get(tokens[1]);
             user.setState(tokens[2]);
             user.setScore(Integer.parseInt(tokens[3]));
+        }
+
+        // Handle ending message
+        else if(message.text.equals("-----------------")) {
+            closeChat();
         }
     }
 }

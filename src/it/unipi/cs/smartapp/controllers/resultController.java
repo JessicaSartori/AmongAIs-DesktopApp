@@ -7,7 +7,6 @@ import javafx.scene.control.TableView;
 import it.unipi.cs.smartapp.screens.Renderer;
 import it.unipi.cs.smartapp.statemanager.Player;
 import it.unipi.cs.smartapp.statemanager.StateManager;
-import it.unipi.cs.smartapp.drivers.GameServerDriver;
 
 
 public class resultController implements Controller {

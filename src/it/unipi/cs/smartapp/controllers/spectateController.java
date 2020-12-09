@@ -98,7 +98,7 @@ public class spectateController implements Controller {
         Platform.runLater(() -> {
             // Check finished game
             if (stateMgr.getGameState() == GameState.FINISHED) {
-                quitScene();
+                automaticActions.shutdownNow();
 
                 Alert message = new Alert(Alert.AlertType.INFORMATION);
                 message.setTitle("Game finished!");
@@ -116,13 +116,9 @@ public class spectateController implements Controller {
 
     @FXML
     public void btnGoBackPressed() {
-        quitScene();
-        Controllers.closeGameServerConnection();
-        Renderer.getInstance().show("mainMenu");
-    }
-
-    private void quitScene() {
         automaticActions.shutdownNow();
+        Controllers.closeGameServerConnection();
         chat.closeChat();
+        Renderer.getInstance().show("mainMenu");
     }
 }

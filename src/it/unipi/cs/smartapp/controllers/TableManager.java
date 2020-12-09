@@ -1,10 +1,11 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.statemanager.Player;
-import it.unipi.cs.smartapp.statemanager.StateManager;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import it.unipi.cs.smartapp.statemanager.Player;
+import it.unipi.cs.smartapp.statemanager.StateManager;
 
 
 public class TableManager {
@@ -45,8 +46,9 @@ public class TableManager {
         TableColumn<Player, P> column = new TableColumn<>(name);
         column.setCellValueFactory(new PropertyValueFactory<>(property));
         column.setStyle("-fx-alignment: CENTER");
-        column.setSortable(sortable);
         column.setReorderable(false);
+        column.setSortable(sortable);
+        if (sortable) column.setSortType(TableColumn.SortType.DESCENDING);
 
         return column;
     }

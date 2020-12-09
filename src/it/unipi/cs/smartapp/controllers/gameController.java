@@ -148,7 +148,8 @@ public class gameController implements Controller {
 
     @FXML
     public void btnGoBackPressed() {
-        quitScene();
+        automaticActions.shutdownNow();
+        chat.closeChat();
         Controllers.closeGameServerConnection();
         Renderer.getInstance().show("mainMenu");
     }
@@ -182,7 +183,7 @@ public class gameController implements Controller {
 
             // Check finished game
             if (stateMgr.getGameState() == GameState.FINISHED) {
-                quitScene();
+                automaticActions.shutdownNow();
 
                 Alert message = new Alert(Alert.AlertType.INFORMATION);
                 message.setTitle("Game finished!");
@@ -335,11 +336,6 @@ public class gameController implements Controller {
             }
         }
         labelFader(lblResponse, 2.0).play();
-    }
-
-    private void quitScene() {
-        automaticActions.shutdownNow();
-        chat.closeChat();
     }
 
     private FadeTransition labelFader(Node node, Double seconds) {
