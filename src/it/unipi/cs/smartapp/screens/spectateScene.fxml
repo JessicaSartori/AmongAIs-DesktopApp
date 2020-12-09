@@ -41,12 +41,9 @@
          </columns>
       </TableView>
    </Pane>
-   <VBox alignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="315.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="42.0">
-      <children>
-      
-      
-         <Canvas fx:id="mapCanvas" focusTraversable="true" height="645.0" width="645.0" />
-      </children>
+   <VBox alignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="315.0" AnchorPane.rightAnchor="300.0"
+         AnchorPane.topAnchor="42.0">
+      <Canvas fx:id="mapCanvas" focusTraversable="true" height="645.0" width="645.0"/>
    </VBox>
 
 

@@ -13,82 +13,81 @@
          <Font size="13.0" />
       </font></Button>
    <HBox alignment="CENTER" layoutX="79.0" prefHeight="60.0" prefWidth="1190.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <children>
-      
-         <Label text="Lobby name:">
-            <font>
-               <Font name="System Italic" size="18.0" />
-            </font>
-         </Label>
-         <Separator prefWidth="10.0" visible="false" />
-         <Label fx:id="lobbyName" maxWidth="100.0" prefHeight="27.0" text="lobby">
-            <font>
-               <Font name="System Bold Italic" size="18.0" />
-            </font>
-         </Label>
-         <Separator layoutX="119.0" layoutY="39.0" prefWidth="30.0" visible="false" />
-      
-         <Label text="Game status:">
-            <font>
-               <Font name="System Italic" size="18.0" />
-            </font>
-         </Label>
-         <Separator layoutX="119.0" layoutY="39.0" prefWidth="10.0" visible="false" />
-         <Label fx:id="lblGameState" text="FINISHED">
-            <font>
-               <Font name="System Bold" size="18.0" />
-            </font>
-         </Label>
-         <Separator layoutX="178.0" layoutY="39.0" prefWidth="30.0" visible="false" />
-      
-         <Label text="Player status:">
-            <font>
-               <Font name="System Italic" size="18.0" />
-            </font>
-         </Label>
-         <Separator layoutX="317.0" layoutY="39.0" prefWidth="10.0" visible="false" />
-         <Label fx:id="lblPlayerState" text="lobbyowner">
-            <font>
-               <Font name="System Bold" size="18.0" />
-            </font>
-         </Label>
-         <Separator layoutX="552.0" layoutY="39.0" prefWidth="40.0" visible="false" />
-      
-         <Label fx:id="txtLoyalty" text="Loyalty: ">
-            <font>
-               <Font name="System Italic" size="18.0" />
-            </font>
-         </Label>
-         <Separator layoutX="552.0" layoutY="39.0" prefWidth="10.0" visible="false" />
-         <Label fx:id="playerLoyalty" prefHeight="27.0" text="Normal">
-            <font>
-               <Font name="System Bold" size="18.0" />
-            </font>
-         </Label>
-         <Separator layoutX="664.0" layoutY="39.0" prefWidth="40.0" visible="false" />
-      
-         <Label fx:id="txtEnergy" text="Energy: ">
-            <font>
-               <Font name="System Bold" size="18.0" />
-            </font>
-         </Label>
-         <ProgressBar fx:id="playerEnergyBar" prefHeight="27.0" prefWidth="153.0" progress="1.0" />
-         <Label fx:id="playerEnergy" alignment="CENTER" contentDisplay="CENTER" style="-fx-scale-z: 1000;" text=" 256" textFill="BLACK">
-            <font>
-               <Font name="System Bold" size="18.0" />
-            </font>
-         </Label>
-      </children></HBox>
+
+      <Label text="Lobby name:">
+         <font>
+            <Font name="System Italic" size="18.0" />
+         </font>
+      </Label>
+      <Separator prefWidth="10.0" visible="false" />
+      <Label fx:id="lobbyName" maxWidth="100.0" prefHeight="27.0" text="lobby">
+         <font>
+            <Font name="System Bold Italic" size="18.0" />
+         </font>
+      </Label>
+      <Separator layoutX="119.0" layoutY="39.0" prefWidth="30.0" visible="false" />
+
+      <Label text="Game status:">
+         <font>
+            <Font name="System Italic" size="18.0" />
+         </font>
+      </Label>
+      <Separator layoutX="119.0" layoutY="39.0" prefWidth="10.0" visible="false" />
+      <Label fx:id="lblGameState" text="FINISHED">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Separator layoutX="178.0" layoutY="39.0" prefWidth="30.0" visible="false" />
+
+      <Label text="Player status:">
+         <font>
+            <Font name="System Italic" size="18.0" />
+         </font>
+      </Label>
+      <Separator layoutX="317.0" layoutY="39.0" prefWidth="10.0" visible="false" />
+      <Label fx:id="lblPlayerState" text="lobbyOwner">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Separator layoutX="552.0" layoutY="39.0" prefWidth="40.0" visible="false" />
+
+      <Label text="Loyalty: ">
+         <font>
+            <Font name="System Italic" size="18.0" />
+         </font>
+      </Label>
+      <Separator layoutX="552.0" layoutY="39.0" prefWidth="10.0" visible="false" />
+      <Label fx:id="playerLoyalty" prefHeight="27.0" text="Normal">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Separator layoutX="664.0" layoutY="39.0" prefWidth="40.0" visible="false" />
+
+      <Label text="Energy: ">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <ProgressBar fx:id="playerEnergyBar" prefHeight="27.0" prefWidth="153.0" progress="1.0" />
+      <Label fx:id="playerEnergy" alignment="CENTER" contentDisplay="CENTER" style="-fx-scale-z: 1000;" text=" 256" textFill="BLACK">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+   </HBox>
 
 
    <Pane fx:id="leftSubPanel" focusTraversable="true" layoutY="53.0" prefHeight="729.0" prefWidth="315.0" AnchorPane.leftAnchor="0.0">
 
       <TextField fx:id="txtPlayerVote" focusTraversable="false" layoutX="27.0" layoutY="567.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="126.0" promptText="Write a player name" />
       <TextField fx:id="txtPlayerJudge" focusTraversable="false" layoutX="162.0" layoutY="567.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="126.0" promptText="Nature (H/AI)" />
-      <Button fx:id="btnAccuse" focusTraversable="false" layoutX="27.0" layoutY="605.0" mnemonicParsing="false" onAction="#btnAccusePressed" prefHeight="40.0" prefWidth="126.0" text="Accuse" />
-      <Button fx:id="btnJudge" focusTraversable="false" layoutX="162.0" layoutY="605.0" mnemonicParsing="false" onAction="#btnJudgePressed" prefHeight="40.0" prefWidth="126.0" text="Judge" />
+      <Button focusTraversable="false" layoutX="27.0" layoutY="605.0" mnemonicParsing="false" onAction="#btnAccusePressed" prefHeight="40.0" prefWidth="126.0" text="Accuse" />
+      <Button focusTraversable="false" layoutX="162.0" layoutY="605.0" mnemonicParsing="false" onAction="#btnJudgePressed" prefHeight="40.0" prefWidth="126.0" text="Judge" />
 
-      <Label fx:id="lblListPlayers" layoutX="123.0" layoutY="14.0" text="Players">
+      <Label layoutX="123.0" layoutY="14.0" text="Players">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
@@ -97,34 +96,27 @@
       <TableView fx:id="tblPlayers" focusTraversable="false" layoutX="11.0" layoutY="44.0" prefHeight="505.0" prefWidth="294.0">
          <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
          <columns>
-            <TableColumn prefWidth="75.0" text="Team" />
-            <TableColumn prefWidth="75.0" text="Name" />
-            <TableColumn prefWidth="75.0" text="Status" />
+            <TableColumn editable="false" prefWidth="75.0" sortable="false" text="Team" />
+            <TableColumn editable="false" prefWidth="75.0" sortable="false" text="Name" />
+            <TableColumn editable="false" prefWidth="75.0" sortType="DESCENDING" sortable="false" text="Status" />
          </columns>
       </TableView>
 
    </Pane>
    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="315.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="42.0">
-      <children>
-
-
-         <Canvas fx:id="mapCanvas" focusTraversable="true" height="645.0" nodeOrientation="INHERIT" width="645.0" />
-      </children>
+      <Canvas fx:id="mapCanvas" focusTraversable="true" height="645.0" nodeOrientation="INHERIT" width="645.0" />
    </VBox>
    <HBox alignment="CENTER" layoutX="548.0" layoutY="743.0" prefWidth="200.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="315.0" AnchorPane.rightAnchor="300.0">
-      <children>
-
-         <Label fx:id="txtScore" text="Score: ">
-            <font>
-               <Font name="System Bold" size="18.0" />
-            </font>
-         </Label>
-         <Label fx:id="playerScore" text="0">
-            <font>
-               <Font name="System Bold" size="18.0" />
-            </font>
-         </Label>
-      </children>
+      <Label text="Score: ">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="playerScore" text="0">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
    </HBox>
 
    <Label fx:id="lblResponse" alignment="CENTER" contentDisplay="CENTER" layoutX="351.0" layoutY="379.0" prefHeight="27.0" prefWidth="601.0" text="responseLabel" textAlignment="CENTER" textFill="red" wrapText="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="315.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="42.0">
@@ -141,14 +133,12 @@
          </font>
       </Label>
 
-      <ScrollPane fx:id="chatPane" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" layoutX="24.0" layoutY="44.0" prefHeight="515.0" prefWidth="265.0" style="-fx-border-color: gray; -fx-background-color: white; -fx-border-radius: 5; -fx-padding: 5;" vvalue="1.0" AnchorPane.rightAnchor="26.333333333333314" AnchorPane.topAnchor="44.0">
-         <content>
-            <TextFlow prefHeight="475.0" prefWidth="253.0" style="-fx-background-color: white;">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </TextFlow>
-         </content>
+      <ScrollPane fx:id="chatPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="24.0" layoutY="44.0" prefHeight="515.0" prefWidth="265.0" style="-fx-border-color: gray; -fx-background-color: white; -fx-border-radius: 5; -fx-padding: 5;" vvalue="1.0" AnchorPane.rightAnchor="26.333333333333314" AnchorPane.topAnchor="44.0">
+         <TextFlow prefHeight="475.0" prefWidth="253.0" style="-fx-background-color: white;">
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+         </TextFlow>
       </ScrollPane>
 
       <TextField fx:id="txtMessage" focusTraversable="false" layoutX="26.0" layoutY="568.0" onAction="#txtSendMessage" prefHeight="27.0" prefWidth="263.0" promptText="Write something in chat..." />
