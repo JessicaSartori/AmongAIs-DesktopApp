@@ -156,7 +156,7 @@ public class gameController implements Controller {
 
     @FXML
     public void txtSendMessage() {
-        if(txtMessage.getText().isBlank()) {
+        if(txtMessage.getText().trim().isEmpty()) {
             txtMessage.setStyle("-fx-border-color: red");
         } else {
             txtMessage.setStyle("-fx-border-color: none");
@@ -203,26 +203,24 @@ public class gameController implements Controller {
         GameServerResponse res = gameServer.sendMOVE(stateMgr.getGameName(), direction);
 
         switch (res.code) {
-            case FAIL -> {
+            case FAIL:
                 System.err.println(res.freeText);
                 return;
-            }
-            case ERROR -> {
+            case ERROR:
                 lblResponse.setTextFill(Color.RED);
                 lblResponse.setText(res.freeText);
                 labelFader(lblResponse, 2.0).play();
                 return;
-            }
         }
 
         Integer[] old_position = stateMgr.player.getPosition();
         stateMgr.map.updatePosition(old_position[0], old_position[1], direction);
 
         switch (direction) {
-            case 'N' -> old_position[1] -= 1;
-            case 'S' -> old_position[1] += 1;
-            case 'W' -> old_position[0] -= 1;
-            case 'E' -> old_position[0] += 1;
+            case 'N': old_position[1] -= 1; break;
+            case 'S': old_position[1] += 1; break;
+            case 'W': old_position[0] -= 1; break;
+            case 'E': old_position[0] += 1; break;
         }
         stateMgr.player.setPosition(old_position);
 
@@ -233,16 +231,14 @@ public class gameController implements Controller {
         GameServerResponse res = gameServer.sendSHOOT(stateMgr.getGameName(), direction);
 
         switch (res.code) {
-            case FAIL -> {
+            case FAIL:
                 System.err.println(res.freeText);
                 return;
-            }
-            case ERROR -> {
+            case ERROR:
                 lblResponse.setTextFill(Color.RED);
                 lblResponse.setText(res.freeText);
                 labelFader(lblResponse, 2.0).play();
                 return;
-            }
         }
 
         Integer energy = stateMgr.player.getEnergy();
@@ -275,7 +271,7 @@ public class gameController implements Controller {
     private void btnAccusePressed() {
         String username = txtPlayerVote.getText();
 
-        if(username.isBlank()) {
+        if(username.trim().isEmpty()) {
             lblResponse.setTextFill(Color.RED);
             lblResponse.setText("Player name empty");
             labelFader(lblResponse, 2.0).play();
@@ -284,18 +280,17 @@ public class gameController implements Controller {
 
         GameServerResponse response = gameServer.sendACCUSE(stateMgr.getGameName(), username);
         switch (response.code) {
-            case FAIL -> {
+            case FAIL:
                 System.err.println(response.freeText);
                 return;
-            }
-            case ERROR -> {
+            case ERROR:
                 lblResponse.setTextFill(Color.RED);
                 lblResponse.setText(response.freeText);
-            }
-            case OK -> {
+                break;
+            case OK:
                 lblResponse.setTextFill(Color.DARKGREEN);
                 lblResponse.setText("You accused " + username + "!");
-            }
+                break;
         }
         labelFader(lblResponse, 2.0).play();
     }
@@ -305,7 +300,7 @@ public class gameController implements Controller {
         String username = txtPlayerVote.getText();
         String nature = txtPlayerJudge.getText();
 
-        if(username.isBlank()) {
+        if(username.trim().isEmpty()) {
             lblResponse.setTextFill(Color.RED);
             lblResponse.setText("Player name empty");
             labelFader(lblResponse, 2.0).play();
@@ -321,19 +316,16 @@ public class gameController implements Controller {
 
         GameServerResponse response = gameServer.sendJUDGE(stateMgr.getGameName(), txtPlayerVote.getText(), txtPlayerJudge.getText().toUpperCase());
         switch (response.code) {
-            case FAIL -> {
+            case FAIL:
                 System.err.println(response.freeText);
                 return;
-            }
-            case ERROR -> {
+            case ERROR:
                 lblResponse.setTextFill(Color.RED);
                 lblResponse.setText(response.freeText);
                 return;
-            }
-            case OK -> {
+            case OK:
                 lblResponse.setTextFill(Color.DARKGREEN);
                 lblResponse.setText("You judged " + username + " as " + nature + "!");
-            }
         }
         labelFader(lblResponse, 2.0).play();
     }

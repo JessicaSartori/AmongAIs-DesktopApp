@@ -143,30 +143,30 @@ public class MapStatus {
         else canvasContext.setStroke(Color.BLUE);
 
         switch (shotDirection) {
-            case 'N' -> {
+            case 'N':
                 if(landed == '?') r = -1;
                 else if(landed == '.' || landed == '~' || landed == '@') r -= prevEnergy;
                 else while(gameMap[r][c] != landed && r >= 0) r--;
                 playerKey = (team == 0) ? '8' : '7';
-            }
-            case 'S' -> {
+                break;
+            case 'S':
                 if(landed == '?') r = mapSize;
                 else if(landed == '.' || landed == '~' || landed == '@') r += prevEnergy;
                 else while(gameMap[r][c] != landed && r <= mapSize) r++;
                 playerKey = (team == 0) ? '2' : '1';
-            }
-            case 'W' -> {
+                break;
+            case 'W':
                 if(landed == '?') c = -1;
                 else if(landed == '.' || landed == '~' || landed == '@') c -= prevEnergy;
                 else while(gameMap[r][c] != landed && c >= 0) c--;
                 playerKey = (team == 0) ? '4' : '3';
-            }
-            case 'E' -> {
+                break;
+            case 'E':
                 if(landed == '?') c = mapWidth;
                 else if(landed == '.' || landed == '~' || landed == '@') c += prevEnergy;
                 else while(gameMap[r][c] != landed && c <= mapWidth) c++;
                 playerKey = (team == 0) ? '6' : '5';
-            }
+                break;
         }
 
         // Turn the player correctly
@@ -174,10 +174,10 @@ public class MapStatus {
         drawCell(canvasContext, playerPos[0] + 1, playerPos[1] + 1, player);
         // Draw explosion according to terrain
         switch (landed) {
-            case '~' -> explosionKey = '-';
-            case '@' -> explosionKey = '+';
-            case '?' -> explosionKey = '/';
-            default -> explosionKey = '*';
+            case '~': explosionKey = '-'; break;
+            case '@': explosionKey = '+'; break;
+            case '?': explosionKey = '/'; break;
+            default: explosionKey = '*'; break;
         }
         Image explosion = sprites.get(explosionKey);
         drawCell(canvasContext, c + 1, r + 1, explosion);
@@ -242,10 +242,10 @@ public class MapStatus {
         char old = gameMap[y][x];
         gameMap[y][x] = '.';
         switch (direction) {
-            case 'N' -> gameMap[y - 1][x] = old;
-            case 'S' -> gameMap[y + 1][x] = old;
-            case 'W' -> gameMap[y][x - 1] = old;
-            case 'E' -> gameMap[y][x + 1] = old;
+            case 'N': gameMap[y - 1][x] = old; break;
+            case 'S': gameMap[y + 1][x] = old; break;
+            case 'W': gameMap[y][x - 1] = old; break;
+            case 'E': gameMap[y][x + 1] = old; break;
         }
     }
 }

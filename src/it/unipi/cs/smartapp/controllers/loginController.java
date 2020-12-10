@@ -43,12 +43,12 @@ public class loginController implements Controller {
         String privateUsername = usernameField.getText();
         String publicUsername = publicUsernameField.getText();
 
-        if(privateUsername.isBlank() || privateUsername.contains(" ")) {
+        if(privateUsername.trim().isEmpty() || privateUsername.contains(" ")) {
             errorLabel.setText("Username not valid");
             return;
         }
 
-        if(publicUsername.isBlank()) publicUsername = privateUsername;
+        if(publicUsername.trim().isEmpty()) publicUsername = privateUsername;
         else if(publicUsername.contains(" ")) {
             errorLabel.setText("Public username not valid");
             return;

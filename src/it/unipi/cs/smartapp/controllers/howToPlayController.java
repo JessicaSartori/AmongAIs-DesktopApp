@@ -1,7 +1,9 @@
 package it.unipi.cs.smartapp.controllers;
 
-import it.unipi.cs.smartapp.screens.Renderer;
 import javafx.fxml.FXML;
+
+import it.unipi.cs.smartapp.screens.Renderer;
+
 
 public class howToPlayController implements Controller {
 

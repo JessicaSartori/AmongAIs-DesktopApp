@@ -73,7 +73,7 @@ public class createController implements Controller {
 
     // Check if the game name is valid (no whitespaces)
     private boolean isValid(String s) {
-        boolean valid = !(s.isBlank() || s.contains(" "));
+        boolean valid = !(s.trim().isEmpty() || s.contains(" "));
         if(!valid) lblMessage.setText("Invalid Game Name");
         return valid;
     }
@@ -91,11 +91,13 @@ public class createController implements Controller {
     private boolean create(String gameName, String options) {
         GameServerResponse res = gameServer.sendNEW(gameName, options);
         switch (res.code) {
-            case ERROR -> lblMessage.setText(res.freeText);
-            case FAIL -> {
+            case ERROR:
+                lblMessage.setText(res.freeText);
+                break;
+            case FAIL:
                 System.err.println(res.freeText);
                 lblMessage.setText("Cannot create the lobby");
-            }
+                break;
         }
         return (res.code == ResponseCode.OK);
     }
@@ -105,11 +107,13 @@ public class createController implements Controller {
     private boolean join(String gameName) {
         GameServerResponse res = gameServer.sendJOIN(gameName, stateManager.getUsername(), 'H', stateManager.getPrivateUsername());
         switch (res.code) {
-            case ERROR -> lblMessage.setText(res.freeText);
-            case FAIL -> {
+            case ERROR:
+                lblMessage.setText(res.freeText);
+                break;
+            case FAIL:
                 System.err.println(res.freeText);
                 lblMessage.setText("Cannot join the lobby");
-            }
+                break;
         }
         return (res.code == ResponseCode.OK);
     }

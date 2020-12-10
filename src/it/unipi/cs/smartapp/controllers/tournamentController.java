@@ -41,7 +41,7 @@ public class tournamentController implements Controller {
 
     @FXML
     private void btnJoinPressed() {
-        if (txtTournamentName.getText().isBlank()) {
+        if (txtTournamentName.getText().trim().isEmpty()) {
             lblMessage.setStyle("-fx-text-fill: red");
             lblMessage.setText("The tournament name must be valid.");
         } else {
@@ -53,7 +53,7 @@ public class tournamentController implements Controller {
 
     @FXML
     private void btnWithdrawPressed() {
-        if (txtTournamentName.getText().isBlank()) {
+        if (txtTournamentName.getText().trim().isEmpty()) {
             lblMessage.setStyle("-fx-text-fill: red");
             lblMessage.setText("The tournament name must be valid.");
         } else {

@@ -104,16 +104,16 @@ public class settingsController implements Controller {
                 btn.setText(newValue.toString());
 
                 switch (btn.getId()) {
-                    case "btnMoveUp" -> settings.setMoveUp(newValue);
-                    case "btnMoveDown" -> settings.setMoveDown(newValue);
-                    case "btnMoveLeft" -> settings.setMoveLeft(newValue);
-                    case "btnMoveRight" -> settings.setMoveRight(newValue);
-                    case "btnShootUp" -> settings.setShootUp(newValue);
-                    case "btnShootDown" -> settings.setShootDown(newValue);
-                    case "btnShootLeft" -> settings.setShootLeft(newValue);
-                    case "btnShootRight" -> settings.setShootRight(newValue);
-                    case "btnToggleChat" -> settings.setFlipRight(newValue);
-                    case "btnToggleList" -> settings.setFlipLeft(newValue);
+                    case "btnMoveUp": settings.setMoveUp(newValue); break;
+                    case "btnMoveDown": settings.setMoveDown(newValue); break;
+                    case "btnMoveLeft": settings.setMoveLeft(newValue); break;
+                    case "btnMoveRight": settings.setMoveRight(newValue); break;
+                    case "btnShootUp": settings.setShootUp(newValue); break;
+                    case "btnShootDown": settings.setShootDown(newValue); break;
+                    case "btnShootLeft": settings.setShootLeft(newValue); break;
+                    case "btnShootRight": settings.setShootRight(newValue); break;
+                    case "btnToggleChat": settings.setFlipRight(newValue); break;
+                    case "btnToggleList": settings.setFlipLeft(newValue); break;
                 }
             } else {
                 btn.setText(oldValue.toString());

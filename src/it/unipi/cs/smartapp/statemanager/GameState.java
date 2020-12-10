@@ -6,10 +6,13 @@ public enum GameState {
     FINISHED;   // Match is finished
 
     static public GameState fromString(String s) {
-        return switch (s) {
-            case "LOBBY" -> LOBBY;
-            case "ACTIVE" -> ACTIVE;
-            default -> FINISHED;
-        };
+        switch (s) {
+            case "LOBBY":
+                return LOBBY;
+            case "ACTIVE":
+                return ACTIVE;
+            default:
+                return FINISHED;
+        }
     }
 }

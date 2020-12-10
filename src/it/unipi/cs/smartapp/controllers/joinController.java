@@ -64,7 +64,7 @@ public class joinController implements Controller {
 
     // Check if the game name is valid (no whitespaces)
     private boolean isValid(String s) {
-        boolean valid = !(s.isBlank() || s.contains(" "));
+        boolean valid = !(s.trim().isEmpty() || s.contains(" "));
         if(!valid) errorLabel.setText("Invalid Game Name");
         return valid;
     }
@@ -82,12 +82,14 @@ public class joinController implements Controller {
     private boolean join(String gameName, Character nature) {
         GameServerResponse res = gameServer.sendJOIN(gameName, stateMgr.getUsername(), nature, stateMgr.getPrivateUsername());
         switch (res.code) {
-            case ERROR -> errorLabel.setText(res.freeText);
-            case FAIL -> {
+            case ERROR:
+                errorLabel.setText(res.freeText);
+                break;
+            case FAIL:
                 System.err.println(res.freeText);
                 if(nature == 'H') errorLabel.setText("Cannot join the lobby");
                 else errorLabel.setText("Cannot spectate the lobby");
-            }
+                break;
         }
         return (res.code == ResponseCode.OK);
     }

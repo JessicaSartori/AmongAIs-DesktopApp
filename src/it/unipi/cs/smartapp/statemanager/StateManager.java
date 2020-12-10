@@ -66,9 +66,9 @@ public class StateManager {
         for(int i=0; i < tokens.length; i += 2) {
             String keyword = tokens[i], value = tokens[i+1];
             switch (keyword) {
-                case "state" -> gameStatus.setState(GameState.fromString(value));
-                case "size" -> map.setMapSize(Integer.parseInt(value));
-                case "ratio" -> map.setMapRatio(value.charAt(0));
+                case "state": gameStatus.setState(GameState.fromString(value)); break;
+                case "size": map.setMapSize(Integer.parseInt(value)); break;
+                case "ratio": map.setMapRatio(value.charAt(0)); break;
             }
         }
     }

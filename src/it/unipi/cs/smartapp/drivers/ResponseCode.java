@@ -6,10 +6,13 @@ public enum ResponseCode {
     FAIL;   // General error during the communication
 
     static public ResponseCode fromString(String s) {
-        return switch (s) {
-            case "OK" -> OK;
-            case "ERROR" -> ERROR;
-            default -> FAIL;
-        };
+        switch (s) {
+            case "OK":
+                return OK;
+            case "ERROR":
+                return ERROR;
+            default:
+                return FAIL;
+        }
     }
 }
