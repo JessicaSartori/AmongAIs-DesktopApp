@@ -39,7 +39,7 @@ public class loginController implements Controller {
     }
 
     @FXML
-    private void btnPlayAsGuestPressed() {
+    private void btnPlayPressed() {
         String privateUsername = usernameField.getText();
         String publicUsername = publicUsernameField.getText();
 

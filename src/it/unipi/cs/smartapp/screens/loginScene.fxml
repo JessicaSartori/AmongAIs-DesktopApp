@@ -37,8 +37,8 @@
       </TextField>
       <Separator orientation="VERTICAL" prefHeight="20.0" visible="false"/>
 
-      <Button mnemonicParsing="false" onAction="#btnPlayAsGuestPressed" prefHeight="30.0" prefWidth="200.0"
-              text="Play as Guest">
+      <Button mnemonicParsing="false" onAction="#btnPlayPressed" prefHeight="30.0" prefWidth="200.0"
+              text="Play">
          <font>
             <Font size="13.0"/>
          </font>
