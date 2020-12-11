@@ -1,11 +1,15 @@
 package it.unipi.cs.smartapp.controllers;
 
+import javafx.application.Platform;
+import javafx.event.Event;
+import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import it.unipi.cs.smartapp.statemanager.Player;
 import it.unipi.cs.smartapp.statemanager.StateManager;
+import javafx.scene.input.MouseEvent;
 
 
 public class TableManager {
@@ -46,7 +50,14 @@ public class TableManager {
         TableColumn<Player, P> column = new TableColumn<>(name);
         column.setCellValueFactory(new PropertyValueFactory<>(property));
         column.setStyle("-fx-alignment: CENTER");
-        column.setReorderable(false);
+
+        // Substitute code for column.setReorderable(false) (did not work on some Java versions)
+        Platform.runLater(() -> {
+            for (Node header : tblPlayers.lookupAll(".column-header")) {
+                header.addEventFilter(MouseEvent.MOUSE_DRAGGED, Event::consume);
+            }
+        });
+
         column.setSortable(sortable);
         if (sortable) column.setSortType(TableColumn.SortType.DESCENDING);
 
