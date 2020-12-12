@@ -11,6 +11,7 @@ import java.util.Map;
 
 import it.unipi.cs.smartapp.controllers.Controller;
 
+
 public class Renderer {
 
     // Instance reference
@@ -20,29 +21,35 @@ public class Renderer {
     public static Renderer getInstance() { return instance; }
 
     // Create the instance with the given Stage
-    public static Renderer createInstance(Stage primaryStage) {
-        instance = new Renderer(primaryStage);
+    public static Renderer createInstance(Stage primaryStage, double w, double h) {
+        instance = new Renderer(primaryStage, w, h);
         return instance;
     }
+
 
     /*
      * ******************************
      * Instance variables and methods
      * ******************************
      */
-    private final Map<String, Scene> scenesMap;
+    private final Map<String, Parent> scenesMap;
+    private final Map<String, Controller> controllersMap;
     private final Stage stage;
+    double width, height;
 
-    private Renderer(Stage primaryStage) {
+    private Renderer(Stage primaryStage, double w, double h) {
+        width = w;
+        height = h;
         stage = primaryStage;
+
         scenesMap = new HashMap<>();
+        controllersMap = new HashMap<>();
+
+        stage.setMaximized(true);
     }
 
-    /*
-     * Add a new scene.
-     * Load the scene from the given FXML file and associate it
-     * with the given name
-     */
+    // Add a new scene.
+    // Load the scene root from the given FXML file and associate it with the given name
     public void addScene(String name, String FXMLFile) {
         if(scenesMap.containsKey(name)) {
             System.err.println("screens.Renderer: Scene already exists");
@@ -51,31 +58,29 @@ public class Renderer {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(FXMLFile));
-            Parent pane = loader.load();
-            Scene scene = new Scene(pane, 1280, 720);
+            Parent root = loader.load();
+            scenesMap.put(name, root);
             Controller sceneController = loader.getController();
-            scene.setUserData(sceneController);
-            scenesMap.put(name, scene);
+            controllersMap.put(name, sceneController);
+
         } catch(IOException e) {
             e.printStackTrace();
         }
     }
 
-    /*
-     * Display the corresponding scene
-     */
+     // Display the scene corresponding to the given name
     public void show(String sceneName) {
-        Scene sceneToShow = scenesMap.get(sceneName);
-        Controller c = (Controller) sceneToShow.getUserData();
-        c.updateContent();
+        Parent sceneRoot = scenesMap.get(sceneName);
+        Controller rootController = controllersMap.get(sceneName);
+        rootController.updateContent();
 
-        stage.setScene(sceneToShow);
+        try {
+            stage.getScene().setRoot(sceneRoot);
+        } catch (NullPointerException e) {
+            stage.setScene(new Scene(sceneRoot, width, height));
+        }
     }
 
-    /*
-     * Make the stage visible
-     */
-    public void showStage() {
-        stage.show();
-    }
+    // Make the stage visible
+    public void showStage() { stage.show(); }
 }

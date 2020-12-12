@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 
 import it.unipi.cs.smartapp.screens.Renderer;
 
+
 public class Main extends Application {
 
     private Renderer r;
@@ -12,9 +13,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("AmongAIs");
-        //primaryStage.setResizable(false);
 
-        r = Renderer.createInstance(primaryStage);
+        r = Renderer.createInstance(primaryStage, 1280, 720);
 
         r.addScene("login", "/it/unipi/cs/smartapp/screens/loginScene.fxml");
         r.addScene("mainMenu", "/it/unipi/cs/smartapp/screens/mainMenuScene.fxml");
