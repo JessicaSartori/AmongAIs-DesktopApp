@@ -13,7 +13,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 public class Controllers {
 
-    // Send s STATUS request, parse the response ad update the state
+    // Send a STATUS request, parse the response ad update the state
     public static void updateStatus(boolean spectating) {
         GameServerDriver gameServer = GameServerDriver.getInstance();
         StateManager stateMgr = StateManager.getInstance();
@@ -24,7 +24,7 @@ public class Controllers {
             System.err.println(res.freeText);
             return;
         }
-        System.out.println(res.freeText);
+        // System.out.println(res.freeText);
         String[] data = (String[]) res.data;
 
         // Update game status
@@ -55,7 +55,7 @@ public class Controllers {
             System.err.println(response.freeText);
             return;
         }
-        System.out.println(response.freeText);
+        // System.out.println(response.freeText);
 
         stateMgr.map.setGameMap((String[]) response.data);
     }

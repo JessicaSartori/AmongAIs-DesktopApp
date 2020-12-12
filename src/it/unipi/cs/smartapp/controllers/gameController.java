@@ -243,7 +243,7 @@ public class gameController implements Controller {
 
         Integer energy = stateMgr.player.getEnergy();
         Character landed = (Character) res.data;
-        System.out.println("Ok shot. Landed on: " + landed);
+        // System.out.println("Ok shot. Landed on: " + landed);
 
         stateMgr.map.drawShot(canvasContext, stateMgr.player.getPosition(), stateMgr.player.getTeam(), direction, landed, energy);
     }
