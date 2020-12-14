@@ -1,37 +1,49 @@
 package it.unipi.cs.smartapp.controllers;
 
+import it.unipi.cs.smartapp.statemanager.StateManager;
+import it.unipi.cs.smartapp.statemanager.Tournament;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import it.unipi.cs.smartapp.drivers.ChatSystemDriver;
 import it.unipi.cs.smartapp.drivers.LeagueManagerDriver;
 import it.unipi.cs.smartapp.screens.Renderer;
 
+import java.util.ArrayList;
+
 
 public class tournamentController implements Controller {
 
-    @FXML
-    private Label lblMessage;
-    @FXML
-    private TextField txtTournamentName;
-
-    private ChatSystemDriver chatSystem;
     private LeagueManagerDriver lmDriver;
+    private TournamentTable table;
+    private StateManager stateManager;
+
+    @FXML
+    private TableView<Tournament> tblTournaments;
+    @FXML
+    private Button btnJoin, btnWithdraw, btnShowInfo;
 
     public void initialize() {
-        lblMessage.setText("");
-        chatSystem = ChatSystemDriver.getInstance();
         lmDriver = LeagueManagerDriver.getInstance();
+        stateManager = StateManager.getInstance();
+        table = new TournamentTable(tblTournaments);
 
         System.out.println("Tournament Controller done");
     }
 
     @Override
     public void updateContent() {
-        lblMessage.setText("");
+        // Get tournaments list from LM
+        lmDriver.getTournaments();
 
-        chatSystem.openConnection();
+        // Show all tournaments in the scene
+        table.createTable();
+
+        // Disable buttons
+        btnJoin.disableProperty().bind(Bindings.isEmpty(tblTournaments.getSelectionModel().getSelectedItems()));
+        btnWithdraw.disableProperty().bind(Bindings.isEmpty(tblTournaments.getSelectionModel().getSelectedItems()));
+        btnShowInfo.disableProperty().bind(Bindings.isEmpty(tblTournaments.getSelectionModel().getSelectedItems()));
     }
 
     @FXML
@@ -41,25 +53,38 @@ public class tournamentController implements Controller {
 
     @FXML
     private void btnJoinPressed() {
-        if (txtTournamentName.getText().trim().isEmpty()) {
-            lblMessage.setStyle("-fx-text-fill: red");
-            lblMessage.setText("The tournament name must be valid.");
-        } else {
-            lmDriver.joinTournament(txtTournamentName.getText());
-            lblMessage.setStyle("-fx-text-fill: green");
-            lblMessage.setText("Ok, joined!");
-        }
+        // Perform JOIN with LM
+        Tournament t = tblTournaments.getSelectionModel().getSelectedItem();
+        lmDriver.joinTournament(t.tournamentName.get(), stateManager.getUsername());
+        Alert message = new Alert(Alert.AlertType.INFORMATION);
+        message.setTitle(t.tournamentName.get());
+        message.setContentText("You successfully joined!");
+        message.showAndWait();
     }
 
     @FXML
     private void btnWithdrawPressed() {
-        if (txtTournamentName.getText().trim().isEmpty()) {
-            lblMessage.setStyle("-fx-text-fill: red");
-            lblMessage.setText("The tournament name must be valid.");
-        } else {
-            lmDriver.withdrawTournament(txtTournamentName.getText());
-            lblMessage.setStyle("-fx-text-fill: green");
-            lblMessage.setText("Ok, withdrawn!");
+        // Perform Withdraw with LM
+        Tournament t = tblTournaments.getSelectionModel().getSelectedItem();
+        lmDriver.withdrawTournament(t.tournamentName.get(), stateManager.getUsername());
+        Alert message = new Alert(Alert.AlertType.INFORMATION);
+        message.setTitle(t.tournamentName.get());
+        message.setContentText("You successfully withdrawn.");
+        message.showAndWait();
+    }
+
+    @FXML
+    private void btnShowInfoPressed() {
+        // Perform Show participants with LM
+        Tournament t = tblTournaments.getSelectionModel().getSelectedItem();
+        Alert message = new Alert(Alert.AlertType.INFORMATION);
+        message.setTitle(t.tournamentName.get() + " info");
+        ArrayList<String> list = lmDriver.getTournamentParticipants(t.tournamentName.get());
+        String listPlayers = "";
+        for (String p : list) {
+            listPlayers += p + "\n";
         }
+        message.setContentText("List of participants:\n" + listPlayers);
+        message.showAndWait();
     }
 }

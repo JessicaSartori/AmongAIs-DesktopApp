@@ -5,23 +5,34 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.tournamentController">
-    <Label alignment="CENTER" layoutX="297.0" layoutY="38.0" prefHeight="137.0" prefWidth="206.0" text="AmongAIs" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="50.0">
+    <Label alignment="CENTER" layoutX="297.0" layoutY="28.0" prefHeight="66.0" prefWidth="686.0" text="AmongAIs" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="28.0">
         <font>
             <Font name="Segoe UI Bold Italic" size="36.0" />
         </font>
     </Label>
-      <Label fx:id="lblMessage" layoutX="601.0" layoutY="223.0" text="message label" textFill="RED" />
-      <TextField fx:id="txtTournamentName" layoutX="515.0" layoutY="277.0" prefHeight="30.0" prefWidth="250.0" promptText="Tournament name..." AnchorPane.topAnchor="280.0">
-      <font>
-         <Font size="13.0" />
-      </font></TextField>
-      <Button layoutX="515.0" layoutY="323.0" mnemonicParsing="false" onAction="#btnJoinPressed" prefHeight="37.0" prefWidth="113.0" text="Join" AnchorPane.topAnchor="330.0">
-      <font>
-         <Font size="13.0" />
-      </font></Button>
-      <Button layoutX="652.0" layoutY="323.0" mnemonicParsing="false" onAction="#btnWithdrawPressed" prefHeight="37.0" prefWidth="113.0" text="Withdraw" AnchorPane.topAnchor="330.0">
-      <font>
-         <Font size="13.0" />
-      </font></Button>
       <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnGoBackPressed" prefHeight="27.0" prefWidth="73.0" text="Go back" />
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="574.0" layoutY="105.0" text="Tournaments List" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Label>
+   <VBox alignment="TOP_CENTER" fillWidth="false" layoutX="8.0" layoutY="8.0" prefHeight="630.0" prefWidth="241.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
+      <children>
+         <HBox prefHeight="31.0" prefWidth="669.0">
+            <children>
+               <Separator layoutX="356.0" layoutY="10.0" prefHeight="27.0" prefWidth="381.0" visible="false" />
+               <Button fx:id="btnJoin" mnemonicParsing="false" onAction="#btnJoinPressed" prefHeight="27.0" prefWidth="73.0" text="Join" />
+               <Separator prefHeight="0.0" prefWidth="30.0" visible="false" />
+               <Button fx:id="btnWithdraw" mnemonicParsing="false" onAction="#btnWithdrawPressed" prefHeight="27.0" prefWidth="73.0" text="Withdraw" />
+               <Separator layoutX="356.0" layoutY="10.0" prefHeight="0.0" prefWidth="30.0" visible="false" />
+               <Button fx:id="btnShowInfo" mnemonicParsing="false" onAction="#btnShowInfoPressed" prefHeight="27.0" prefWidth="73.0" text="Info" />
+            </children>
+         </HBox>
+         <TableView fx:id="tblTournaments" prefHeight="465.0" prefWidth="890.0">
+           <columns>
+             <TableColumn prefWidth="75.0" text="C1" />
+             <TableColumn prefWidth="75.0" text="C2" />
+           </columns>
+         </TableView>
+      </children></VBox>
 </AnchorPane>
