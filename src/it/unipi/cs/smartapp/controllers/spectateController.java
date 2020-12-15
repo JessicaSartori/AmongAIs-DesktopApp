@@ -2,7 +2,6 @@ package it.unipi.cs.smartapp.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -21,11 +20,11 @@ import java.util.concurrent.TimeUnit;
 
 
 public class spectateController implements Controller {
-
+    // Singleton components
     private StateManager stateMgr;
     private PlayerSettings playerSettings;
 
-    private GraphicsContext canvasContext;
+    // Complex element managers
     private ChatManager chat;
     private TableManager table;
 
@@ -46,21 +45,20 @@ public class spectateController implements Controller {
 
 
     public void initialize() {
+        // Initialize singleton components
         stateMgr = StateManager.getInstance();
         playerSettings = PlayerSettings.getInstance();
 
-        canvasContext = mapCanvas.getGraphicsContext2D();
+        // Initialize complex element managers
         chat = new ChatManager(chatPane);
         table = new TableManager(tblPlayers);
-
-        leftSubPanel.toFront();
-        rightSubPanel.toFront();
 
         System.out.println("Spectate Controller done");
     }
 
     @Override
     public void updateContent() {
+        // Reduce commands delay
         GameServerDriver.getInstance().setMinDelay(50);
 
         // Setup chat
@@ -73,7 +71,9 @@ public class spectateController implements Controller {
         // Prepare the interface
         lobbyName.setText(stateMgr.getGameName());
         table.createTable();
-        stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, null);
+        stateMgr.map.drawMap(mapCanvas, stateMgr.playersList, null);
+        leftSubPanel.toFront();
+        rightSubPanel.toFront();
 
         // Keyboard events
         spectatePanel.setOnKeyPressed(keyEvent -> {
@@ -111,7 +111,7 @@ public class spectateController implements Controller {
 
     private void updateMap() {
         Controllers.updateMap();
-        Platform.runLater(() -> stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, null));
+        Platform.runLater(() -> stateMgr.map.drawMap(mapCanvas, stateMgr.playersList, null));
     }
 
     @FXML
