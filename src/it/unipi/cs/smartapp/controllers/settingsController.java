@@ -96,6 +96,7 @@ public class settingsController implements Controller {
 
     private void setKeyButton(Button btn, KeyCode oldValue) {
         btn.setText("...");
+        btn.requestFocus();
         btn.setOnKeyReleased(keyEvent -> {
             KeyCode newValue = keyEvent.getCode();
 
@@ -122,6 +123,7 @@ public class settingsController implements Controller {
                 message.setContentText("This key is already bound.");
                 message.showAndWait();
             }
+            lblStatusFrequency.requestFocus();
         });
     }
 
