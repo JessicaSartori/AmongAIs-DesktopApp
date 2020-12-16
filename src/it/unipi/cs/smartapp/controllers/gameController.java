@@ -90,7 +90,7 @@ public class gameController implements Controller {
         lblPlayerState.setText(stateMgr.player.getState());
         lblResponse.setTextFill(Color.RED);
         lblResponse.setText("");
-        table.createTable();
+        table.createTable(true);
         stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
 
         // Update the interface with status information

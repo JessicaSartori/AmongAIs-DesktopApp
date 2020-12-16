@@ -72,7 +72,7 @@ public class spectateController implements Controller {
 
         // Prepare the interface
         lobbyName.setText(stateMgr.getGameName());
-        table.createTable();
+        table.createTable(false);
         stateMgr.map.drawMap(canvasContext, mapCanvas, stateMgr.playersList, null);
 
         // Keyboard events

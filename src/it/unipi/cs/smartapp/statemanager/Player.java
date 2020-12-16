@@ -1,9 +1,7 @@
 package it.unipi.cs.smartapp.statemanager;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.scene.control.Button;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +24,13 @@ public class Player {
     private IntegerProperty score = null;
     private StringProperty state = null;
 
+    public static String accusePropertyName = "accuse";
+    public static String judgeHumanPropertyName = "judgeHuman";
+    public static String judgeAIPropertyName = "judgeAI";
+
+    public ObjectProperty<Button> accuse = null;
+    public ObjectProperty<Button> judgeHuman = null;
+    public ObjectProperty<Button> judgeAI = null;
 
     /*
      * Constructors
@@ -112,5 +117,21 @@ public class Player {
         String[] tokens = info.split("[ =]");
         for(int i=0; i < tokens.length; i += 2) map.put(tokens[i], tokens[i+1]);
         return map;
+    }
+
+    /*
+     * Property methods
+     */
+    public ObjectProperty<Button> accuseProperty() {
+        if(accuse == null) accuse = new SimpleObjectProperty<>(this, accusePropertyName);
+        return accuse;
+    }
+    public ObjectProperty<Button> judgeHumanProperty() {
+        if(judgeHuman == null) judgeHuman = new SimpleObjectProperty<>(this, judgeHumanPropertyName);
+        return judgeHuman;
+    }
+    public ObjectProperty<Button> judgeAIProperty() {
+        if(judgeAI == null) judgeAI = new SimpleObjectProperty<>(this, judgeAIPropertyName);
+        return judgeAI;
     }
 }
