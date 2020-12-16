@@ -65,7 +65,7 @@ public class MapStatus {
     /*
      * Methods to draw the map on canvas
      */
-    public void drawMap(GraphicsContext canvasContext, Canvas mapCanvas, ObservableList<Player> players, String currentUser) {
+    public void drawMap(Canvas mapCanvas, ObservableList<Player> players, String currentUser) {
         // Adjust canvas size and load sprites every time scene is loaded
         if(!loaded){
             canvasHeight = mapCanvas.getHeight();
@@ -80,6 +80,8 @@ public class MapStatus {
             loadSprites();
             loaded = true;
         }
+
+        GraphicsContext canvasContext = mapCanvas.getGraphicsContext2D();
 
         // Clear canvas
         canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -135,7 +137,9 @@ public class MapStatus {
         return sprites.get(value);
     }
 
-    public void drawShot(GraphicsContext canvasContext, Integer[] playerPos, Integer team, Character shotDirection, Character landed, Integer prevEnergy) {
+    public void drawShot(Canvas mapCanvas, Integer[] playerPos, Integer team, Character shotDirection, Character landed, Integer prevEnergy) {
+        GraphicsContext canvasContext = mapCanvas.getGraphicsContext2D();
+
         Integer c = playerPos[0], r = playerPos[1];
         char playerKey = ' ', explosionKey;
 

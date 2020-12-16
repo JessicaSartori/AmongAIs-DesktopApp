@@ -29,8 +29,8 @@ public class PlayerSettings {
         moveUp = KeyCode.W; moveDown = KeyCode.S;
         moveLeft = KeyCode.A; moveRight = KeyCode.D;
 
-        shootUp = KeyCode.I; shootDown = KeyCode.K;
-        shootLeft = KeyCode.J; shootRight = KeyCode.L;
+        shootUp = KeyCode.UP; shootDown = KeyCode.DOWN;
+        shootLeft = KeyCode.LEFT; shootRight = KeyCode.RIGHT;
 
         flipLeft = KeyCode.P; flipRight = KeyCode.ENTER;
 
