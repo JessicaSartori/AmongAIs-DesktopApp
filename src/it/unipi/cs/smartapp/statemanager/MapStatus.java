@@ -13,53 +13,32 @@ import java.util.HashMap;
 
 public class MapStatus {
 
-    // Sizes of canvas in gameScene
-    private Double canvasHeight = null, canvasWidth = null;
+    private final Character[][] gameMap;
+    private final Integer mapHeight, mapWidth;
+    private final Character ratio;
 
-    private Character[][] gameMap = null;
-    private Integer mapSize = null, mapWidth = null;
-    private Double cellSize = null;
-    private Character ratio = null;
+    private Double cellSize;
     private Boolean loaded;
+    private char hidden_tile = '.';
 
     private final HashMap<Character, Image> sprites;
 
-    /*
-     * Constructor
-     */
-    public MapStatus(){
+    // Constructor
+    public MapStatus(Integer size, Character r) {
+        mapHeight = size;
+        ratio = r;
+        mapWidth = (ratio == 'Q') ? mapHeight : 2* mapHeight;
+        gameMap = new Character[mapHeight][mapWidth];
+
         sprites = new HashMap<>();
         loaded = false;
     }
 
-    /*
-     * Setters
-     */
-    public void setGameMap(String[] rows) { gameMap = stringToCharMap(rows); }
-    public void setMapSize(Integer s) { mapSize = s; }
-    public void setMapRatio(Character r) { ratio = r; mapWidth = (ratio == 'Q') ? mapSize : mapSize*2; }
-    public void setCanvasHeight(Double h) { canvasHeight = h; }
-    public void setCanvasWidth(Double w) { canvasWidth = w; }
-
-    /*
-     * Getters
-     */
-    public Character[][] getGameMap(){ return gameMap; }
-    public Integer getMapSize(){ return mapSize; }
-    public Double getCellSize(){ return cellSize; }
-
-    /*
-     * Method to parse map
-     */
-    public Character[][] stringToCharMap(String[] rows) {
-        Character[][] parsedMap = new Character[mapSize][mapWidth];
-
-        for(int r = 0; r < mapSize; r++)
-            for(int c = 0; c < mapWidth; c++) {
-                parsedMap[r][c] = rows[r].charAt(c);
-            }
-
-        return parsedMap;
+    // Update the game map
+    public void setGameMap(String[] rows) {
+        for (int r = 0; r < mapHeight; r++)
+            for (int c = 0; c < mapWidth; c++)
+                gameMap[r][c] = rows[r].charAt(c);
     }
 
     /*
@@ -68,13 +47,12 @@ public class MapStatus {
     public void drawMap(Canvas mapCanvas, ObservableList<Player> players, String currentUser) {
         // Adjust canvas size and load sprites every time scene is loaded
         if(!loaded){
-            canvasHeight = mapCanvas.getHeight();
-            canvasWidth = mapCanvas.getWidth();
+            double canvasHeight = mapCanvas.getHeight();
 
-            cellSize = canvasHeight / (mapSize + 2);
+            cellSize = canvasHeight / (mapHeight + 2);
 
             // Enlarge canvas accordingly
-            if(ratio == 'W') mapCanvas.setWidth(canvasHeight + cellSize*mapSize);
+            if(ratio == 'W') mapCanvas.setWidth(canvasHeight + cellSize* mapHeight);
             else mapCanvas.setWidth(canvasHeight);
 
             loadSprites();
@@ -84,21 +62,21 @@ public class MapStatus {
         GraphicsContext canvasContext = mapCanvas.getGraphicsContext2D();
 
         // Clear canvas
-        canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+        canvasContext.clearRect(0, 0, mapCanvas.getWidth(), mapCanvas.getHeight());
 
         // Increase font size and make it bold
         canvasContext.setFont(Font.font(canvasContext.getFont().getFamily(), FontWeight.BOLD, 15));
+        canvasContext.setLineWidth(2);
 
         // Draw map
         Double xCanvas = cellSize, yCanvas = cellSize;
-        for(int r = 0; r < mapSize; r++) {
+        for(int r = 0; r < mapHeight; r++) {
             for (int c = 0; c < mapWidth; c++) {
                 Image sprite = setSprite(gameMap[r][c]);
                 canvasContext.drawImage(sprite, xCanvas, yCanvas, cellSize, cellSize);
 
                 if(Character.isUpperCase(gameMap[r][c])) { canvasContext.setFill(Color.web("#B30000")); canvasContext.setStroke(Color.web("#B30000"));}
                 else { canvasContext.setFill(Color.BLUE); canvasContext.setStroke(Color.BLUE); }
-                canvasContext.setLineWidth(2);
 
                 // Write names on players
                 String username = findName(players, gameMap[r][c]);
@@ -154,9 +132,9 @@ public class MapStatus {
                 playerKey = (team == 0) ? '8' : '7';
                 break;
             case 'S':
-                if(landed == '?') r = mapSize;
+                if(landed == '?') r = mapHeight;
                 else if(landed == '.' || landed == '~' || landed == '@') r += prevEnergy;
-                else while(r < mapSize && gameMap[r][c] != landed) r++;
+                else while(r < mapHeight && gameMap[r][c] != landed) r++;
                 playerKey = (team == 0) ? '2' : '1';
                 break;
             case 'W':
@@ -244,12 +222,29 @@ public class MapStatus {
 
     public void updatePosition(Integer x, Integer y, Character direction) {
         char old = gameMap[y][x];
-        gameMap[y][x] = '.';
+
+        gameMap[y][x] = hidden_tile;
+
+        int new_x = x, new_y = y;
         switch (direction) {
-            case 'N': gameMap[y - 1][x] = old; break;
-            case 'S': gameMap[y + 1][x] = old; break;
-            case 'W': gameMap[y][x - 1] = old; break;
-            case 'E': gameMap[y][x + 1] = old; break;
+            case 'N': new_y = y - 1; break;
+            case 'S': new_y = y + 1; break;
+            case 'W': new_x = x - 1; break;
+            case 'E': new_x = x + 1; break;
         }
+
+        if(gameMap[new_y][new_x] == '~') hidden_tile = '~';
+        else {
+            hidden_tile = '.';
+            if(gameMap[new_y][new_x] == '&') {
+                switch (direction) {
+                    case 'N': gameMap[new_y - 1][x] = '&'; break;
+                    case 'S': gameMap[new_y + 1][x] = '&'; break;
+                    case 'W': gameMap[y][new_x - 1] = '&'; break;
+                    case 'E': gameMap[y][new_x + 1] = '&'; break;
+                }
+            }
+        }
+        gameMap[new_y][new_x] = old;
     }
 }

@@ -56,7 +56,7 @@ public class StateManager {
         }
 
         gameStatus = new GameStatus(gameName, created);
-        map = new MapStatus();
+        map = null;
         newMessages = new ConcurrentLinkedQueue<>();
 
         currentGameName = gameName;
@@ -64,15 +64,18 @@ public class StateManager {
 
     public void updateGameState(String info) {
         String[] tokens = info.split("[ =]");
+        int size = 32;
+        char ratio = 'Q';
 
         for(int i=0; i < tokens.length; i += 2) {
             String keyword = tokens[i], value = tokens[i+1];
             switch (keyword) {
                 case "state": gameStatus.setState(GameState.fromString(value)); break;
-                case "size": map.setMapSize(Integer.parseInt(value)); break;
-                case "ratio": map.setMapRatio(value.charAt(0)); break;
+                case "size": size = Integer.parseInt(value); break;
+                case "ratio": ratio = value.charAt(0); break;
             }
         }
+        if (map == null) map = new MapStatus(size, ratio);
     }
 
     public synchronized void updatePlayerStatus(String info) {
