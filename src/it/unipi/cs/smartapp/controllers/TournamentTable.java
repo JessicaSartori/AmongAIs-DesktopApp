@@ -36,10 +36,10 @@ public class TournamentTable {
         TableColumn<Tournament, String> endTournCol = createColumn("Ending", Tournament.endPropertyTournament, false);
         TableColumn<Tournament, String> startSubsCol = createColumn("Starting Subs", Tournament.startPropertySubscriptions, false);
         TableColumn<Tournament, String> endSubsCol = createColumn("Ending Subs", Tournament.endPropertySubscriptions, false);
-        TableColumn<Tournament, String> minPartCol = createColumn("Min Players", Tournament.minPropertyParticipants, false);
-        TableColumn<Tournament, String> maxPartCol = createColumn("Max Players", Tournament.maxPropertyParticipants, false);
+        // TableColumn<Tournament, String> minPartCol = createColumn("Min Players", Tournament.minPropertyParticipants, false);
+        // TableColumn<Tournament, String> maxPartCol = createColumn("Max Players", Tournament.maxPropertyParticipants, false);
 
-        tblTournaments.getColumns().setAll(nameCol, typeCol, startTournCol, endTournCol, startSubsCol, endSubsCol, minPartCol, maxPartCol);
+        tblTournaments.getColumns().setAll(nameCol, typeCol, startTournCol, endTournCol, startSubsCol, endSubsCol);
     }
 
     private <P> TableColumn<Tournament, P> createColumn(String name, String property, Boolean sortable) {

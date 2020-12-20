@@ -1,11 +1,6 @@
 package it.unipi.cs.smartapp.statemanager;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
-import java.util.Date;
+import javafx.beans.property.*;
 
 public class Tournament {
     public static String tournamentPropertyName = "tournamentName";
@@ -23,8 +18,8 @@ public class Tournament {
     public StringProperty endSubscriptions = null;
     public StringProperty startTournament = null;
     public StringProperty endTournament = null;
-    public StringProperty minParticipants = null;
-    public StringProperty maxParticipants = null;
+    public IntegerProperty minParticipants = null;
+    public IntegerProperty maxParticipants = null;
 
     public StringProperty tournamentNameProperty() {
         if(tournamentName == null) tournamentName = new SimpleStringProperty(this, tournamentPropertyName);
@@ -56,18 +51,18 @@ public class Tournament {
         return endTournament;
     }
 
-    public StringProperty minParticipantsProperty() {
-        if(minParticipants == null) minParticipants = new SimpleStringProperty(this, minPropertyParticipants);
+    public IntegerProperty minParticipantsProperty() {
+        if(minParticipants == null) minParticipants = new SimpleIntegerProperty(this, minPropertyParticipants);
         return minParticipants;
     }
 
-    public StringProperty maxParticipantsProperty() {
-        if(maxParticipants == null) maxParticipants = new SimpleStringProperty(this, maxPropertyParticipants);
+    public IntegerProperty maxParticipantsProperty() {
+        if(maxParticipants == null) maxParticipants = new SimpleIntegerProperty(this, maxPropertyParticipants);
         return maxParticipants;
     }
 
     @Override
     public String toString() {
-        return tournamentName + " - " + gameType + " - " + startTournament.toString();
+        return tournamentName.get() + " - " + gameType.get() + " - " + startTournament.get();
     }
 }

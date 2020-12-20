@@ -42,6 +42,8 @@ public class StateManager {
     public Boolean getCreator() { return gameStatus.isCreated(); }
     public GameState getGameState() { return gameStatus.getState(); }
 
+    // For Tournament Info Scene
+    public String TournamentName;
 
     public void setInGame(String gameName, Boolean created, Boolean spectator) {
         players = new HashMap<>();
