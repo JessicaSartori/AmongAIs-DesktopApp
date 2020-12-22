@@ -10,7 +10,6 @@ import java.util.Map;
 public class Player {
 
     public static String usernamePropertyName = "username";
-    public static String teamPropertyName = "team";
     public static String scorePropertyName = "score";
     public static String statePropertyName = "state";
 
@@ -18,9 +17,9 @@ public class Player {
     private Integer[] position = {-1 , -1};
     private Integer loyalty = null;
     private Integer energy = null;
+    private Integer team = null;
 
     private StringProperty username = null;
-    private IntegerProperty team = null;
     private IntegerProperty score = null;
     private StringProperty state = null;
 
@@ -45,9 +44,9 @@ public class Player {
     public void setPosition(Integer[] p) { position = p; }
     public void setLoyalty(Integer l) { loyalty = l; }
     public void setEnergy(Integer e) { energy = e; }
+    public void setTeam(Integer t) { team = t; }
 
     public void setUsername(String username) { usernameProperty().set(username); }
-    public void setTeam(Integer team) { teamProperty().set(team); }
     public void setScore(Integer score) { scoreProperty().set(score); }
     public void setState(String state) { stateProperty().set(state); }
 
@@ -58,9 +57,9 @@ public class Player {
     public Integer[] getPosition() { return position; }
     public Integer getLoyalty() { return loyalty; }
     public Integer getEnergy() { return energy; }
+    public Integer getTeam() { return team; }
 
     public String getUsername() { return usernameProperty().get(); }
-    public Integer getTeam() { return teamProperty().get(); }
     public Integer getScore() { return scoreProperty().get(); }
     public String getState() { return stateProperty().get(); }
 
@@ -70,10 +69,6 @@ public class Player {
     public StringProperty usernameProperty() {
         if(username == null) username = new SimpleStringProperty(this, usernamePropertyName);
         return username;
-    }
-    public IntegerProperty teamProperty() {
-        if(team == null) team = new SimpleIntegerProperty(this, teamPropertyName);
-        return team;
     }
     public IntegerProperty scoreProperty() {
         if(score == null) score = new SimpleIntegerProperty(this, scorePropertyName);
@@ -123,15 +118,15 @@ public class Player {
      * Property methods
      */
     public ObjectProperty<Button> accuseProperty() {
-        if(accuse == null) accuse = new SimpleObjectProperty<>(this, accusePropertyName);
+        if(accuse == null) accuse = new SimpleObjectProperty<Button>(this, accusePropertyName);
         return accuse;
     }
     public ObjectProperty<Button> judgeHumanProperty() {
-        if(judgeHuman == null) judgeHuman = new SimpleObjectProperty<>(this, judgeHumanPropertyName);
+        if(judgeHuman == null) judgeHuman = new SimpleObjectProperty<Button>(this, judgeHumanPropertyName);
         return judgeHuman;
     }
     public ObjectProperty<Button> judgeAIProperty() {
-        if(judgeAI == null) judgeAI = new SimpleObjectProperty<>(this, judgeAIPropertyName);
+        if(judgeAI == null) judgeAI = new SimpleObjectProperty<Button>(this, judgeAIPropertyName);
         return judgeAI;
     }
 }

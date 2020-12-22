@@ -12,7 +12,7 @@ import it.unipi.cs.smartapp.statemanager.StateManager;
 public class resultController implements Controller {
 
     private StateManager stateManager;
-    private TableManager table;
+    private TableController table;
 
     @FXML
     private Label lblWinner, lblTitle;
@@ -21,7 +21,7 @@ public class resultController implements Controller {
 
     public void initialize() {
         stateManager = StateManager.getInstance();
-        table = new TableManager(tblPlayers);
+        table = new TableController(tblPlayers);
 
         System.out.println("Result Controller done");
     }
