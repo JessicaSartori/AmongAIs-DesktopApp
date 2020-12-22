@@ -1,6 +1,8 @@
 package it.unipi.cs.smartapp.drivers;
 
 import it.unipi.cs.smartapp.statemanager.Tournament;
+import it.unipi.cs.smartapp.statemanager.TournamentLeaderboard;
+import it.unipi.cs.smartapp.statemanager.TournamentRound;
 import it.unipi.cs.smartapp.statemanager.TournamentStatus;
 import javafx.util.Pair;
 import org.json.simple.JSONArray;
@@ -8,7 +10,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -20,7 +25,7 @@ import java.util.Date;
 public class LeagueManagerDriver {
     private static LeagueManagerDriver instance = null;
 
-    public final static String LM_SERVER = "http://api.dbarasti.com/";
+    public final static String LM_SERVER = "http://api.dbarasti.com:8080/";
     private static final String USER_AGENT = "Mozilla/5.0";
     private TournamentStatus tournamentStatus;
 
@@ -132,6 +137,7 @@ public class LeagueManagerDriver {
         return response.toString();
     }
 
+    // Perform HTTP DELETE request with one parameter
     private String doDeleteRequest(String endpoint, String parameters) {
         StringBuffer response = new StringBuffer();
 
@@ -177,8 +183,11 @@ public class LeagueManagerDriver {
                 String tournamentName = (String)tournament.get("id");
                 t.tournamentNameProperty().set(tournamentName);
                 t.gameTypeProperty().set((String)tournament.get("game_type"));
-                t.maxParticipantsProperty().set((String)tournament.get("max_participants"));
-                t.minParticipantsProperty().set((String)tournament.get("min_participants"));
+                // Ignore min/maxParticipants since always null (LM rules)
+                // Long max = (Long)tournament.get("max_participants");
+                // t.maxParticipantsProperty().set(max.intValue());
+                // Long min = (Long)tournament.get("min_participants");
+                // t.minParticipantsProperty().set(min.intValue());
                 String StartSubs = (String)tournament.get("start_subscriptions_date");
                 String EndSubs = (String)tournament.get("end_subscriptions_date");
                 String StartTourn = (String)tournament.get("start_matches_date");
@@ -189,8 +198,8 @@ public class LeagueManagerDriver {
                 t.startTournamentProperty().set(getDate(StartTourn));
                 t.endTournamentProperty().set(getDate(EndTourn));
 
-                tournamentStatus.tournamentsList.put(tournamentName, t);
-                tournamentStatus.tournamentTableList.add(t);
+                // Update Tournaments State
+                tournamentStatus.addTournament(t);
             }
 
         } catch(ParseException err) {
@@ -200,7 +209,10 @@ public class LeagueManagerDriver {
 
     // Parse ISO Date as simpler String
     private String getDate(String isoDate) {
-        Instant instant = Instant.parse(isoDate);
+        // Every date will be in this format: 2020-12-17T11:56:41.866Z
+        // Remove last 6 chars and replace with 'Z'
+        String correctDate = isoDate.substring(0, isoDate.length() - 5) + "Z";
+        Instant instant = Instant.parse(correctDate);
         Date myDate = Date.from(instant);
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm - dd/MM/yyyy");
         String date = formatter.format(myDate);
@@ -223,7 +235,8 @@ public class LeagueManagerDriver {
     // Get all participants of a specific tournament
     public ArrayList<String> getTournamentParticipants(String TournamentName) {
         String response = doGetRequest("registration", new Pair<>("tournament_id", TournamentName));
-        ArrayList<String> listParticipants = new ArrayList<String>();
+
+        ArrayList<String> listParticipants = new ArrayList<>();
 
         try {
             JSONParser parse = new JSONParser();
@@ -233,7 +246,7 @@ public class LeagueManagerDriver {
             for(int i = 0; i < playerAttributes.size(); i++)  {
                 JSONObject player = (JSONObject)playerAttributes.get(i);
 
-                String playerInfo = (String)player.get("player_id"); // + " - " + getDate((String)player.get("datetime"));
+                String playerInfo = (String)player.get("player_id") + " - " + getDate((String)player.get("datetime"));
                 listParticipants.add(playerInfo);
             }
 
@@ -242,5 +255,81 @@ public class LeagueManagerDriver {
         }
 
         return listParticipants;
+    }
+
+    // Get schedule of a specific tournament
+    public ArrayList<TournamentRound> getTournamentSchedule(String TournamentName) {
+        String response = doGetRequest("schedule", new Pair<>("tournament_id", TournamentName));
+
+        ArrayList<TournamentRound> tournamentRounds = new ArrayList<>();
+
+        try {
+            JSONParser parse = new JSONParser();
+            JSONObject json = (JSONObject)parse.parse(response);
+            JSONArray tournamentAttributes = (JSONArray)json.get("rounds");
+            TournamentRound r = new TournamentRound();
+
+            // For all rounds
+            for (int i = 0; i < tournamentAttributes.size(); i++) {
+                JSONObject match = (JSONObject)tournamentAttributes.get(i);
+                JSONArray matchesAttributes = (JSONArray)match.get("matches");
+                ArrayList<TournamentRound.Match> roundMatches = new ArrayList<>();
+
+                // For all matches
+                for (int j = 0; j < matchesAttributes.size(); j++) {
+                    JSONObject participants = (JSONObject)matchesAttributes.get(j);
+                    JSONArray participantsArray = (JSONArray)participants.get("participants");
+                    TournamentRound.Match m = new TournamentRound.Match();
+                    ArrayList<String> p = new ArrayList<>();
+
+                    m.startDate = getDate((String)participants.get("start_date"));
+
+                    // For all participants
+                    for (int k = 0; k < participantsArray.size(); k++) {
+                        p.add((String)participantsArray.get(k));
+                    }
+
+                    m.participants = p;
+                    roundMatches.add(m);
+                }
+
+                r.rounds.addAll(roundMatches);
+                tournamentRounds.add(r);
+            }
+
+        } catch(ParseException err) {
+            System.err.println("Error parsing the received JSON");
+        }
+
+        return tournamentRounds;
+    }
+
+    // Get tournament leaderboard
+    public ArrayList<TournamentLeaderboard> getTournamentLeaderboard(String TournamentName) {
+        String response = doGetRequest("leaderboard", new Pair<>("tournament_id", TournamentName));
+        ArrayList<TournamentLeaderboard> leaderboard = new ArrayList<>();
+
+        try {
+            JSONParser parse = new JSONParser();
+            JSONObject json = (JSONObject)parse.parse(response);
+            JSONArray tournLeaderboard = (JSONArray)json.get("leaderboard");
+
+            for(int i = 0; i < tournLeaderboard.size(); i++)  {
+                TournamentLeaderboard tl = new TournamentLeaderboard();
+                JSONObject playerLeaderboard = (JSONObject)tournLeaderboard.get(i);
+
+                tl.playerName = (String)playerLeaderboard.get("player_id");
+                Long playerRankLong = (Long)playerLeaderboard.get("player_rank");
+                tl.playerRank = playerRankLong.intValue();
+                Long playerScoreLong = (Long)playerLeaderboard.get("player_score");
+                tl.playerScore = playerScoreLong.intValue();
+                leaderboard.add(tl);
+            }
+
+        } catch(ParseException err) {
+            System.err.println("Error parsing the received JSON");
+        }
+
+        return leaderboard;
     }
 }

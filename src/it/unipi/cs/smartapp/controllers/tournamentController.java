@@ -77,14 +77,10 @@ public class tournamentController implements Controller {
     private void btnShowInfoPressed() {
         // Perform Show participants with LM
         Tournament t = tblTournaments.getSelectionModel().getSelectedItem();
-        Alert message = new Alert(Alert.AlertType.INFORMATION);
-        message.setTitle(t.tournamentName.get() + " info");
-        ArrayList<String> list = lmDriver.getTournamentParticipants(t.tournamentName.get());
-        String listPlayers = "";
-        for (String p : list) {
-            listPlayers += p + "\n";
-        }
-        message.setContentText("List of participants:\n" + listPlayers);
-        message.showAndWait();
+
+        // Pass in some way the tournament name to the tournament info scene
+        stateManager.TournamentName = t.tournamentName.get();
+
+        Renderer.getInstance().show("tournamentInfoScene");
     }
 }
