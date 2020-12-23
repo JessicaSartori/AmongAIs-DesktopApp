@@ -1,6 +1,5 @@
 package it.unipi.cs.smartapp.statemanager;
 
-import it.unipi.cs.smartapp.controllers.Controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -92,14 +91,11 @@ public class StateManager {
 
             if(pl != null) {
                 // Player already in the list
-                //System.out.println("BEFORE - " + pl.getTeam() + " playerInfo " + playerInfo);
                 pl.updateWith(playerInfo);
-                System.out.println("PL != NULL " + pl.getUsername() + " team " + pl.getTeam());
             } else {
                 // New player
                 pl = new Player();
                 pl.updateWith(playerInfo);
-                System.out.println("name " + pl.getUsername() + " team " + pl.getTeam());
                 players.put(pl.getUsername(), pl);
                 playersList.add(pl);
             }

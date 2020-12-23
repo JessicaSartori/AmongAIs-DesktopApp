@@ -2,16 +2,15 @@ package it.unipi.cs.smartapp.controllers;
 
 import it.unipi.cs.smartapp.drivers.GameServerDriver;
 import it.unipi.cs.smartapp.drivers.GameServerResponse;
-import it.unipi.cs.smartapp.drivers.ResponseCode;
+import it.unipi.cs.smartapp.statemanager.Player;
+import it.unipi.cs.smartapp.statemanager.StateManager;
+
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-
-import it.unipi.cs.smartapp.statemanager.Player;
-import it.unipi.cs.smartapp.statemanager.StateManager;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -48,10 +47,12 @@ public class TableController {
             TableColumn<Player, Image> judgeHuman = createColumn("Human", Player.judgeHumanPropertyName, false);
             TableColumn<Player, Image> judgeAI = createColumn("AI", Player.judgeAIPropertyName, false);
 
+            // Add columns to table
             tblPlayers.getColumns().add(accuse);
             tblPlayers.getColumns().add(judgeHuman);
             tblPlayers.getColumns().add(judgeAI);
 
+            // Handle event for each column
             accuse.setCellFactory(new CellFactory(event -> {
                 Player p = tblPlayers.getSelectionModel().getSelectedItem();
                 GameServerResponse response = gameServer.sendACCUSE(stateMgr.getGameName(), p.getUsername());
@@ -74,12 +75,7 @@ public class TableController {
         tblPlayers.setRowFactory(tv -> new TableRow<Player>() {
             @Override
             protected void updateItem(Player p, boolean empty) {
-                for (Player element : stateMgr.playersList) {
-                    System.out.println("username " + element.getUsername() + " team " + element.getTeam());
-                }
-                System.out.println("--------------------");
-
-                super.updateItem(p, empty);
+                 super.updateItem(p, empty);
                 if (p == null || p.getTeam() == null) {
                     setStyle("");
                     return;
@@ -92,7 +88,6 @@ public class TableController {
                 }
 
                 if (p.getUsername().equals(stateMgr.getUsername())) setStyle(getStyle() + "-fx-font-weight: 800");
-
             }
         });
     }

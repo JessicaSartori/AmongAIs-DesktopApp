@@ -1,7 +1,6 @@
 package it.unipi.cs.smartapp.controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -9,8 +8,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.application.Platform;
-import javafx.animation.FadeTransition;
-import javafx.util.Duration;
 
 import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.statemanager.*;
@@ -234,6 +231,7 @@ public class gameController implements Controller {
     public void updateStatus() {
         Controllers.updateStatus(false);
         Platform.runLater(() -> {
+            tblPlayers.refresh();
             playerScore.setText(stateMgr.player.getScore().toString());
             lblGameState.setText(stateMgr.getGameState().toString());
             lblPlayerState.setText(stateMgr.player.getState());

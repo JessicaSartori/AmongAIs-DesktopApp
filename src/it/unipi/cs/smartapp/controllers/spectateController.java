@@ -96,6 +96,8 @@ public class spectateController implements Controller {
         Controllers.updateStatus(true);
 
         Platform.runLater(() -> {
+            tblPlayers.refresh();
+
             // Check finished game
             if (stateMgr.getGameState() == GameState.FINISHED) {
                 automaticActions.shutdownNow();
