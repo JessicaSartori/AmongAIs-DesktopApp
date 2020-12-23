@@ -26,7 +26,7 @@ public class spectateController implements Controller {
 
     // Complex element managers
     private ChatManager chat;
-    private TableManager table;
+    private TableController table;
 
     private ScheduledThreadPoolExecutor automaticActions;
 
@@ -51,7 +51,7 @@ public class spectateController implements Controller {
 
         // Initialize complex element managers
         chat = new ChatManager(chatPane);
-        table = new TableManager(tblPlayers);
+        table = new TableController(tblPlayers);
 
         System.out.println("Spectate Controller done");
     }
@@ -70,7 +70,7 @@ public class spectateController implements Controller {
 
         // Prepare the interface
         lobbyName.setText(stateMgr.getGameName());
-        table.createTable();
+        table.createTable(false, null);
         stateMgr.map.drawMap(mapCanvas, stateMgr.playersList, null);
         leftSubPanel.toFront();
         rightSubPanel.toFront();
@@ -96,6 +96,8 @@ public class spectateController implements Controller {
         Controllers.updateStatus(true);
 
         Platform.runLater(() -> {
+            tblPlayers.refresh();
+
             // Check finished game
             if (stateMgr.getGameState() == GameState.FINISHED) {
                 automaticActions.shutdownNow();

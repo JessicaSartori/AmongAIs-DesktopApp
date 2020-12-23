@@ -1,7 +1,6 @@
 package it.unipi.cs.smartapp.controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -9,8 +8,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.application.Platform;
-import javafx.animation.FadeTransition;
-import javafx.util.Duration;
 
 import it.unipi.cs.smartapp.drivers.*;
 import it.unipi.cs.smartapp.statemanager.*;
@@ -29,7 +26,7 @@ public class gameController implements Controller {
 
     // Complex element managers
     private ChatManager chat;
-    private TableManager table;
+    private TableController table;
 
     private Boolean firstTime = true;
     private ScheduledThreadPoolExecutor automaticActions;
@@ -63,7 +60,7 @@ public class gameController implements Controller {
 
         // Initialize complex element managers
         chat = new ChatManager(chatPane);
-        table = new TableManager(tblPlayers);
+        table = new TableController(tblPlayers);
 
         System.out.println("Game Controller done");
     }
@@ -96,7 +93,7 @@ public class gameController implements Controller {
         lblPlayerState.setText(stateMgr.player.getState());
         updateEnergy();
         lblResponse.setText("");
-        table.createTable();
+        table.createTable(true, lblResponse);
         stateMgr.map.drawMap(mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
         btnStartMatch.setVisible(stateMgr.getCreator());
         leftSubPanel.toFront();
@@ -112,12 +109,12 @@ public class gameController implements Controller {
             else if (stateMgr.getGameState() != GameState.ACTIVE) {
                 lblResponse.setTextFill(Color.RED);
                 lblResponse.setText("Cannot move or shoot while in lobby");
-                labelFader(lblResponse, 3.0).play();
+                table.labelFader(lblResponse, 3.0).play();
             }
             else if (stateMgr.player.getState().equalsIgnoreCase("killed")) {
                 lblResponse.setTextFill(Color.RED);
                 lblResponse.setText("Cannot move or shoot if dead");
-                labelFader(lblResponse, 3.0).play();
+                table.labelFader(lblResponse, 3.0).play();
             }
 
             else if (key == playerSettings.getMoveUp()) movePlayer('N');
@@ -197,7 +194,7 @@ public class gameController implements Controller {
                 lblResponse.setText("You accused " + username + "!");
                 break;
         }
-        labelFader(lblResponse, 2.0).play();
+        table.labelFader(lblResponse, 2.0).play();
     }
 
     @FXML
@@ -227,13 +224,14 @@ public class gameController implements Controller {
                 lblResponse.setTextFill(Color.DARKGREEN);
                 lblResponse.setText("You judged " + username + " as " + nature + "!");
         }
-        labelFader(lblResponse, 2.0).play();
+        table.labelFader(lblResponse, 2.0).play();
     }
 
 
     public void updateStatus() {
         Controllers.updateStatus(false);
         Platform.runLater(() -> {
+            tblPlayers.refresh();
             playerScore.setText(stateMgr.player.getScore().toString());
             lblGameState.setText(stateMgr.getGameState().toString());
             lblPlayerState.setText(stateMgr.player.getState());
@@ -243,7 +241,7 @@ public class gameController implements Controller {
             if (stateMgr.getGameState() == GameState.ACTIVE && firstTime) {
                 lblResponse.setTextFill(Color.DARKGREEN);
                 lblResponse.setText("GAME STARTED");
-                labelFader(lblResponse, 3.0).play();
+                table.labelFader(lblResponse, 3.0).play();
                 firstTime = false;
             }
 
@@ -275,7 +273,7 @@ public class gameController implements Controller {
             case ERROR:
                 lblResponse.setTextFill(Color.RED);
                 lblResponse.setText(res.freeText);
-                labelFader(lblResponse, 2.0).play();
+                table.labelFader(lblResponse, 2.0).play();
                 return;
         }
 
@@ -303,7 +301,7 @@ public class gameController implements Controller {
             case ERROR:
                 lblResponse.setTextFill(Color.RED);
                 lblResponse.setText(res.freeText);
-                labelFader(lblResponse, 2.0).play();
+                table.labelFader(lblResponse, 2.0).play();
                 return;
         }
 
@@ -319,13 +317,5 @@ public class gameController implements Controller {
         Integer energyValue = stateMgr.player.getEnergy();
         playerEnergy.setText(energyValue.toString());
         playerEnergyBar.setProgress(((double) energyValue) / 256.0);
-    }
-
-    private FadeTransition labelFader(Node node, Double seconds) {
-        FadeTransition fade = new FadeTransition(Duration.seconds(seconds), node);
-        fade.setFromValue(1);
-        fade.setToValue(0);
-
-        return fade;
     }
 }

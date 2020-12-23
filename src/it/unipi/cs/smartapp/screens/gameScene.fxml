@@ -99,9 +99,11 @@
       <TableView fx:id="tblPlayers" focusTraversable="false" layoutX="11.0" layoutY="44.0" prefHeight="505.0" prefWidth="294.0">
          <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
          <columns>
-            <TableColumn editable="false" prefWidth="75.0" sortable="false" text="Team" />
-            <TableColumn editable="false" prefWidth="75.0" sortable="false" text="Name" />
-            <TableColumn editable="false" prefWidth="75.0" sortable="false" text="Status" />
+            <TableColumn editable="false" prefWidth="37.0" sortable="false" text="Name" />
+            <TableColumn editable="false" prefWidth="37.0" sortable="false" text="Status" />
+            <TableColumn editable="false" prefWidth="37.0" sortable="false" text="Accuse" />
+            <TableColumn editable="false" prefWidth="37.0" sortable="false" text="Human" />
+            <TableColumn editable="false" prefWidth="37.0" sortable="false" text="AI" />
          </columns>
       </TableView>
 

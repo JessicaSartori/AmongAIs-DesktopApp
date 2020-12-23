@@ -1,9 +1,6 @@
 package it.unipi.cs.smartapp.statemanager;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +9,6 @@ import java.util.Map;
 public class Player {
 
     public static String usernamePropertyName = "username";
-    public static String teamPropertyName = "team";
     public static String scorePropertyName = "score";
     public static String statePropertyName = "state";
 
@@ -20,12 +16,11 @@ public class Player {
     private Integer[] position = {-1 , -1};
     private Integer loyalty = null;
     private Integer energy = null;
+    private Integer team = null;
 
     private StringProperty username = null;
-    private IntegerProperty team = null;
     private IntegerProperty score = null;
     private StringProperty state = null;
-
 
     /*
      * Constructors
@@ -40,9 +35,9 @@ public class Player {
     public void setPosition(Integer[] p) { position = p; }
     public void setLoyalty(Integer l) { loyalty = l; }
     public void setEnergy(Integer e) { energy = e; }
+    public void setTeam(Integer t) { team = t; }
 
     public void setUsername(String username) { usernameProperty().set(username); }
-    public void setTeam(Integer team) { teamProperty().set(team); }
     public void setScore(Integer score) { scoreProperty().set(score); }
     public void setState(String state) { stateProperty().set(state); }
 
@@ -53,9 +48,9 @@ public class Player {
     public Integer[] getPosition() { return position; }
     public Integer getLoyalty() { return loyalty; }
     public Integer getEnergy() { return energy; }
+    public Integer getTeam() { return team; }
 
     public String getUsername() { return usernameProperty().get(); }
-    public Integer getTeam() { return teamProperty().get(); }
     public Integer getScore() { return scoreProperty().get(); }
     public String getState() { return stateProperty().get(); }
 
@@ -65,10 +60,6 @@ public class Player {
     public StringProperty usernameProperty() {
         if(username == null) username = new SimpleStringProperty(this, usernamePropertyName);
         return username;
-    }
-    public IntegerProperty teamProperty() {
-        if(team == null) team = new SimpleIntegerProperty(this, teamPropertyName);
-        return team;
     }
     public IntegerProperty scoreProperty() {
         if(score == null) score = new SimpleIntegerProperty(this, scorePropertyName);
