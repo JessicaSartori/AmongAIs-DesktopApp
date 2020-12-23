@@ -228,7 +228,7 @@ public class LeagueManagerDriver {
 
     // Withdraw from a specific tournament
     public void withdrawTournament(String TournamentName, String PlayerId) {
-        String parameters = "tournamentID=" + TournamentName + "&playerID=" + PlayerId;
+        String parameters = "tournament_id=" + TournamentName + "&player_id=" + PlayerId;
         doDeleteRequest("registration", parameters);
     }
 

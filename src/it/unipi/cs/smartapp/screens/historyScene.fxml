@@ -40,53 +40,54 @@
                      </font>
                   </Label>
                   <Separator orientation="VERTICAL" prefHeight="29.0" visible="false" />
-                  <Label fx:id="lblName" prefHeight="18.0" prefWidth="425.0" text="Player:">
+                  <Label fx:id="lblName" prefHeight="18.0" prefWidth="250.0" text="Player:">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                   <Separator orientation="VERTICAL" prefHeight="14.0" prefWidth="31.0" visible="false" />
-                  <Label fx:id="lblScore" layoutX="20.0" layoutY="58.0" prefHeight="18.0" prefWidth="425.0" text="Best score:">
+                  <Label fx:id="lblScore" layoutX="20.0" layoutY="58.0" prefHeight="18.0" prefWidth="250.0" text="Best score:">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                   <Separator layoutX="20.0" layoutY="76.0" orientation="VERTICAL" prefHeight="14.0" prefWidth="31.0" visible="false" />
-                  <Label fx:id="lblPlayedMatches" layoutX="20.0" layoutY="76.0" prefHeight="18.0" prefWidth="425.0" text="Played matches:">
+                  <Label fx:id="lblPlayedMatches" layoutX="20.0" layoutY="76.0" prefHeight="18.0" prefWidth="250.0" text="Played matches:">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                   <Separator layoutX="20.0" layoutY="108.0" orientation="VERTICAL" prefHeight="14.0" prefWidth="31.0" visible="false" />
-                  <Label fx:id="lblAccuracy" layoutX="20.0" layoutY="94.0" prefHeight="18.0" prefWidth="425.0" text="Total accuracy:">
+                  <Label fx:id="lblAccuracy" layoutX="20.0" layoutY="94.0" prefHeight="18.0" prefWidth="250.0" text="Total accuracy:">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                   <Separator layoutX="20.0" layoutY="140.0" orientation="VERTICAL" prefHeight="14.0" prefWidth="31.0" visible="false" />
-                  <Label fx:id="lblDeaths" layoutX="20.0" layoutY="112.0" prefHeight="18.0" prefWidth="425.0" text="Total deatchs:">
+                  <Label fx:id="lblDeaths" layoutX="20.0" layoutY="112.0" prefHeight="18.0" prefWidth="250.0" text="Total deaths:">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                   <Separator layoutX="20.0" layoutY="172.0" orientation="VERTICAL" prefHeight="14.0" prefWidth="31.0" visible="false" />
-                  <Label fx:id="lblKillDeathRatio" layoutX="20.0" layoutY="130.0" prefHeight="18.0" prefWidth="425.0" text="Kill / Death ratio:">
+                  <Label fx:id="lblKillDeathRatio" layoutX="20.0" layoutY="130.0" prefHeight="18.0" prefWidth="250.0" text="Kill / Death ratio:">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                   <Separator layoutX="20.0" layoutY="204.0" orientation="VERTICAL" prefHeight="14.0" prefWidth="31.0" visible="false" />
-                  <Label fx:id="lblTotalKills" layoutX="20.0" layoutY="148.0" prefHeight="18.0" prefWidth="425.0" text="Total kills:">
+                  <Label fx:id="lblTotalKills" layoutX="20.0" layoutY="148.0" prefHeight="18.0" prefWidth="250.0" text="Total kills:">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                   <Separator orientation="VERTICAL" prefHeight="14.0" prefWidth="31.0" visible="false" />
-                  <Label fx:id="lblTotalScore" layoutX="20.0" layoutY="166.0" prefHeight="18.0" prefWidth="425.0" text="Total score:">
+                  <Label fx:id="lblTotalScore" layoutX="20.0" layoutY="166.0" prefHeight="18.0" prefWidth="250.0" text="Total score:">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="496.0" />
                </children>
                <padding>
                   <Insets left="30.0" />

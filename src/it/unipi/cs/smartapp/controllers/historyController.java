@@ -41,12 +41,19 @@ public class historyController implements Controller {
 
     @Override
     public void updateContent() {
+        // Clear table
         tableMatchHistory.getItems().clear();
 
+        // Clear labels
+        clearLabels();
+
+        // Add content to table
         table.createTable();
 
+        // Get player history
         logDriver.getPlayerHistory(stateManager.getUsername());
 
+        // Show player statistics
         GlobalPlayerStatistics stats = logDriver.getGlobalPlayerStatistics(stateManager.getUsername());
 
         if (stats == null) {
@@ -62,6 +69,17 @@ public class historyController implements Controller {
             lblTotalKills.setText(lblTotalKills.getText() + " " + stats.totalKills);
             lblTotalScore.setText(lblTotalScore.getText() + " " + stats.totalScore);
         }
+    }
+
+    private void clearLabels() {
+        lblName.setText("Player:");
+        lblScore.setText("Best score:");
+        lblAccuracy.setText("Total accuracy");
+        lblPlayedMatches.setText("Played matches:");
+        lblDeaths.setText("Total deaths:");
+        lblKillDeathRatio.setText("Kill / Death ratio:");
+        lblTotalKills.setText("Total kills:");
+        lblTotalScore.setText("Total score:");
     }
 
     @FXML

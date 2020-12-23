@@ -169,65 +169,6 @@ public class gameController implements Controller {
         }
     }
 
-    @FXML
-    private void btnAccusePressed() {
-        String username = txtPlayerVote.getText();
-
-        if(username.trim().isEmpty()) {
-            txtPlayerVote.setText("");
-            txtPlayerVote.setStyle("-fx-border-color: red");
-            return;
-        }
-        txtMessage.setStyle("-fx-border-color: none");
-
-        GameServerResponse response = gameServer.sendACCUSE(stateMgr.getGameName(), username);
-        switch (response.code) {
-            case FAIL:
-                System.err.println(response.freeText);
-                return;
-            case ERROR:
-                lblResponse.setTextFill(Color.RED);
-                lblResponse.setText(response.freeText);
-                break;
-            case OK:
-                lblResponse.setTextFill(Color.DARKGREEN);
-                lblResponse.setText("You accused " + username + "!");
-                break;
-        }
-        table.labelFader(lblResponse, 2.0).play();
-    }
-
-    @FXML
-    private void btnJudgePressed() {
-        String username = txtPlayerVote.getText();
-        String nature = txtPlayerJudge.getText();
-
-        if(username.trim().isEmpty()) {
-            txtPlayerVote.setText("");
-            txtPlayerVote.setStyle("-fx-border-color: red");
-        }
-
-        if(!nature.equalsIgnoreCase("AI") && !nature.equalsIgnoreCase("H")) {
-            txtPlayerJudge.setStyle("-fx-border-color: red");
-        }
-
-        GameServerResponse response = gameServer.sendJUDGE(stateMgr.getGameName(), txtPlayerVote.getText(), txtPlayerJudge.getText().toUpperCase());
-        switch (response.code) {
-            case FAIL:
-                System.err.println(response.freeText);
-                return;
-            case ERROR:
-                lblResponse.setTextFill(Color.RED);
-                lblResponse.setText(response.freeText);
-                return;
-            case OK:
-                lblResponse.setTextFill(Color.DARKGREEN);
-                lblResponse.setText("You judged " + username + " as " + nature + "!");
-        }
-        table.labelFader(lblResponse, 2.0).play();
-    }
-
-
     public void updateStatus() {
         Controllers.updateStatus(false);
         Platform.runLater(() -> {
