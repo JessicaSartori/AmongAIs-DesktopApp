@@ -30,6 +30,10 @@ public class StateManager {
     public HashMap<String, Player> players;
     public ObservableList<Player> playersList;
 
+    // Game Statistics
+    public HashMap<String, PlayerGameHistory> gamesHistory;
+    public ObservableList<PlayerGameHistory> gamesTableHistory;
+
     // Setters
     public void setPrivateUsername(String s) { privateUsername = s; }
     public void setUsername(String s) { currentUsername = s; }
@@ -113,5 +117,20 @@ public class StateManager {
     public synchronized void removePlayer(String name) {
         Player pl = players.remove(name);
         playersList.remove(pl);
+    }
+
+    public void addGameHistory(PlayerGameHistory gHistory) {
+        if (gamesHistory.containsKey(gHistory.matchId.get())) {
+            // Remove old existing tournament
+            PlayerGameHistory tOld = gamesHistory.remove(gHistory.matchId.get());
+            gamesTableHistory.removeAll(tOld);
+
+            // Replace it with the updated one
+            gamesHistory.put(gHistory.matchId.get(), gHistory);
+            gamesTableHistory.add(gHistory);
+        } else {
+            gamesHistory.put(gHistory.matchId.get(), gHistory);
+            gamesTableHistory.add(gHistory);
+        }
     }
 }
