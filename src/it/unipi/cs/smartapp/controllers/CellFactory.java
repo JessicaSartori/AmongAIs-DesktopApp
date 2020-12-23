@@ -10,50 +10,32 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
 
-public class CellFactory implements Callback<TableColumn<Player, Image>, TableCell<Player, Image>> {
+public class CellFactory implements Callback<TableColumn<Player, ImageView>, TableCell<Player, ImageView>> {
 
     private final EventHandler<MouseEvent> event;
+    private final String imageName;
 
-    public CellFactory(EventHandler<MouseEvent> e) {
+    public CellFactory(EventHandler<MouseEvent> e, String i) {
         this.event = e;
+        this.imageName = i;
     }
 
     @Override
-    public TableCell<Player, Image> call(TableColumn tableColumn) {
+    public TableCell<Player, ImageView> call(TableColumn tableColumn) {
         final ImageView imageView = new ImageView();
 
-        TableCell<Player, Image> cell = new TableCell<Player, Image>() {
+        return new TableCell<Player, ImageView>() {
             @Override
-            protected void updateItem(Image item, boolean empty) {
+            protected void updateItem(ImageView item, boolean empty) {
                 super.updateItem(item, empty);
-                if(item != null) {
-                    setText(item.toString());
-                    imageView.setImage(new Image("it/unipi/cs/smartapp/sprites/barrier.png"));
+
+                if(!empty){
+                    imageView.setImage(new Image("it/unipi/cs/smartapp/sprites/" + imageName));
+                    setGraphic(imageView);
+                    setOnMouseClicked(event);
                 }
             }
-
-            /*@Override
-            protected void updateItem(Image item, boolean empty) {
-                if (item != null) {
-                    imageView.setImage(new Image("it/unipi/cs/smartapp/sprites/barrier.png", 30, 30, true, true));
-                }
-            }*/
-
-            /*@Override
-            public void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item != null) {
-                    imageView.setImage(new Image("it/unipi/cs/smartapp/sprites/barrier.png"));
-                }
-            }*/
         };
-
-
-
-        // Attach the imageview to the cell
-        //cell.setGraphic(imageView);
-        cell.setOnMouseClicked(event);
-        return cell;
     }
 }
 

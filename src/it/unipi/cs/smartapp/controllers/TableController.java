@@ -7,11 +7,13 @@ import it.unipi.cs.smartapp.statemanager.StateManager;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -24,6 +26,13 @@ public class TableController {
 
     private final TableView<Player> tblPlayers;
 
+    public static String accusePropertyName = "accuse";
+    public static String judgeHumanPropertyName = "judgeHuman";
+    public static String judgeAIPropertyName = "judgeAI";
+
+    public ObjectProperty<ImageView> accuse = null;
+    public ObjectProperty<ImageView> judgeHuman = null;
+    public ObjectProperty<ImageView> judgeAI = null;
 
     public TableController(TableView<Player> tblView) {
         tblPlayers = tblView;
@@ -43,9 +52,9 @@ public class TableController {
 
         if(playing) {
             // Setup voting table columns
-            TableColumn<Player, Image> accuse = createColumn("Accuse", Player.accusePropertyName, false);
-            TableColumn<Player, Image> judgeHuman = createColumn("Human", Player.judgeHumanPropertyName, false);
-            TableColumn<Player, Image> judgeAI = createColumn("AI", Player.judgeAIPropertyName, false);
+            TableColumn<Player, ImageView> accuse = createColumn("Accuse", accusePropertyName, false);
+            TableColumn<Player, ImageView> judgeHuman = createColumn("Human", judgeHumanPropertyName, false);
+            TableColumn<Player, ImageView> judgeAI = createColumn("AI", judgeAIPropertyName, false);
 
             // Add columns to table
             tblPlayers.getColumns().add(accuse);
@@ -56,36 +65,34 @@ public class TableController {
             accuse.setCellFactory(new CellFactory(event -> {
                 Player p = tblPlayers.getSelectionModel().getSelectedItem();
                 GameServerResponse response = gameServer.sendACCUSE(stateMgr.getGameName(), p.getUsername());
-                updateResponse(response, lblResponse, "You accused " + p.getUsername() + "!");
-            }));
+                TableController.this.updateResponse(response, lblResponse, "You accused " + p.getUsername() + "!");
+            }, "accuse.png"));
 
             judgeHuman.setCellFactory(new CellFactory(event -> {
                 Player p = tblPlayers.getSelectionModel().getSelectedItem();
                 GameServerResponse response = gameServer.sendJUDGE(stateMgr.getGameName(), p.getUsername(), "H");
                 updateResponse(response, lblResponse, "You judged " + p.getUsername() + " as human!");
-            }));
+            }, "judgeH.png"));
 
             judgeAI.setCellFactory(new CellFactory(event -> {
                 Player p = tblPlayers.getSelectionModel().getSelectedItem();
                 GameServerResponse response = gameServer.sendJUDGE(stateMgr.getGameName(), p.getUsername(), "AI");
                 updateResponse(response, lblResponse, "You judged " + p.getUsername() + " as AI!");
-            }));
+            }, "judgeAI.png"));
+
+            accuse.setCellValueFactory(playerImageViewCellDataFeatures -> accuseProperty());
+            judgeHuman.setCellValueFactory(playerImageViewCellDataFeatures -> judgeHumanProperty());
+            judgeAI.setCellValueFactory(playerImageViewCellDataFeatures -> judgeAIProperty());
         }
 
         tblPlayers.setRowFactory(tv -> new TableRow<Player>() {
             @Override
             protected void updateItem(Player p, boolean empty) {
-                 super.updateItem(p, empty);
-                if (p == null || p.getTeam() == null) {
-                    setStyle("");
-                    return;
-                } else if (p.getTeam() == 0) {
-                    setStyle("-fx-background-color: #fc6262;");
-                    //System.out.println("Should be 0 RED " + p.getTeam());
-                    } else {
-                    setStyle("-fx-background-color: #7a91ff;");
-                    //    System.out.println("Should be 1 BLUE " + p.getTeam());
-                }
+                super.updateItem(p, empty);
+
+                if (p == null || p.getTeam() == null) { setStyle(""); return; }
+                else if (p.getTeam() == 0) { setStyle("-fx-background-color: #fc6262;"); }
+                else { setStyle("-fx-background-color: #7a91ff;"); }
 
                 if (p.getUsername().equals(stateMgr.getUsername())) setStyle(getStyle() + "-fx-font-weight: 800");
             }
@@ -142,6 +149,22 @@ public class TableController {
         fade.setToValue(0);
 
         return fade;
+    }
+
+    /*
+     * Property methods
+     */
+    public ObjectProperty<ImageView> accuseProperty() {
+        if(accuse == null) accuse = new SimpleObjectProperty<>(this, accusePropertyName);
+        return accuse;
+    }
+    public ObjectProperty<ImageView> judgeHumanProperty() {
+        if(judgeHuman == null) judgeHuman = new SimpleObjectProperty<>(this, judgeHumanPropertyName);
+        return judgeHuman;
+    }
+    public ObjectProperty<ImageView> judgeAIProperty() {
+        if(judgeAI == null) judgeAI = new SimpleObjectProperty<>(this, judgeAIPropertyName);
+        return judgeAI;
     }
 }
 
