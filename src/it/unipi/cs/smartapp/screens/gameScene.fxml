@@ -83,7 +83,7 @@
    </HBox>
 
 
-   <Pane fx:id="leftSubPanel" focusTraversable="true" layoutY="53.0" prefHeight="729.0" prefWidth="315.0" AnchorPane.leftAnchor="0.0">
+   <Pane fx:id="leftSubPanel" layoutY="53.0" prefHeight="729.0" prefWidth="315.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="53.0">
 
       <Label layoutX="123.0" layoutY="14.0" text="Players">
          <font>
@@ -123,7 +123,7 @@
    </Label>
 
 
-   <Pane fx:id="rightSubPanel" focusTraversable="true" layoutX="965" layoutY="65.0" prefHeight="719.0" prefWidth="315.0" AnchorPane.rightAnchor="0.0">
+   <Pane fx:id="rightSubPanel" layoutX="965" layoutY="65.0" prefHeight="719.0" prefWidth="315.0" AnchorPane.rightAnchor="0.0">
       <Label layoutX="25.0" layoutY="14.0" text="Game chat:">
          <font>
             <Font name="System Bold" size="18.0" />

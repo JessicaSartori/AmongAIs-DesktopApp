@@ -34,7 +34,7 @@ public class gameController implements Controller {
     @FXML
     private Label lobbyName, playerLoyalty, playerEnergy, playerScore, lblResponse, lblGameState, lblPlayerState;
     @FXML
-    private TextField txtPlayerVote, txtPlayerJudge, txtMessage;
+    private TextField txtMessage;
     @FXML
     private ProgressBar playerEnergyBar;
     @FXML
