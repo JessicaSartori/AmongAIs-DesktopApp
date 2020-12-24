@@ -10,75 +10,72 @@
          <Font name="Segoe UI Bold Italic" size="36.0" />
       </font>
    </Label>
-   <VBox alignment="TOP_CENTER" fillWidth="false" layoutX="300.0" layoutY="210.0" prefHeight="382.0" prefWidth="1280.0"
-         AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="210.0">
+   <VBox alignment="TOP_CENTER" fillWidth="false" layoutX="300.0" layoutY="210.0" prefHeight="382.0" prefWidth="1280.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="210.0">
       <Label fx:id="lblMessage" prefHeight="30.0" prefWidth="480.0" text="error label" textFill="RED">
          <font>
-            <Font size="13.0"/>
+            <Font size="13.0" />
          </font>
       </Label>
       <TextField fx:id="gameNameField" prefHeight="30.0" prefWidth="480.0" promptText="Game name">
          <font>
-            <Font size="13.0"/>
+            <Font size="13.0" />
          </font>
       </TextField>
       <HBox alignment="CENTER" prefHeight="30.0" prefWidth="1280.0">
-         <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="30.0"
-                text="Teams preference:">
+         <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="30.0" text="Teams preference:">
             <font>
-               <Font name="System Bold" size="14.0"/>
+               <Font name="System Bold" size="14.0" />
             </font>
          </Label>
-         <Separator prefWidth="30.0" visible="false"/>
+         <Separator prefWidth="30.0" visible="false" />
          <RadioButton mnemonicParsing="false" selected="true" text="Balanced">
             <toggleGroup>
-               <ToggleGroup fx:id="radioTeam"/>
+               <ToggleGroup fx:id="radioTeam" />
             </toggleGroup>
          </RadioButton>
-         <Separator layoutX="644.0" layoutY="24.0" prefWidth="30.0" visible="false"/>
-         <RadioButton mnemonicParsing="false" text="Unbalanced" toggleGroup="$radioTeam"/>
+         <Separator layoutX="644.0" layoutY="24.0" prefWidth="30.0" visible="false" />
+         <RadioButton mnemonicParsing="false" text="Unbalanced" toggleGroup="$radioTeam" />
+         <Separator layoutX="603.0" layoutY="23.0" prefWidth="30.0" visible="false" />
+         <RadioButton mnemonicParsing="false" text="Battle of species" toggleGroup="$radioTeam" />
       </HBox>
       <HBox alignment="CENTER" prefHeight="30.0" prefWidth="1280.0">
-         <Separator layoutX="688.0" layoutY="24.0" prefWidth="10.0" visible="false"/>
-         <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="30.0"
-                text="Map shape:">
+         <Separator layoutX="688.0" layoutY="24.0" prefWidth="10.0" visible="false" />
+         <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="30.0" text="Map shape:">
             <font>
-               <Font name="System Bold" size="14.0"/>
+               <Font name="System Bold" size="14.0" />
             </font>
          </Label>
-         <Separator prefWidth="30.0" visible="false"/>
+         <Separator prefWidth="30.0" visible="false" />
          <RadioButton mnemonicParsing="false" selected="true" text="Square">
             <toggleGroup>
-               <ToggleGroup fx:id="radioShape"/>
+               <ToggleGroup fx:id="radioShape" />
             </toggleGroup>
          </RadioButton>
-         <Separator layoutX="620.0" layoutY="24.0" prefWidth="41.0" visible="false"/>
-         <RadioButton mnemonicParsing="false" text="Wide" toggleGroup="$radioShape"/>
+         <Separator layoutX="620.0" layoutY="24.0" prefWidth="41.0" visible="false" />
+         <RadioButton mnemonicParsing="false" text="Wide" toggleGroup="$radioShape" />
       </HBox>
       <HBox alignment="CENTER" prefHeight="30.0" prefWidth="1280.0">
-         <Separator layoutX="582.0" layoutY="24.0" prefWidth="45.0" visible="false"/>
-         <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="30.0"
-                text="Map size:">
+         <Separator layoutX="582.0" layoutY="24.0" prefWidth="45.0" visible="false" />
+         <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="30.0" text="Map size:">
             <font>
-               <Font name="System Bold" size="14.0"/>
+               <Font name="System Bold" size="14.0" />
             </font>
          </Label>
-         <Separator prefWidth="30.0" visible="false"/>
+         <Separator prefWidth="30.0" visible="false" />
          <RadioButton mnemonicParsing="false" selected="true" text="32">
             <toggleGroup>
-               <ToggleGroup fx:id="radioMap"/>
+               <ToggleGroup fx:id="radioMap" />
             </toggleGroup>
          </RadioButton>
-         <Separator layoutX="612.0" layoutY="24.0" prefWidth="30.0" visible="false"/>
-         <RadioButton mnemonicParsing="false" text="64" toggleGroup="$radioMap"/>
-         <Separator layoutX="661.0" layoutY="24.0" prefWidth="30.0" visible="false"/>
-         <RadioButton mnemonicParsing="false" text="128" toggleGroup="$radioMap"/>
+         <Separator layoutX="612.0" layoutY="24.0" prefWidth="30.0" visible="false" />
+         <RadioButton mnemonicParsing="false" text="64" toggleGroup="$radioMap" />
+         <Separator layoutX="661.0" layoutY="24.0" prefWidth="30.0" visible="false" />
+         <RadioButton mnemonicParsing="false" text="128" toggleGroup="$radioMap" />
       </HBox>
-      <Separator orientation="VERTICAL" prefHeight="20.0" visible="false"/>
-      <Button mnemonicParsing="false" onAction="#btnCreatePressed" prefHeight="40.0" prefWidth="120.0"
-              text="Create Game">
+      <Separator orientation="VERTICAL" prefHeight="20.0" visible="false" />
+      <Button mnemonicParsing="false" onAction="#btnCreatePressed" prefHeight="40.0" prefWidth="120.0" text="Create Game">
          <font>
-            <Font size="13.0"/>
+            <Font size="13.0" />
          </font>
       </Button>
    </VBox>

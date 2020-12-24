@@ -100,7 +100,8 @@ public class MapStatus {
         }
 
         // Enhance current player coordinates
-        highlightCoordinates(canvasContext);
+        if(currentUser != null)
+            highlightCoordinates(canvasContext);
     }
 
     public void drawCell(GraphicsContext canvasContext, Integer x, Integer y, Image image) {
@@ -138,7 +139,7 @@ public class MapStatus {
         if((Character.isUpperCase(value) && value != 'X') || (Character.isLowerCase(value) && value != 'x')) {
             Player current = StateManager.getInstance().player;
 
-            if(current.getSymbol() == value)
+            if(current != null && current.getSymbol() == value)
                 switch (current.getDirection()) {
                     case 'N':
                         return Character.isUpperCase(value) ? sprites.get('8') : sprites.get('7');
