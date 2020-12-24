@@ -102,6 +102,7 @@ public class gameController implements Controller {
         // Setup Keyboard event listener
         gamePanel.setOnKeyPressed(keyEvent -> {
             KeyCode key = keyEvent.getCode();
+            System.out.println(key);
 
             if (key == playerSettings.getFlipLeft()) Controllers.flipVisiblePane(leftSubPanel);
             else if (key == playerSettings.getFlipRight()) Controllers.flipVisiblePane(rightSubPanel);
