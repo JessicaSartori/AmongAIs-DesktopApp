@@ -55,10 +55,10 @@ public class tournamentController implements Controller {
     private void btnJoinPressed() {
         // Perform JOIN with LM
         Tournament t = tblTournaments.getSelectionModel().getSelectedItem();
-        lmDriver.joinTournament(t.tournamentName.get(), stateManager.getUsername());
+        String res = lmDriver.joinTournament(t.tournamentName.get(), stateManager.getUsername());
         Alert message = new Alert(Alert.AlertType.INFORMATION);
         message.setTitle(t.tournamentName.get());
-        message.setContentText("You successfully joined!");
+        message.setContentText(res);
         message.showAndWait();
     }
 
@@ -66,10 +66,10 @@ public class tournamentController implements Controller {
     private void btnWithdrawPressed() {
         // Perform Withdraw with LM
         Tournament t = tblTournaments.getSelectionModel().getSelectedItem();
-        lmDriver.withdrawTournament(t.tournamentName.get(), stateManager.getUsername());
+        String response = lmDriver.withdrawTournament(t.tournamentName.get(), stateManager.getUsername());
         Alert message = new Alert(Alert.AlertType.INFORMATION);
         message.setTitle(t.tournamentName.get());
-        message.setContentText("You successfully withdrawn.");
+        message.setContentText(response);
         message.showAndWait();
     }
 

@@ -27,6 +27,8 @@ public class LeagueManagerDriver {
 
     public final static String LM_SERVER = "http://api.dbarasti.com:8080/";
     private static final String USER_AGENT = "Mozilla/5.0";
+    private static final String ALREADY_JOINED = "You already joined this tournament.";
+    private static final String ALREADY_WITHDRAWN = "The given player is not registered to the given tournament!";
     private TournamentStatus tournamentStatus;
 
     public static LeagueManagerDriver getInstance() {
@@ -127,11 +129,11 @@ public class LeagueManagerDriver {
                     response.append(inputLine);
                 }
                 in.close();
-            } else {
-                return "Error with League Manager.";
+            } else if (responseCode == HttpURLConnection.HTTP_CONFLICT) {
+                return ALREADY_JOINED;
             }
         } catch(IOException err) {
-            System.err.println("HTTP ERROR: " + LM_SERVER + endpoint);
+            System.err.println("Error with LM server.");
         }
 
         return response.toString();
@@ -158,8 +160,8 @@ public class LeagueManagerDriver {
                     response.append(inputLine);
                 }
                 in.close();
-            } else {
-                return "Error with League Manager.";
+            } else if (responseCode == HttpURLConnection.HTTP_BAD_REQUEST) {
+                return ALREADY_WITHDRAWN;
             }
         } catch(IOException err) {
             System.err.println("HTTP ERROR: " + LM_SERVER + endpoint);
@@ -221,15 +223,29 @@ public class LeagueManagerDriver {
     }
 
     // Join a specific tournament
-    public void joinTournament(String TournamentName, String PlayerId) {
+    public String joinTournament(String TournamentName, String PlayerId) {
         String parameters = "{ \"player_id\": \"" + PlayerId + "\", \"tournament_id\": \"" + TournamentName + "\" }";
-        doPostRequest("registration", parameters);
+        String response = doPostRequest("registration", parameters);
+
+        if (!response.equals(ALREADY_JOINED)) {
+            try {
+                JSONParser parse = new JSONParser();
+                JSONObject json = (JSONObject)parse.parse(response);
+                String message = (String)json.get("message");
+
+                return message;
+            } catch (ParseException err) {
+                System.err.println("Error parsing the JSON.");
+            }
+        }
+
+        return response;
     }
 
     // Withdraw from a specific tournament
-    public void withdrawTournament(String TournamentName, String PlayerId) {
+    public String withdrawTournament(String TournamentName, String PlayerId) {
         String parameters = "tournament_id=" + TournamentName + "&player_id=" + PlayerId;
-        doDeleteRequest("registration", parameters);
+        return doDeleteRequest("registration", parameters);
     }
 
     // Get all participants of a specific tournament
