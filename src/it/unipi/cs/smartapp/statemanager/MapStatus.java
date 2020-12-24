@@ -5,6 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -78,13 +79,16 @@ public class MapStatus {
                 if(Character.isUpperCase(gameMap[r][c])) { canvasContext.setFill(Color.web("#B30000")); canvasContext.setStroke(Color.web("#B30000"));}
                 else { canvasContext.setFill(Color.BLUE); canvasContext.setStroke(Color.BLUE); }
 
-                // Write names on players
                 String username = findName(players, gameMap[r][c]);
                 if(username != null) {
+                    // Write names on players
                     canvasContext.fillText(username, xCanvas - (username.length() * 2), yCanvas - 5);
 
-                    if(currentUser != null && currentUser.equals(username)) canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
+                    // Enhance current player position on map
+                    if(currentUser != null && currentUser.equals(username))
+                        canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
                 } else if(gameMap[r][c] == 'X' || gameMap[r][c] == 'x') {
+                    // Improve flag visibility
                     canvasContext.fillText("Flag", xCanvas - 5, yCanvas - 5);
                     canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
                 }
@@ -94,12 +98,33 @@ public class MapStatus {
             yCanvas += cellSize;
             xCanvas = cellSize;
         }
+
+        // Enhance current player coordinates
+        highlightCoordinates(canvasContext);
     }
 
     public void drawCell(GraphicsContext canvasContext, Integer x, Integer y, Image image) {
         double xCanvas = x*cellSize, yCanvas = y*cellSize;
 
-        canvasContext.drawImage(image, xCanvas, yCanvas, cellSize, cellSize);
+        if(image != null) canvasContext.drawImage(image, xCanvas, yCanvas, cellSize, cellSize);
+        else {
+            Paint p = canvasContext.getFill();
+
+            canvasContext.setFill(Color.WHITE);
+            canvasContext.setGlobalAlpha(0.2);
+            canvasContext.fillRect(xCanvas, yCanvas, cellSize, cellSize);
+
+            canvasContext.setGlobalAlpha(1.0);
+            canvasContext.setFill(p);
+        }
+    }
+
+    private void highlightCoordinates(GraphicsContext canvasContext) {
+        Integer[] playerPos = StateManager.getInstance().player.getPosition();
+        for(int y = 0; y < mapHeight; y++)
+            drawCell(canvasContext, playerPos[0] + 1, y + 1, null);
+        for(int x = 0; x < mapWidth; x++)
+            drawCell(canvasContext, x + 1, playerPos[1] + 1, null);
     }
 
     public String findName(ObservableList<Player> players, Character symbol){
@@ -110,8 +135,30 @@ public class MapStatus {
     }
 
     public Image setSprite(Character value) {
-        if(Character.isUpperCase(value) && value != 'X') return sprites.get('8');
-        if(Character.isLowerCase(value) && value != 'x') return sprites.get('7');
+        if(Character.isUpperCase(value) && value != 'X')
+            switch (StateManager.getInstance().player.getDirection()) {
+                case 'N':
+                    return sprites.get('8');
+                case 'S':
+                    return sprites.get('2');
+                case 'E':
+                    return sprites.get('6');
+                case 'W':
+                    return sprites.get('4');
+            }
+
+        if(Character.isLowerCase(value) && value != 'x')
+            switch (StateManager.getInstance().player.getDirection()) {
+                case 'N':
+                    return sprites.get('7');
+                case 'S':
+                    return sprites.get('1');
+                case 'E':
+                    return sprites.get('5');
+                case 'W':
+                    return sprites.get('3');
+            }
+
         return sprites.get(value);
     }
 

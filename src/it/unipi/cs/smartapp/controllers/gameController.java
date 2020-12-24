@@ -77,6 +77,9 @@ public class gameController implements Controller {
         Controllers.updateStatus(false);
         Controllers.updateMap();
 
+        // Set initial player facing direction
+        stateMgr.player.setDirection((stateMgr.player.getTeam() == 0) ? 'E' : 'W');
+
         // Prepare the interface
         lobbyName.setText(stateMgr.getGameName());
         lblGameState.setText(stateMgr.getGameState().toString());
@@ -228,6 +231,7 @@ public class gameController implements Controller {
             case 'E': old_position[0] += 1; break;
         }
         stateMgr.player.setPosition(old_position);
+        stateMgr.player.setDirection(direction);
 
         stateMgr.map.drawMap(mapCanvas, stateMgr.playersList, stateMgr.player.getUsername());
     }

@@ -13,6 +13,7 @@ public class Player {
     public static String statePropertyName = "state";
 
     private Character symbol = null;
+    private Character direction = null;
     private Integer[] position = {-1 , -1};
     private Integer loyalty = null;
     private Integer energy = null;
@@ -32,6 +33,7 @@ public class Player {
      * Setters
      */
     public void setSymbol(Character s) { symbol = s; }
+    public void setDirection(Character d) { direction = d; }
     public void setPosition(Integer[] p) { position = p; }
     public void setLoyalty(Integer l) { loyalty = l; }
     public void setEnergy(Integer e) { energy = e; }
@@ -45,6 +47,7 @@ public class Player {
      * Getters
      */
     public Character getSymbol() { return symbol; }
+    public Character getDirection() { return direction; }
     public Integer[] getPosition() { return position; }
     public Integer getLoyalty() { return loyalty; }
     public Integer getEnergy() { return energy; }
