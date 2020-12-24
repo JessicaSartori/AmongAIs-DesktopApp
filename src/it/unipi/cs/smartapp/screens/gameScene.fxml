@@ -7,7 +7,7 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="gamePanel" focusTraversable="true" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.cs.smartapp.controllers.gameController">
-   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="315.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="42.0">
+   <VBox alignment="CENTER" focusTraversable="true" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="315.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="42.0">
       <Canvas fx:id="mapCanvas" height="645.0" nodeOrientation="INHERIT" width="645.0" />
    </VBox>
 
@@ -83,7 +83,7 @@
    </HBox>
 
 
-   <Pane fx:id="leftSubPanel" focusTraversable="true" layoutY="53.0" prefHeight="729.0" prefWidth="315.0" AnchorPane.leftAnchor="0.0">
+   <Pane fx:id="leftSubPanel" layoutY="53.0" prefHeight="729.0" prefWidth="315.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="53.0">
 
       <Label layoutX="123.0" layoutY="14.0" text="Players">
          <font>
@@ -123,7 +123,7 @@
    </Label>
 
 
-   <Pane fx:id="rightSubPanel" focusTraversable="true" layoutX="965" layoutY="65.0" prefHeight="719.0" prefWidth="315.0" AnchorPane.rightAnchor="0.0">
+   <Pane fx:id="rightSubPanel" layoutX="965" layoutY="65.0" prefHeight="719.0" prefWidth="315.0" AnchorPane.rightAnchor="0.0">
       <Label layoutX="25.0" layoutY="14.0" text="Game chat:">
          <font>
             <Font name="System Bold" size="18.0" />
