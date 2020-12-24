@@ -135,38 +135,31 @@ public class MapStatus {
     }
 
     public Image setSprite(Character value) {
-        if(Character.isUpperCase(value) && value != 'X')
-            switch (StateManager.getInstance().player.getDirection()) {
-                case 'N':
-                    return sprites.get('8');
-                case 'S':
-                    return sprites.get('2');
-                case 'E':
-                    return sprites.get('6');
-                case 'W':
-                    return sprites.get('4');
-            }
+        if((Character.isUpperCase(value) && value != 'X') || (Character.isLowerCase(value) && value != 'x')) {
+            Player current = StateManager.getInstance().player;
 
-        if(Character.isLowerCase(value) && value != 'x')
-            switch (StateManager.getInstance().player.getDirection()) {
-                case 'N':
-                    return sprites.get('7');
-                case 'S':
-                    return sprites.get('1');
-                case 'E':
-                    return sprites.get('5');
-                case 'W':
-                    return sprites.get('3');
-            }
+            if(current.getSymbol() == value)
+                switch (current.getDirection()) {
+                    case 'N':
+                        return Character.isUpperCase(value) ? sprites.get('8') : sprites.get('7');
+                    case 'S':
+                        return Character.isUpperCase(value) ? sprites.get('2') : sprites.get('1');
+                    case 'E':
+                        return Character.isUpperCase(value) ? sprites.get('6') : sprites.get('5');
+                    case 'W':
+                        return Character.isUpperCase(value) ? sprites.get('4') : sprites.get('3');
+                }
+            else return Character.isUpperCase(value) ? sprites.get('6') : sprites.get('3');
+        }
 
         return sprites.get(value);
     }
 
-    public void drawShot(Canvas mapCanvas, Integer[] playerPos, Integer team, Character shotDirection, Character landed, Integer prevEnergy) {
+    public void drawShot(Canvas mapCanvas, Integer[] playerPos, Character shotDirection, Character landed, Integer prevEnergy) {
         GraphicsContext canvasContext = mapCanvas.getGraphicsContext2D();
 
         Integer c = playerPos[0], r = playerPos[1];
-        char playerKey = ' ', explosionKey;
+        Character explosionKey;
 
         if(Character.isUpperCase(gameMap[r][c])) canvasContext.setStroke(Color.web("#B30000"));
         else canvasContext.setStroke(Color.BLUE);
@@ -176,31 +169,29 @@ public class MapStatus {
                 if(landed == '?') r = -1;
                 else if(landed == '.' || landed == '~' || landed == '@') r -= prevEnergy;
                 else while(r > 0 && gameMap[r][c] != landed) r--;
-                playerKey = (team == 0) ? '8' : '7';
                 break;
             case 'S':
                 if(landed == '?') r = mapHeight;
                 else if(landed == '.' || landed == '~' || landed == '@') r += prevEnergy;
                 else while(r < mapHeight && gameMap[r][c] != landed) r++;
-                playerKey = (team == 0) ? '2' : '1';
                 break;
             case 'W':
                 if(landed == '?') c = -1;
                 else if(landed == '.' || landed == '~' || landed == '@') c -= prevEnergy;
                 else while(c > 0 && gameMap[r][c] != landed) c--;
-                playerKey = (team == 0) ? '4' : '3';
                 break;
             case 'E':
                 if(landed == '?') c = mapWidth;
                 else if(landed == '.' || landed == '~' || landed == '@') c += prevEnergy;
                 else while(c < mapWidth && gameMap[r][c] != landed) c++;
-                playerKey = (team == 0) ? '6' : '5';
                 break;
         }
 
         // Turn the player correctly
-        Image player = sprites.get(playerKey);
+        StateManager.getInstance().player.setDirection(shotDirection);
+        Image player = setSprite(StateManager.getInstance().player.getSymbol());
         drawCell(canvasContext, playerPos[0] + 1, playerPos[1] + 1, player);
+
         // Draw explosion according to terrain
         switch (landed) {
             case '~': explosionKey = '-'; break;
@@ -208,7 +199,7 @@ public class MapStatus {
             case '?': explosionKey = '/'; break;
             default: explosionKey = '*'; break;
         }
-        Image explosion = sprites.get(explosionKey);
+        Image explosion = setSprite(explosionKey);
         drawCell(canvasContext, c + 1, r + 1, explosion);
 
         // Redraw square around current player
