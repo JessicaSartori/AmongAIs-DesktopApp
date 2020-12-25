@@ -53,15 +53,13 @@ public class createController implements Controller {
         String mapSize = MapSizeRadioButton.getText();
 
         // Set options flags
-        options = (teamB.charAt(0) == 'B') ? "B" : "";
+        if(teamB.equals("Balanced")) options = "B";
+        else if(teamB.equals("Unbalanced")) options = "";
+        else options = "S";
         options += (mapShape.equals("Square")) ? "Q" : "W";
-        if (mapSize.equals("32")) {
-            options += "1";
-        } else if (mapSize.equals("64")) {
-            options += "2";
-        } else {
-            options += "3";
-        }
+        if (mapSize.equals("32")) options += "1";
+        else if (mapSize.equals("64")) options += "2";
+        else options += "3";
 
         if(isValid(gameName) && tryConnect() &&
                 create(gameName, options) && join(gameName)) {

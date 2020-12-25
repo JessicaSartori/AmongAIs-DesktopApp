@@ -5,6 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -78,13 +79,16 @@ public class MapStatus {
                 if(Character.isUpperCase(gameMap[r][c])) { canvasContext.setFill(Color.web("#B30000")); canvasContext.setStroke(Color.web("#B30000"));}
                 else { canvasContext.setFill(Color.BLUE); canvasContext.setStroke(Color.BLUE); }
 
-                // Write names on players
                 String username = findName(players, gameMap[r][c]);
                 if(username != null) {
+                    // Write names on players
                     canvasContext.fillText(username, xCanvas - (username.length() * 2), yCanvas - 5);
 
-                    if(currentUser != null && currentUser.equals(username)) canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
+                    // Enhance current player position on map
+                    if(currentUser != null && currentUser.equals(username))
+                        canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
                 } else if(gameMap[r][c] == 'X' || gameMap[r][c] == 'x') {
+                    // Improve flag visibility
                     canvasContext.fillText("Flag", xCanvas - 5, yCanvas - 5);
                     canvasContext.strokeRect(xCanvas, yCanvas, cellSize, cellSize);
                 }
@@ -94,12 +98,34 @@ public class MapStatus {
             yCanvas += cellSize;
             xCanvas = cellSize;
         }
+
+        // Enhance current player coordinates
+        if(currentUser != null)
+            highlightCoordinates(canvasContext);
     }
 
     public void drawCell(GraphicsContext canvasContext, Integer x, Integer y, Image image) {
         double xCanvas = x*cellSize, yCanvas = y*cellSize;
 
-        canvasContext.drawImage(image, xCanvas, yCanvas, cellSize, cellSize);
+        if(image != null) canvasContext.drawImage(image, xCanvas, yCanvas, cellSize, cellSize);
+        else {
+            Paint p = canvasContext.getFill();
+
+            canvasContext.setFill(Color.WHITE);
+            canvasContext.setGlobalAlpha(0.2);
+            canvasContext.fillRect(xCanvas, yCanvas, cellSize, cellSize);
+
+            canvasContext.setGlobalAlpha(1.0);
+            canvasContext.setFill(p);
+        }
+    }
+
+    private void highlightCoordinates(GraphicsContext canvasContext) {
+        Integer[] playerPos = StateManager.getInstance().player.getPosition();
+        for(int y = 0; y < mapHeight; y++)
+            drawCell(canvasContext, playerPos[0] + 1, y + 1, null);
+        for(int x = 0; x < mapWidth; x++)
+            drawCell(canvasContext, x + 1, playerPos[1] + 1, null);
     }
 
     public String findName(ObservableList<Player> players, Character symbol){
@@ -110,16 +136,31 @@ public class MapStatus {
     }
 
     public Image setSprite(Character value) {
-        if(Character.isUpperCase(value) && value != 'X') return sprites.get('8');
-        if(Character.isLowerCase(value) && value != 'x') return sprites.get('7');
+        if((Character.isUpperCase(value) && value != 'X') || (Character.isLowerCase(value) && value != 'x')) {
+            Player current = StateManager.getInstance().player;
+
+            if(current != null && current.getSymbol() == value)
+                switch (current.getDirection()) {
+                    case 'N':
+                        return Character.isUpperCase(value) ? sprites.get('8') : sprites.get('7');
+                    case 'S':
+                        return Character.isUpperCase(value) ? sprites.get('2') : sprites.get('1');
+                    case 'E':
+                        return Character.isUpperCase(value) ? sprites.get('6') : sprites.get('5');
+                    case 'W':
+                        return Character.isUpperCase(value) ? sprites.get('4') : sprites.get('3');
+                }
+            else return Character.isUpperCase(value) ? sprites.get('6') : sprites.get('3');
+        }
+
         return sprites.get(value);
     }
 
-    public void drawShot(Canvas mapCanvas, Integer[] playerPos, Integer team, Character shotDirection, Character landed, Integer prevEnergy) {
+    public void drawShot(Canvas mapCanvas, Integer[] playerPos, Character shotDirection, Character landed, Integer prevEnergy) {
         GraphicsContext canvasContext = mapCanvas.getGraphicsContext2D();
 
         Integer c = playerPos[0], r = playerPos[1];
-        char playerKey = ' ', explosionKey;
+        Character explosionKey;
 
         if(Character.isUpperCase(gameMap[r][c])) canvasContext.setStroke(Color.web("#B30000"));
         else canvasContext.setStroke(Color.BLUE);
@@ -129,31 +170,29 @@ public class MapStatus {
                 if(landed == '?') r = -1;
                 else if(landed == '.' || landed == '~' || landed == '@') r -= prevEnergy;
                 else while(r > 0 && gameMap[r][c] != landed) r--;
-                playerKey = (team == 0) ? '8' : '7';
                 break;
             case 'S':
                 if(landed == '?') r = mapHeight;
                 else if(landed == '.' || landed == '~' || landed == '@') r += prevEnergy;
                 else while(r < mapHeight && gameMap[r][c] != landed) r++;
-                playerKey = (team == 0) ? '2' : '1';
                 break;
             case 'W':
                 if(landed == '?') c = -1;
                 else if(landed == '.' || landed == '~' || landed == '@') c -= prevEnergy;
                 else while(c > 0 && gameMap[r][c] != landed) c--;
-                playerKey = (team == 0) ? '4' : '3';
                 break;
             case 'E':
                 if(landed == '?') c = mapWidth;
                 else if(landed == '.' || landed == '~' || landed == '@') c += prevEnergy;
                 else while(c < mapWidth && gameMap[r][c] != landed) c++;
-                playerKey = (team == 0) ? '6' : '5';
                 break;
         }
 
         // Turn the player correctly
-        Image player = sprites.get(playerKey);
+        StateManager.getInstance().player.setDirection(shotDirection);
+        Image player = setSprite(StateManager.getInstance().player.getSymbol());
         drawCell(canvasContext, playerPos[0] + 1, playerPos[1] + 1, player);
+
         // Draw explosion according to terrain
         switch (landed) {
             case '~': explosionKey = '-'; break;
@@ -161,7 +200,7 @@ public class MapStatus {
             case '?': explosionKey = '/'; break;
             default: explosionKey = '*'; break;
         }
-        Image explosion = sprites.get(explosionKey);
+        Image explosion = setSprite(explosionKey);
         drawCell(canvasContext, c + 1, r + 1, explosion);
 
         // Redraw square around current player
