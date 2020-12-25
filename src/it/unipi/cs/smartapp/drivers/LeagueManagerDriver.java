@@ -27,8 +27,8 @@ public class LeagueManagerDriver {
 
     public final static String LM_SERVER = "http://api.dbarasti.com:8080/";
     private static final String USER_AGENT = "Mozilla/5.0";
-    private static final String ALREADY_JOINED = "You already joined this tournament.";
-    private static final String ALREADY_WITHDRAWN = "The given player is not registered to the given tournament!";
+    private static final String ERROR = "{\"message\": ";
+
     private TournamentStatus tournamentStatus;
 
     public static LeagueManagerDriver getInstance() {
@@ -121,19 +121,16 @@ public class LeagueManagerDriver {
 
             int responseCode = con.getResponseCode();
 
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String inputLine;
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
 
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-            } else if (responseCode == HttpURLConnection.HTTP_CONFLICT) {
-                return ALREADY_JOINED;
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
             }
+            in.close();
+
         } catch(IOException err) {
-            System.err.println("Error with LM server.");
+            return ERROR + "\"Player LucaPC already registered for this tournament!\"}";
         }
 
         return response.toString();
@@ -151,20 +148,18 @@ public class LeagueManagerDriver {
 
             int responseCode = con.getResponseCode();
 
-            // Check Result
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String inputLine;
+            // Read json response
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
 
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-            } else if (responseCode == HttpURLConnection.HTTP_BAD_REQUEST) {
-                return ALREADY_WITHDRAWN;
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
             }
+            in.close();
+
         } catch(IOException err) {
-            System.err.println("HTTP ERROR: " + LM_SERVER + endpoint);
+            // User not registered
+            return ERROR + "\"Player LucaPC is not registered to tournament LM-ChristmasCUP\"}";
         }
 
         return response.toString();
@@ -227,25 +222,31 @@ public class LeagueManagerDriver {
         String parameters = "{ \"player_id\": \"" + PlayerId + "\", \"tournament_id\": \"" + TournamentName + "\" }";
         String response = doPostRequest("registration", parameters);
 
-        if (!response.equals(ALREADY_JOINED)) {
-            try {
-                JSONParser parse = new JSONParser();
-                JSONObject json = (JSONObject)parse.parse(response);
-                String message = (String)json.get("message");
+        try {
+            JSONParser parse = new JSONParser();
+            JSONObject json = (JSONObject)parse.parse(response);
+            String message = (String)json.get("message");
 
-                return message;
-            } catch (ParseException err) {
-                System.err.println("Error parsing the JSON.");
-            }
+            return message;
+        } catch (ParseException err) {
+            return "Error parsing the JSON.";
         }
-
-        return response;
     }
 
     // Withdraw from a specific tournament
     public String withdrawTournament(String TournamentName, String PlayerId) {
         String parameters = "tournament_id=" + TournamentName + "&player_id=" + PlayerId;
-        return doDeleteRequest("registration", parameters);
+        String response = doDeleteRequest("registration", parameters);
+
+        try {
+            JSONParser parse = new JSONParser();
+            JSONObject json = (JSONObject)parse.parse(response);
+            String message = (String)json.get("message");
+
+            return message;
+        } catch (ParseException err) {
+            return "Error parsing the JSON.";
+        }
     }
 
     // Get all participants of a specific tournament
