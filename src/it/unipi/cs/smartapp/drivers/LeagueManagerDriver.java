@@ -130,7 +130,7 @@ public class LeagueManagerDriver {
             in.close();
 
         } catch(IOException err) {
-            return ERROR + "\"Player LucaPC already registered for this tournament!\"}";
+            return ERROR + "\"You already registered for this tournament!\"}";
         }
 
         return response.toString();
@@ -159,7 +159,7 @@ public class LeagueManagerDriver {
 
         } catch(IOException err) {
             // User not registered
-            return ERROR + "\"Player LucaPC is not registered to tournament LM-ChristmasCUP\"}";
+            return ERROR + "\"You're not registered to tournament LM-ChristmasCUP\"}";
         }
 
         return response.toString();
@@ -284,22 +284,22 @@ public class LeagueManagerDriver {
             JSONParser parse = new JSONParser();
             JSONObject json = (JSONObject)parse.parse(response);
             JSONArray tournamentAttributes = (JSONArray)json.get("rounds");
-            TournamentRound r = new TournamentRound();
 
             // For all rounds
             for (int i = 0; i < tournamentAttributes.size(); i++) {
+                TournamentRound r = new TournamentRound();
                 JSONObject match = (JSONObject)tournamentAttributes.get(i);
                 JSONArray matchesAttributes = (JSONArray)match.get("matches");
-                ArrayList<TournamentRound.Match> roundMatches = new ArrayList<>();
 
                 // For all matches
                 for (int j = 0; j < matchesAttributes.size(); j++) {
-                    JSONObject participants = (JSONObject)matchesAttributes.get(j);
-                    JSONArray participantsArray = (JSONArray)participants.get("participants");
+                    JSONObject aMatch = (JSONObject)matchesAttributes.get(j);
+                    JSONArray participantsArray = (JSONArray)aMatch.get("participants");
                     TournamentRound.Match m = new TournamentRound.Match();
                     ArrayList<String> p = new ArrayList<>();
 
-                    m.startDate = getDate((String)participants.get("start_date"));
+                    m.startDate = getDate((String)aMatch.get("start_date"));
+                    m.id = (String)aMatch.get("id");
 
                     // For all participants
                     for (int k = 0; k < participantsArray.size(); k++) {
@@ -307,10 +307,9 @@ public class LeagueManagerDriver {
                     }
 
                     m.participants = p;
-                    roundMatches.add(m);
+                    r.matches.add(m);
                 }
 
-                r.rounds.addAll(roundMatches);
                 tournamentRounds.add(r);
             }
 

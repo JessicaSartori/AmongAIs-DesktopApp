@@ -6,20 +6,21 @@ import it.unipi.cs.smartapp.statemanager.StateManager;
 import it.unipi.cs.smartapp.statemanager.TournamentLeaderboard;
 import it.unipi.cs.smartapp.statemanager.TournamentRound;
 import it.unipi.cs.smartapp.statemanager.TournamentStatus;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
-import java.lang.reflect.Array;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.*;
 
 public class tournamentInfoController implements Controller {
@@ -44,6 +45,20 @@ public class tournamentInfoController implements Controller {
         stateManager = StateManager.getInstance();
         leagueManagerDriver = LeagueManagerDriver.getInstance();
         tournamentStatus = TournamentStatus.getInstance();
+
+        listSchedule.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                String[] tournamentId = listSchedule.getSelectionModel().getSelectedItem().getText().split(" ");
+                StringSelection selection = new StringSelection(tournamentId[0]);
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(selection, selection);
+                Alert message = new Alert(Alert.AlertType.INFORMATION);
+                message.setTitle("Tournament copied!");
+                message.setContentText("Tournament name copied, you can paste it in the join screen.");
+                message.show();
+            }
+        });
 
         System.out.println("Tournament Info Controller done");
     }
@@ -73,17 +88,19 @@ public class tournamentInfoController implements Controller {
         }
 
         // Get Tournament Schedule
-        ArrayList<TournamentRound> rounds = leagueManagerDriver.getTournamentSchedule(tName);
+        ArrayList<TournamentRound> tRounds = leagueManagerDriver.getTournamentSchedule(tName);
 
-        if (rounds.size() == 0) {
+        if (tRounds.size() == 0) {
             Text message = new Text("There are no scheduled matches yet.");
             listSchedule.getItems().add(message);
         } else {
-            for (int i = 0; i < rounds.size(); i++) {
-                TournamentRound tr = rounds.get(i);
-                for (int j = 0; j < tr.rounds.size(); j++) {
-                    String matchDate = tr.rounds.get(j).startDate;
-                    Integer numParticipants = tr.rounds.get(j).participants.size();
+            for (int i = 0; i < tRounds.size(); i++) {
+                ArrayList<TournamentRound.Match> tMatches = tRounds.get(i).matches;
+
+                for (int j = 0; j < tMatches.size(); j++) {
+                    String matchDate = tMatches.get(j).startDate;
+                    Integer numParticipants = tMatches.get(j).participants.size();
+                    String tournamentName = tMatches.get(j).id;
 
                     try {
                         DateFormat formatter = new SimpleDateFormat("HH:mm - dd/MM/yyyy", Locale.ENGLISH);
@@ -91,7 +108,7 @@ public class tournamentInfoController implements Controller {
                         String now = formatter.format(Calendar.getInstance().getTime());
                         Date timeStamp = formatter.parse(now);
 
-                        Text row = new Text("Round: " + (i + 1) + " - Match " + (j + 1) + " starts at " + matchDate + " - Participants: " + numParticipants);
+                        Text row = new Text(tournamentName + " starts at " + matchDate + " - Participants: " + numParticipants);
 
                         if (timeStamp.after(initDate)) {
                             row.setStyle("-fx-text-fill: red");
