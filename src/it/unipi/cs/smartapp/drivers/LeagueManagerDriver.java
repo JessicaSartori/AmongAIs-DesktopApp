@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -347,5 +348,33 @@ public class LeagueManagerDriver {
         }
 
         return leaderboard;
+    }
+
+    // Get global leaderboard
+    public ArrayList<String> getGlobalLeaderboard() {
+        String response = doGetRequest("ranking");
+        ArrayList<String> globalLeaderboard = new ArrayList<>();
+
+        try {
+            JSONParser parse = new JSONParser();
+            JSONArray leaderboard = (JSONArray)parse.parse(response);
+
+            for(int i = 0; i < leaderboard.size(); i++)  {
+                JSONObject jsonRow = (JSONObject)leaderboard.get(i);
+                String playerName = (String)jsonRow.get("player_name");
+                Integer playerRank = ((Long)jsonRow.get("player_rank")).intValue();
+                Integer playerScore =  ((Long)jsonRow.get("player_score")).intValue();
+
+                String space = "                  ";
+                String row = playerRank + space + space + playerScore + space + playerName;
+
+                globalLeaderboard.add(row);
+            }
+
+        } catch(ParseException err) {
+            System.err.println("Error parsing the received JSON");
+        }
+
+        return globalLeaderboard;
     }
 }

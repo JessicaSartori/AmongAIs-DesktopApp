@@ -9,9 +9,10 @@ import javafx.scene.control.*;
 import it.unipi.cs.smartapp.drivers.ChatSystemDriver;
 import it.unipi.cs.smartapp.drivers.LeagueManagerDriver;
 import it.unipi.cs.smartapp.screens.Renderer;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
-
 
 public class tournamentController implements Controller {
 
@@ -23,6 +24,8 @@ public class tournamentController implements Controller {
     private TableView<Tournament> tblTournaments;
     @FXML
     private Button btnJoin, btnWithdraw, btnShowInfo;
+    @FXML
+    private ListView<String> listLeaderboard;
 
     public void initialize() {
         lmDriver = LeagueManagerDriver.getInstance();
@@ -44,6 +47,21 @@ public class tournamentController implements Controller {
         btnJoin.disableProperty().bind(Bindings.isEmpty(tblTournaments.getSelectionModel().getSelectedItems()));
         btnWithdraw.disableProperty().bind(Bindings.isEmpty(tblTournaments.getSelectionModel().getSelectedItems()));
         btnShowInfo.disableProperty().bind(Bindings.isEmpty(tblTournaments.getSelectionModel().getSelectedItems()));
+
+        // Clear list
+        listLeaderboard.getItems().clear();
+
+        // Update global leaderboard
+        ArrayList<String> leaderboard = lmDriver.getGlobalLeaderboard();
+
+        if (leaderboard.size() == 0) {
+            listLeaderboard.getItems().add("There are no values yet.");
+        } else {
+            listLeaderboard.getItems().add("Position                  Score                  Player");
+            for (String row : leaderboard) {
+                listLeaderboard.getItems().add(row);
+            }
+        }
     }
 
     @FXML

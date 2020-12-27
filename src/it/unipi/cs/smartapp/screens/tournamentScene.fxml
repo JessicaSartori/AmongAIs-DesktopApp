@@ -16,11 +16,11 @@
          <Font size="18.0" />
       </font>
    </Label>
-   <VBox alignment="TOP_CENTER" fillWidth="false" layoutX="8.0" layoutY="8.0" prefHeight="630.0" prefWidth="241.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
+   <VBox fx:id="vboxTournament" alignment="TOP_CENTER" fillWidth="false" layoutX="8.0" layoutY="8.0" prefHeight="630.0" prefWidth="241.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
       <children>
-         <HBox prefHeight="31.0" prefWidth="669.0">
+         <HBox prefHeight="31.0" prefWidth="889.0">
             <children>
-               <Separator layoutX="356.0" layoutY="10.0" prefHeight="27.0" prefWidth="381.0" visible="false" />
+               <Separator layoutX="10.0" layoutY="10.0" prefHeight="27.0" prefWidth="665.0" visible="false" />
                <Button fx:id="btnJoin" mnemonicParsing="false" onAction="#btnJoinPressed" prefHeight="27.0" prefWidth="73.0" text="Join" />
                <Separator prefHeight="0.0" prefWidth="30.0" visible="false" />
                <Button fx:id="btnWithdraw" mnemonicParsing="false" onAction="#btnWithdrawPressed" prefHeight="27.0" prefWidth="73.0" text="Withdraw" />
@@ -28,11 +28,32 @@
                <Button fx:id="btnShowInfo" mnemonicParsing="false" onAction="#btnShowInfoPressed" prefHeight="27.0" prefWidth="73.0" text="Info" />
             </children>
          </HBox>
-         <TableView fx:id="tblTournaments" prefHeight="465.0" prefWidth="890.0">
-           <columns>
-             <TableColumn prefWidth="75.0" text="C1" />
-             <TableColumn prefWidth="75.0" text="C2" />
-           </columns>
-         </TableView>
+         <TabPane fx:id="TournamentTabs" prefHeight="478.0" prefWidth="888.0" tabClosingPolicy="UNAVAILABLE">
+           <tabs>
+             <Tab fx:id="tabTournaments" text="Available Tournaments">
+               <content>
+                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+                           <TableView fx:id="tblTournaments" prefHeight="465.0" prefWidth="890.0">
+                             <columns>
+                               <TableColumn prefWidth="75.0" text="C1" />
+                               <TableColumn prefWidth="75.0" text="C2" />
+                             </columns>
+                           </TableView>
+                        </children>
+                     </AnchorPane>
+               </content>
+             </Tab>
+             <Tab fx:id="TabLeaderboard" text="Global Leaderboard">
+               <content>
+                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="81.0" prefWidth="324.0">
+                        <children>
+                           <ListView fx:id="listLeaderboard" layoutX="14.0" layoutY="23.0" prefHeight="289.0" prefWidth="463.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="23.0" />
+                        </children>
+                     </AnchorPane>
+               </content>
+             </Tab>
+           </tabs>
+         </TabPane>
       </children></VBox>
 </AnchorPane>
