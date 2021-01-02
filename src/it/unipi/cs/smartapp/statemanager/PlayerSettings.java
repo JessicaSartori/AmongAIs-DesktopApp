@@ -34,7 +34,7 @@ public class PlayerSettings {
 
         flipLeft = KeyCode.P; flipRight = KeyCode.ENTER;
 
-        mapFreq = 1000; statusFreq = 1000;
+        mapFreq = 400; statusFreq = 800;
     }
 
     public boolean isAlreadySet(KeyCode key) {
