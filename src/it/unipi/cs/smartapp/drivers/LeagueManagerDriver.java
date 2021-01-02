@@ -335,7 +335,7 @@ public class LeagueManagerDriver {
                 TournamentLeaderboard tl = new TournamentLeaderboard();
                 JSONObject playerLeaderboard = (JSONObject)tournLeaderboard.get(i);
 
-                tl.playerName = (String)playerLeaderboard.get("player_id");
+                tl.playerName = (String)playerLeaderboard.get("player_name");
                 Long playerRankLong = (Long)playerLeaderboard.get("player_rank");
                 tl.playerRank = playerRankLong.intValue();
                 Long playerScoreLong = (Long)playerLeaderboard.get("player_score");
