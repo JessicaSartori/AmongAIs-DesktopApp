@@ -85,10 +85,10 @@ public class spectateController implements Controller {
         // Setup automatic LOOK and STATUS
         automaticActions = Controllers.setupPoolExecutor();
         automaticActions.scheduleWithFixedDelay(this::updateStatus,
-                500, PlayerSettings.getInstance().getStatusFreq(), TimeUnit.MILLISECONDS
+                500, 300, TimeUnit.MILLISECONDS
         );
         automaticActions.scheduleWithFixedDelay(this::updateMap,
-                500, PlayerSettings.getInstance().getMapFreq(), TimeUnit.MILLISECONDS
+                500, 100, TimeUnit.MILLISECONDS
         );
     }
 
