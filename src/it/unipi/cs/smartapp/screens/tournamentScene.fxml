@@ -23,7 +23,7 @@
                <Separator layoutX="10.0" layoutY="10.0" prefHeight="27.0" prefWidth="665.0" visible="false" />
                <Button fx:id="btnJoin" mnemonicParsing="false" onAction="#btnJoinPressed" prefHeight="27.0" prefWidth="73.0" text="Join" />
                <Separator prefHeight="0.0" prefWidth="30.0" visible="false" />
-               <Button fx:id="btnWithdraw" mnemonicParsing="false" onAction="#btnWithdrawPressed" prefHeight="27.0" prefWidth="73.0" text="Withdraw" />
+               <Button fx:id="btnWithdraw" mnemonicParsing="false" onAction="#btnWithdrawPressed" prefHeight="27.0" prefWidth="94.0" text="Withdraw" />
                <Separator layoutX="356.0" layoutY="10.0" prefHeight="0.0" prefWidth="30.0" visible="false" />
                <Button fx:id="btnShowInfo" mnemonicParsing="false" onAction="#btnShowInfoPressed" prefHeight="27.0" prefWidth="73.0" text="Info" />
             </children>
