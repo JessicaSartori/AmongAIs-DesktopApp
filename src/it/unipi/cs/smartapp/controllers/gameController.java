@@ -105,7 +105,6 @@ public class gameController implements Controller {
         // Setup Keyboard event listener
         gamePanel.setOnKeyPressed(keyEvent -> {
             KeyCode key = keyEvent.getCode();
-            System.out.println(key);
 
             if (key == playerSettings.getFlipLeft()) Controllers.flipVisiblePane(leftSubPanel);
             else if (key == playerSettings.getFlipRight()) Controllers.flipVisiblePane(rightSubPanel);
@@ -139,6 +138,12 @@ public class gameController implements Controller {
         automaticActions.scheduleWithFixedDelay(this::updateMap,
                 500, PlayerSettings.getInstance().getMapFreq(), TimeUnit.MILLISECONDS
         );
+
+        // Setup mouse input
+        gamePanel.setOnMousePressed(mousePressed -> {
+            if(mousePressed.isPrimaryButtonDown())
+                gamePanel.requestFocus();
+        });
     }
 
     @FXML
